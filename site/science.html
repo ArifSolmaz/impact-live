@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bilim ve veri · AYAP-1 Ay Çarpması</title>
+<meta name="description" content="AYAP-1 Ay çarpması gözlenebilirlik çalışmasının yöntemi, şekilleri, verileri ve yeniden üretme adımları.">
+<meta property="og:title" content="AYAP-1 Ay Çarpması — Bilim ve veri">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="theme-color" content="#06080d">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="science" data-title-key="nav.science">
+<a class="skip" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+  <section class="section tight">
+    <div class="container">
+      <div class="kicker" data-i18n="sci.kicker"></div>
+      <h1 data-i18n="sci.title"></h1>
+      <p class="lead" data-i18n="sci.lead"></p>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container grid two" style="align-items:start">
+      <div>
+        <h2 data-i18n="sci.summary_title"></h2>
+        <p class="secondary" data-i18n="sci.summary_p1"></p>
+        <p class="secondary" data-i18n="sci.summary_p2"></p>
+        <p class="secondary" data-i18n="sci.summary_p3"></p>
+      </div>
+      <div class="card pad-lg">
+        <h2 data-i18n="sci.findings_title"></h2>
+        <ul class="clean" id="findings"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <h2 data-i18n="sci.methods_title"></h2>
+      <div class="grid three" id="methods"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <h2 data-i18n="sci.fig_title"></h2>
+      <p class="secondary" data-i18n="sci.fig_lead"></p>
+      <div class="gallery" id="gallery"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container grid two" style="align-items:start">
+      <div class="card">
+        <h3 data-i18n="sci.data_title"></h3>
+        <p class="secondary" data-i18n-html="sci.data_p"></p>
+        <ul class="clean" id="data-links"></ul>
+      </div>
+      <div class="card">
+        <h3 data-i18n="sci.repro_title"></h3>
+        <p class="secondary" data-i18n="sci.repro_p"></p>
+        <pre class="code" id="repro"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid two" style="align-items:start">
+      <div>
+        <h2 data-i18n="sci.limits_title"></h2>
+        <ul class="clean"><li data-i18n="lim.1"></li><li data-i18n="lim.2"></li><li data-i18n="lim.3"></li><li data-i18n="lim.4"></li><li data-i18n="lim.5"></li></ul>
+      </div>
+      <div class="card">
+        <h3 data-i18n="sci.cite_title"></h3>
+        <p class="secondary" id="cite"></p>
+        <h3 data-i18n="sci.manuscript"></h3>
+        <p class="secondary" id="manuscript"></p>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true"><button class="btn small" type="button" id="lb-close" data-i18n="common.close"></button><img alt="" id="lb-img"></div>
+<footer id="site-footer"></footer>
+<script src="assets/vendor/astronomy.browser.min.js"></script>
+<script type="module" src="assets/js/pages/science.js"></script>
+</body>
+</html>

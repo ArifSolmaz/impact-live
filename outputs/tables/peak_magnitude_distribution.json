@@ -1,0 +1,16 @@
+{
+ "peakV_wide": {
+  "p5": 7.710180231757855,
+  "p50": 12.14161431556895,
+  "p95": 16.53892233334699,
+  "p_brighter_than_eyepiece": 0.1979,
+  "p_brighter_than_binoculars": 0.0059,
+  "p_brighter_than_naked_eye": 0.0
+ },
+ "peakV_v3": {
+  "p5": 9.182461612614421,
+  "p50": 12.567611784984884,
+  "p95": 15.881309432141318,
+  "p_brighter_than_eyepiece": 0.06455
+ }
+}

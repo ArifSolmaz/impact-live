@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AYAP-1 Ay Çarpması</title>
+<meta name="description" content="AYAP-1'in Ay'a çarpması Dünya'dan görülebilir mi? Kim, nereden, hangi araçla? Açık veriye dayalı etkileşimli rehber. / Could AYAP-1's lunar impact be seen from Earth? An open, interactive guide.">
+<meta property="og:title" content="AYAP-1 Ay Çarpması — Kim görebilir, nereden, nasıl?">
+<meta property="og:description" content="Türkiye'nin ilk Ay aracının görev sonu çarpmasının gözlenebilirliği: senaryolar, haritalar ve canlı takip.">
+<meta property="og:image" content="assets/img/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#06080d">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="home">
+<a class="skip" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+  <section class="hero">
+    <div class="container">
+      <div>
+        <div class="kicker" data-i18n="home.kicker"></div>
+        <h1 data-i18n="home.title"></h1>
+        <p class="lead" data-i18n="home.lead"></p>
+        <div class="card" id="status-card" style="margin-top:20px">
+          <div class="row"><span id="status-badge"></span><strong id="status-title"></strong></div>
+          <p class="secondary small" id="status-body" style="margin:10px 0 0"></p>
+        </div>
+        <div class="cta">
+          <a class="btn primary" href="explore.html" data-keep-lang data-i18n="home.cta_explore"></a>
+          <a class="btn" href="see.html" data-keep-lang data-i18n="home.cta_see"></a>
+          <a class="btn" href="live.html" data-keep-lang data-i18n="home.cta_live"></a>
+        </div>
+      </div>
+      <div>
+        <div class="hero-moon"><div class="halo"></div><canvas id="hero-moon" aria-label="Moon"></canvas></div>
+        <div class="row" style="justify-content:center;margin-top:10px">
+          <div class="tabs" role="tablist">
+            <button role="tab" id="tab-now" aria-selected="true" data-i18n="home.moon_now"></button>
+            <button role="tab" id="tab-s1" aria-selected="false" data-i18n="home.moon_s1"></button>
+          </div>
+        </div>
+        <div class="moon-caption" id="moon-caption"></div>
+        <div class="moon-caption small" data-i18n="home.moon_note"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <h2 data-i18n="home.numbers_title"></h2>
+      <p class="secondary" data-i18n="home.numbers_lead"></p>
+      <div class="stats" id="stats"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 data-i18n="home.see_title"></h2>
+      <p class="lead" data-i18n="home.see_lead"></p>
+      <div class="grid four" style="margin-top:20px">
+        <div class="card"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a8 8 0 0 1 16 0"/><path d="M7.5 10a4.5 4.5 0 0 1 9 0"/><circle cx="12" cy="10" r="1.2"/><path d="M12 11.5V20M8 20h8"/></svg></div><h3 data-i18n="home.see1_t"></h3><p class="secondary small" data-i18n="home.see1_d"></p></div>
+        <div class="card"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l11-5 2 4.5-11 5z"/><path d="M14 7l3-1.3 2 4.5-3 1.3"/><path d="M9 15.5l-3 5.5M10.5 15l3 6"/></svg></div><h3 data-i18n="home.see2_t"></h3><p class="secondary small" data-i18n="home.see2_d"></p></div>
+        <div class="card"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg></div><h3 data-i18n="home.see3_t"></h3><p class="secondary small" data-i18n="home.see3_d"></p></div>
+        <div class="card"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><circle cx="9.5" cy="10" r="2.6"/><circle cx="15" cy="15.2" r="1.6"/><circle cx="15.5" cy="8.5" r="0.9"/></svg></div><h3 data-i18n="home.see4_t"></h3><p class="secondary small" data-i18n="home.see4_d"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid two" style="align-items:start">
+      <div>
+        <h2 data-i18n="home.why_title"></h2>
+        <p class="secondary" data-i18n="home.why_p1"></p>
+        <p class="secondary" data-i18n="home.why_p2"></p>
+        <p class="secondary" data-i18n="home.why_p3"></p>
+      </div>
+      <div class="grid two">
+        <a class="card" href="explore.html" data-keep-lang><h3 data-i18n="home.go_explore_t"></h3><p class="secondary small" data-i18n="home.go_explore_d"></p></a>
+        <a class="card" href="see.html" data-keep-lang><h3 data-i18n="home.go_see_t"></h3><p class="secondary small" data-i18n="home.go_see_d"></p></a>
+        <a class="card" href="live.html" data-keep-lang><h3 data-i18n="home.go_live_t"></h3><p class="secondary small" data-i18n="home.go_live_d"></p></a>
+        <a class="card" href="science.html" data-keep-lang><h3 data-i18n="home.go_science_t"></h3><p class="secondary small" data-i18n="home.go_science_d"></p></a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/vendor/astronomy.browser.min.js"></script>
+<script type="module" src="assets/js/pages/home.js"></script>
+</body>
+</html>

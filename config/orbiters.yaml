@@ -1,0 +1,24 @@
+# Orbiter follow-up parameters (from research/orbiters.md, evidence cutoff 2026-10-05). [V] verified, [D] derived, [U] unverified.
+lro:
+  status_2026_10: "operating; imaged Falcon 9 crater 11-12 Aug 2026; LROC/ShadowCam operated by Intuitive Machines since May 2026 [V]"
+  approved_end: "no approved end date found; fuel 'until 2027' (NASA, Jun 2024) [V]; FY2027 budget risk [V], LRO-specific outcome [U]"
+  p_operational_2028: 0.7      # DECLARED PRIOR used in the paper (fuel statement + budget risk); not a NASA figure
+  orbit: "near-circular ~57-123 km, i ~82.5-84 deg, period ~117 min [D from Horizons]"
+  nac_resolution_m: 0.8
+  nac_swath_km: 5.0
+  slew_deg_max: 68
+  low_sun_windows: [["2027-05-12", "2027-07-13"], ["2027-10-23", "2027-12-21"], ["2028-03-29", "2028-05-28"], ["2028-09-08", "2028-11-06"]]   # [D], +-3 weeks
+  near_noon_windows: [["2027-03-09", "2027-04-04"], ["2027-08-20", "2027-09-16"], ["2028-01-26", "2028-02-21"], ["2028-07-06", "2028-08-01"]]  # [D]
+  latency_first_image_days: {well_located_min: 0.4, well_located_typ: 6, well_located_max: 27, poorly_located: [66, 123]}   # [V precedents]
+  latency_release_days: {typ_min: 12, typ_max: 34, poorly_located: [92, 193]}
+  precedent_csv: research/orbiter_latency.csv
+danuri:
+  status: "operating; extended 'to 2027' (KARI) [V]; orbit ~50-65 x 200-215 km [D]; LUTI imaged Falcon 9 crater within hours [V]"
+  p_operational_2028: 0.4      # DECLARED PRIOR
+  luti_gsd_m: "several metres (altitude dependent) [D]"
+  low_sun_windows: [["2027-03-23", "2027-06-02"], ["2027-09-25", "2027-12-02"], ["2028-03-23", "2028-06-02"], ["2028-09-25", "2028-12-02"]]  # [D]
+chandrayaan2:
+  status: "operating; ISRO orbit solutions to Nov 2026 [V]; ~7-yr design life ending ~2026 [V]; OHRC 0.25 m, no public tasking route [U]"
+  p_operational_2028: 0.3
+change7:
+  status: "not launched as of Sep 2026 (secondary source) [S]; data access route unknown [U]"

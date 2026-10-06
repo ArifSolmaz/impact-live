@@ -1,0 +1,154 @@
+# Instrument templates attached to sites (tier -> template).  Values from the facility inventory where verified;
+# 'hypothetical' marks equipment that would have to be brought or built.  p_ready = declared prior that the station
+# is actually staffed, pointed and recording at the event (operational readiness), NOT weather.
+templates:
+  lunar_impact_system:   # NELIOTA (Kryoneri 1.2 m, twin sCMOS R and I, 30 fps, 23 ms exposure, 17'x14.4')
+    aperture_m: 1.2
+    bands: [Rc, Ic]
+    exposure_s: 0.023
+    frame_time_s: 0.0333
+    pixel_scale_arcsec: 0.8
+    fov_arcmin: [17.0, 14.4]
+    read_noise_e: 1.5
+    saturation_e: 3.0e+04   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.5
+    seeing_arcsec: 2.5
+    dual_camera: true
+    realtime_pipeline: true
+    p_ready: 0.8
+    status: verified equipment (operational, scheduled through 2028); participation not confirmed
+  midas_video:           # MIDAS-type 0.36 m SCT + Watec video, 25 fps interlaced, broad band, ~30' field
+    aperture_m: 0.36
+    bands: [broad]
+    exposure_s: 0.04
+    frame_time_s: 0.04
+    pixel_scale_arcsec: 2.0
+    fov_arcmin: [30.0, 22.0]
+    read_noise_e: 8.0
+    saturation_e: 1.5e+04   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.4
+    seeing_arcsec: 3.5
+    dual_camera: true
+    realtime_pipeline: true
+    p_ready: 0.7
+    status: verified-type equipment; 2026 status unverified
+  fast_camera_large:     # 2-4 m class with windowed fast camera (ULTRASPEC, TriCCS, HiPERCAM, SHOC, Agile class): 0.05 s, ~4' field
+    aperture_m: 2.4
+    bands: [Rc]
+    exposure_s: 0.05
+    frame_time_s: 0.055
+    pixel_scale_arcsec: 0.45
+    fov_arcmin: [4.0, 4.0]
+    read_noise_e: 3.0
+    saturation_e: 1.0e+05   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.5
+    seeing_arcsec: 1.2
+    dual_camera: false
+    realtime_pipeline: false
+    p_ready: 0.6
+    status: compatible equipment exists at the listed sites; time allocation and non-sidereal lunar tracking must be arranged
+  nir_large:             # 3.6-4 m NIR imager (WIRCam-like): Ks, 2 s exposures, 8 s cadence, 10' field (DAG DIRAC: 33" field, flagged separately)
+    aperture_m: 3.6
+    bands: [Ks]
+    exposure_s: 2.0
+    frame_time_s: 4.0
+    pixel_scale_arcsec: 0.3
+    fov_arcmin: [10.0, 10.0]
+    read_noise_e: 30.0
+    saturation_e: 1.0e+05   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.4
+    seeing_arcsec: 0.8
+    dual_camera: false
+    realtime_pipeline: false
+    p_ready: 0.5
+    status: SMART-1 precedent (CFHT WIRCam 2006); cadence and field depend on the actual camera
+  fast_camera_possible:  # 1-2 m telescope with a visitor GPS-timed CMOS (e.g. QHY174GPS class): 0.05 s, 8' field, R band
+    aperture_m: 1.2
+    bands: [Rc]
+    exposure_s: 0.05
+    frame_time_s: 0.055
+    pixel_scale_arcsec: 0.6
+    fov_arcmin: [8.0, 6.0]
+    read_noise_e: 2.5
+    saturation_e: 3.2e+04   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.45
+    seeing_arcsec: 2.0
+    dual_camera: false
+    realtime_pipeline: true
+    p_ready: 0.5
+    status: hypothetical configuration (camera must be mounted; non-sidereal tracking verified)
+  amateur_class:         # 0.3-0.6 m amateur telescope + planetary CMOS, 30 fps, broad band, 20' field
+    aperture_m: 0.35
+    bands: [broad]
+    exposure_s: 0.03
+    frame_time_s: 0.0333
+    pixel_scale_arcsec: 1.0
+    fov_arcmin: [20.0, 15.0]
+    read_noise_e: 2.0
+    saturation_e: 2.0e+04   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.5
+    seeing_arcsec: 3.0
+    dual_camera: false
+    realtime_pipeline: false
+    p_ready: 0.6
+    status: equipment class widely available in Turkiye (ISTEK Belde 2017 flash precedent)
+  tug_t100_qhy:          # TUG T100 1.0 m with the existing QHY174GPS (75 fps 16-bit; used as guide camera): 0.02 s, ~6' field assumed
+    aperture_m: 1.0
+    bands: [broad]
+    exposure_s: 0.02
+    frame_time_s: 0.0222
+    pixel_scale_arcsec: 0.45
+    fov_arcmin: [6.0, 4.5]
+    read_noise_e: 2.5
+    saturation_e: 3.2e+04   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.45
+    seeing_arcsec: 1.5
+    dual_camera: false
+    realtime_pipeline: true
+    p_ready: 0.7
+    status: existing GPS-timed camera on T100 (verified listing; field/pixel scale as configured unverified)
+  rtt150_fast:           # RTT150 1.5 m + Andor iXon EMCCD (frame rate unverified) or visitor CMOS: 0.05 s, 8' field assumed
+    aperture_m: 1.5
+    bands: [Rc]
+    exposure_s: 0.05
+    frame_time_s: 0.055
+    pixel_scale_arcsec: 0.5
+    fov_arcmin: [8.0, 8.0]
+    read_noise_e: 3.0
+    saturation_e: 1.0e+05   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.5
+    seeing_arcsec: 1.5
+    dual_camera: false
+    realtime_pipeline: true
+    p_ready: 0.6
+    status: hypothetical fast configuration on verified telescope
+  dag_dirac:             # DAG 4 m + DIRAC NIR behind AO: 33" field -> ellipse coverage problem; 1 s exposures assumed
+    aperture_m: 4.0
+    bands: [Ks]
+    exposure_s: 1.0
+    frame_time_s: 2.0
+    pixel_scale_arcsec: 0.03
+    fov_arcmin: [0.55, 0.55]
+    read_noise_e: 15.0
+    saturation_e: 1.0e+05   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.35
+    seeing_arcsec: 0.5
+    dual_camera: false
+    realtime_pipeline: false
+    p_ready: 0.4
+    status: science operations status unverified (first light 2024, test observations 2025)
+  dag_visitor_fast:      # DAG 4 m Nasmyth seeing-limited port + visitor fast visible camera: hypothetical, 0.05 s, 4' field
+    aperture_m: 4.0
+    bands: [Ic]
+    exposure_s: 0.05
+    frame_time_s: 0.055
+    pixel_scale_arcsec: 0.3
+    fov_arcmin: [4.0, 4.0]
+    read_noise_e: 3.0
+    saturation_e: 3.0e+04   # declared full-well/saturation level (e-/pixel)
+    throughput: 0.45
+    seeing_arcsec: 1.0
+    dual_camera: false
+    realtime_pipeline: true
+    p_ready: 0.3
+    status: hypothetical

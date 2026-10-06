@@ -1,0 +1,58 @@
+tol 0.6 om 0: A lunations 8, first A after 94 d; B first -26 d; plume first 80 d
+tol 0.6 om 15: A lunations 7, first A after 122 d; B first -26 d; plume first 287 d
+tol 0.6 om 30: A lunations 6, first A after 124 d; B first -26 d; plume first 109 d
+tol 0.6 om 45: A lunations 6, first A after 152 d; B first -26 d; plume first 316 d
+tol 0.6 om 60: A lunations 9, first A after 36 d; B first -26 d; plume first -26 d
+tol 0.6 om 75: A lunations 9, first A after 36 d; B first 3 d; plume first 346 d
+tol 0.6 om 90: A lunations 11, first A after 36 d; B first -8 d; plume first -8 d
+tol 0.6 om 105: A lunations 11, first A after 36 d; B first -8 d; plume first 376 d
+tol 0.6 om 120: A lunations 10, first A after 36 d; B first -8 d; plume first 21 d
+tol 0.6 om 135: A lunations 9, first A after 64 d; B first -8 d; plume first 227 d
+tol 0.6 om 150: A lunations 10, first A after 64 d; B first -26 d; plume first 50 d
+tol 0.6 om 165: A lunations 9, first A after 93 d; B first -26 d; plume first 257 d
+tol 0.6 om 180: A lunations 8, first A after 94 d; B first -26 d; plume first 80 d
+tol 0.6 om 195: A lunations 7, first A after 122 d; B first -26 d; plume first 287 d
+tol 0.6 om 210: A lunations 6, first A after 124 d; B first -26 d; plume first 109 d
+tol 0.6 om 225: A lunations 6, first A after 152 d; B first -26 d; plume first 316 d
+tol 0.6 om 240: A lunations 9, first A after 36 d; B first -26 d; plume first -26 d
+tol 0.6 om 255: A lunations 9, first A after 36 d; B first 3 d; plume first 346 d
+tol 0.6 om 270: A lunations 11, first A after 36 d; B first -8 d; plume first -8 d
+tol 0.6 om 285: A lunations 11, first A after 36 d; B first -8 d; plume first 376 d
+tol 0.6 om 300: A lunations 10, first A after 36 d; B first -8 d; plume first 21 d
+tol 0.6 om 315: A lunations 9, first A after 64 d; B first -8 d; plume first 227 d
+tol 0.6 om 330: A lunations 10, first A after 64 d; B first -26 d; plume first 50 d
+tol 0.6 om 345: A lunations 9, first A after 93 d; B first -26 d; plume first 257 d
+tol 2.5 om 0: A lunations 9, first A after 93 d; B first -26 d; plume first 80 d
+tol 2.5 om 15: A lunations 7, first A after 122 d; B first -26 d; plume first 109 d
+tol 2.5 om 30: A lunations 6, first A after 122 d; B first -26 d; plume first 109 d
+tol 2.5 om 45: A lunations 6, first A after 152 d; B first -26 d; plume first 138 d
+tol 2.5 om 60: A lunations 9, first A after 36 d; B first -26 d; plume first -26 d
+tol 2.5 om 75: A lunations 9, first A after 36 d; B first 3 d; plume first 168 d
+tol 2.5 om 90: A lunations 11, first A after 36 d; B first -8 d; plume first -8 d
+tol 2.5 om 105: A lunations 11, first A after 36 d; B first -8 d; plume first 21 d
+tol 2.5 om 120: A lunations 10, first A after 36 d; B first -8 d; plume first 21 d
+tol 2.5 om 135: A lunations 10, first A after 64 d; B first -26 d; plume first 50 d
+tol 2.5 om 150: A lunations 10, first A after 64 d; B first -26 d; plume first 50 d
+tol 2.5 om 165: A lunations 9, first A after 93 d; B first -26 d; plume first 80 d
+tol 2.5 om 180: A lunations 9, first A after 93 d; B first -26 d; plume first 80 d
+tol 2.5 om 195: A lunations 7, first A after 122 d; B first -26 d; plume first 109 d
+tol 2.5 om 210: A lunations 6, first A after 122 d; B first -26 d; plume first 109 d
+tol 2.5 om 225: A lunations 6, first A after 152 d; B first -26 d; plume first 138 d
+tol 2.5 om 240: A lunations 9, first A after 36 d; B first -26 d; plume first -26 d
+tol 2.5 om 255: A lunations 9, first A after 36 d; B first 3 d; plume first 168 d
+tol 2.5 om 270: A lunations 11, first A after 36 d; B first -8 d; plume first -8 d
+tol 2.5 om 285: A lunations 11, first A after 36 d; B first -8 d; plume first 21 d
+tol 2.5 om 300: A lunations 10, first A after 36 d; B first -8 d; plume first 21 d
+tol 2.5 om 315: A lunations 10, first A after 64 d; B first -26 d; plume first 50 d
+tol 2.5 om 330: A lunations 10, first A after 64 d; B first -26 d; plume first 50 d
+tol 2.5 om 345: A lunations 9, first A after 93 d; B first -26 d; plume first 80 d
+months                          3     4    6     9     12   18
+tol cls                                                       
+0.6 A_turkiye_evening_public  0.58  0.83  1.0  1.00  1.00  1.0
+    B_global_science          1.00  1.00  1.0  1.00  1.00  1.0
+    C_any_turkish             1.00  1.00  1.0  1.00  1.00  1.0
+    P_plume_global            0.33  0.42  0.5  0.67  0.92  1.0
+2.5 A_turkiye_evening_public  0.58  0.92  1.0  1.00  1.00  1.0
+    B_global_science          1.00  1.00  1.0  1.00  1.00  1.0
+    C_any_turkish             1.00  1.00  1.0  1.00  1.00  1.0
+    P_plume_global            0.58  0.75  1.0  1.00  1.00  1.0

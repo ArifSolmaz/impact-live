@@ -1,0 +1,16 @@
+{
+  "_help": "Edit this file to drive the Live page. status: planning | announced | live | completed. Times are UTC in ISO 8601 ending with Z. Leave fields null until the mission team publishes them. See docs/LIVE_MODE.md.",
+  "status": "planning",
+  "updated_utc": "2026-10-06T00:00:00Z",
+  "impact_utc": null,
+  "impact_uncertainty_min": null,
+  "target": null,
+  "mission_status": {
+    "tr": "Fırlatma 2027'nin ilk yarısı için planlanıyor. Yaklaşık iki aylık yolculuğun ardından araç, Ay çevresinde 100 km yükseklikte kutupsal bir yörüngede bilimsel görevini sürdürecek; görev, Ay yüzeyine kontrollü bir çarpmayla sona erecek. Çarpma tarihi ve noktası henüz açıklanmadı.",
+    "en": "Launch is planned for the first half of 2027. After a transfer of about two months, the spacecraft will operate in a 100-km polar orbit around the Moon; the mission will end with a controlled impact on the lunar surface. The impact date and site have not been announced."
+  },
+  "streams": [],
+  "watch_events": [],
+  "updates": [],
+  "results": null
+}

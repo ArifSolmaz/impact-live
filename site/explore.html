@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keşfet · AYAP-1 Ay Çarpması</title>
+<meta name="description" content="11 varsayımsal çarpma senaryosu: Ay'ın görünüşü, Dünya'dan kimlerin görebileceği ve parlamanın kaydedilme olasılıkları.">
+<meta property="og:title" content="AYAP-1 Ay Çarpması — Senaryoları keşfet">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="theme-color" content="#06080d">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="explore" data-title-key="nav.explore">
+<a class="skip" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+  <section class="section tight">
+    <div class="container">
+      <div class="kicker" data-i18n="ex.kicker"></div>
+      <h1 data-i18n="ex.title"></h1>
+      <p class="lead" data-i18n="ex.lead"></p>
+      <p class="note" data-i18n="ex.note_hyp"></p>
+      <div style="margin-top:18px">
+        <div class="small secondary" style="margin-bottom:8px" data-i18n="ex.pick_label"></div>
+        <div class="chips" id="chips" role="group"></div>
+      </div>
+      <div class="card" id="scenario-head" style="margin-top:16px"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container grid two" style="align-items:start">
+      <div class="viz">
+        <div class="viz-head"><div><h3 data-i18n="ex.moon_title"></h3><div class="sub" id="moon-sub"></div></div><span class="evid" data-i18n="common.geometry"></span></div>
+        <div class="moon-wrap"><canvas id="moon" aria-label="Moon view"></canvas></div>
+        <div class="row" style="margin-top:12px">
+          <span class="small secondary" data-i18n="ex.heat_label"></span>
+          <div class="tabs" id="heat-tabs" role="tablist">
+            <button role="tab" data-heat="" aria-selected="true" data-i18n="ex.heat_off"></button>
+            <button role="tab" data-heat="h_tr" aria-selected="false" data-i18n="ex.heat_tr"></button>
+            <button role="tab" data-heat="h_plume_tr" aria-selected="false" data-i18n="ex.heat_plume"></button>
+          </div>
+          <label class="toggle"><input type="checkbox" id="labels"> <span data-i18n="ex.labels"></span></label>
+        </div>
+        <p class="small secondary hidden" id="heat-legend" style="margin:10px 0 0"></p>
+        <div class="legend">
+          <span class="key"><span class="sw ring" style="color:#f5c76a"></span><span data-i18n="ex.moon_legend_site"></span></span>
+          <span class="key"><span class="sw round" style="background:#fff"></span><span data-i18n="ex.moon_legend_other"></span></span>
+        </div>
+        <p class="note hidden" id="farside" style="margin-top:10px" data-i18n="ex.moon_farside"></p>
+        <p class="small muted" style="margin:8px 0 0" data-i18n="ex.moon_caption"></p>
+      </div>
+      <div class="viz">
+        <div class="viz-head"><div><h3 data-i18n="ex.earth_title"></h3><div class="sub" data-i18n="ex.earth_sub"></div></div><span class="evid" data-i18n="common.geometry"></span></div>
+        <div class="map-wrap" style="aspect-ratio:1.6/1"><canvas id="earth" aria-label="Earth map"></canvas></div>
+        <div class="legend">
+          <span class="key"><span class="sw" style="background:rgba(57,135,229,.85)"></span><span data-i18n="ex.earth_legend_good"></span></span>
+          <span class="key"><span class="sw" style="background:rgba(57,135,229,.35)"></span><span data-i18n="ex.earth_legend_twilight"></span></span>
+          <span class="key"><span class="sw round" style="background:#fff"></span><span data-i18n="ex.earth_legend_avail"></span></span>
+          <span class="key"><span class="sw ring" style="color:#bec6d7"></span><span data-i18n="ex.earth_legend_unavail"></span></span>
+          <span class="key"><span class="sw round" style="background:#e8e4da"></span><span data-i18n="ex.earth_legend_moon"></span></span>
+          <span class="key"><span class="sw round" style="background:#fab219"></span><span data-i18n="ex.earth_legend_sun"></span></span>
+        </div>
+        <p class="small muted" style="margin:8px 0 0" data-i18n="ex.earth_caption"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <h2 data-i18n="ex.odds_title"></h2>
+      <p class="secondary" data-i18n="ex.odds_lead"></p>
+      <div class="row" style="margin:14px 0">
+        <span class="small secondary" data-i18n="ex.network_label"></span>
+        <div class="tabs" id="net-tabs" role="tablist"></div>
+        <span class="spacer"></span>
+        <span class="small secondary" data-i18n="prior.label"></span>
+        <div class="tabs" id="prior-tabs" role="tablist">
+          <button role="tab" data-prior="wide" aria-selected="true" data-i18n="prior.wide"></button>
+          <button role="tab" data-prior="v3" aria-selected="false" data-i18n="prior.v3"></button>
+        </div>
+      </div>
+      <p class="small muted" id="net-desc"></p>
+      <div class="stats" id="odds-stats"></div>
+      <div class="viz" style="margin-top:16px">
+        <div class="viz-head"><div><h3 data-i18n="ex.odds_chart_title"></h3><div class="sub" data-i18n="ex.odds_chart_sub"></div></div><span class="evid" data-i18n="common.simulation"></span></div>
+        <div id="odds-chart"></div>
+        <div id="odds-table"></div>
+        <p class="small muted" style="margin:10px 0 0" data-i18n="ex.odds_note"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container grid two" style="align-items:start">
+      <div class="card">
+        <h3 data-i18n="ex.detail_title"></h3>
+        <dl class="kv" id="details"></dl>
+      </div>
+      <div class="card">
+        <h3 id="stations-title"></h3>
+        <div class="ladder" id="stations"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 data-i18n="ex.cal_title"></h2>
+      <p class="secondary" data-i18n="ex.cal_lead"></p>
+      <div class="viz">
+        <div class="viz-head" style="justify-content:flex-end;margin:0"><span class="evid" data-i18n="common.geometry"></span></div>
+        <div id="calendar"></div>
+        <div id="calendar-table"></div>
+        <p class="small muted" style="margin:10px 0 0" data-i18n="ex.cal_note"></p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/vendor/astronomy.browser.min.js"></script>
+<script type="module" src="assets/js/pages/explore.js"></script>
+</body>
+</html>

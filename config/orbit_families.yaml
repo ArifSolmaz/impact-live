@@ -1,0 +1,12 @@
+# Orbit-plane scenario families (the real AYAP-1 orbit plane is unpublished).
+reference_epoch_utc: "2027-09-01 00:00:00"   # assumed start of the orbital phase (launch Q2 2027 + ~2-month transfer + commissioning)
+node_longitudes_deg: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]
+inclination_deg: 90.0
+altitude_km: 100.0
+node_drift_deg_day: [0.0]          # inertial drift of the orbit plane; sensitivity runs use +-0.5 deg/day
+cross_track_tolerance_deg: [0.6, 2.5]   # ~0 m/s and ~70 m/s plane-change budget (dv = 2 v sin(di/2), v = 1.633 km/s)
+terminal_velocity_scenarios:
+  - {id: V_BAL, label: "ballistic de-orbit (dv ~25-50 m/s)", v_km_s: 1.68, angle_deg: 3, mass_kg: 2000, status: "mission-consistent scenario (no braking)"}
+  - {id: V_MOD, label: "moderate retro burn (dv ~400 m/s)", v_km_s: 1.35, angle_deg: 15, mass_kg: 1900, status: "conditional on undisclosed propellant reserve"}
+  - {id: V_STR, label: "strong guided deceleration", v_km_s: 0.8, angle_deg: 40, mass_kg: 1800, status: "conditional on undisclosed thrust/propellant"}
+  - {id: V_NSL, label: "near-soft-landing attempt (residual velocity)", v_km_s: 0.3, angle_deg: 70, mass_kg: 1700, status: "illustrative lower bound"}

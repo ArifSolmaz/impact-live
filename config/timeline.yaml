@@ -1,0 +1,15 @@
+# Launch-to-impact timeline families (all dates are scenario assumptions anchored on published statements:
+# launch "first half / Q2 2027" (TÜBİTAK UZAY, TUA, Sep 2026), "about two months" transfer (TUA), >= 3 months orbital
+# mission extendable to 18 months (TUA; IRF says ~3 up to 6), controlled de-orbit at end of mission.
+launch_families:
+  - {id: L1, label: "Q2 2027 early (nominal)", date: "2027-04-15", status: "consistent with published target"}
+  - {id: L2, label: "Q2 2027 late", date: "2027-06-15", status: "consistent with published target"}
+  - {id: L3, label: "+3-month slip", date: "2027-09-15", status: "reasonable delay"}
+  - {id: L4, label: "+6-month slip", date: "2027-12-15", status: "reasonable delay"}
+  - {id: L5, label: "+12-month slip", date: "2028-04-15", status: "pessimistic delay"}
+phases:
+  transfer_days: {nominal: 60, min: 45, max: 80, source: "TUA 2026-09-16: 'yaklasik iki ay' (about two months); multi-burn supersynchronous-GTO raising (GLEX 2025)"}
+  loi_and_circularisation_days: {nominal: 10, min: 5, max: 20, source: "assumed (several burns to reach 100 km circular polar)"}
+  commissioning_days: {nominal: 21, min: 14, max: 30, source: "assumed"}
+  science_months: [3, 6, 12, 18]
+  terminal_phase_days: {nominal: 10, min: 3, max: 20, source: "assumed (orbit lowering, final tracking, guided-deceleration rehearsal)"}

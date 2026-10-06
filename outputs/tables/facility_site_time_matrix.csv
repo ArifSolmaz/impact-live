@@ -1,0 +1,39 @@
+site,station,band,country,S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11
+TUG,TUG Bakirlitepe (RTT150/T100/T60) / tug_t100_qhy,broad,TR,12.6 (52°),10.9 (52°),12.7 (34°),12.6 (23°),8.1 (52°),12.8 (34°),12.8 (52°),10.3 (52°),-,12.6 (52°),12.6 (45°)
+TUG,TUG Bakirlitepe (RTT150/T100/T60) / rtt150_fast,Rc,TR,13.0 (52°),11.2 (52°),13.1 (34°),13.0 (23°),8.5 (52°),13.2 (34°),13.2 (52°),10.7 (52°),-,13.0 (52°),13.0 (45°)
+DAG,"DAG Erzurum (4 m, ATA050, DAGTPS) / dag_dirac",Ks,TR,14.2 (44°),12.9 (44°),14.2 (42°),low,10.2 (44°),14.3 (42°),14.2 (44°),12.4 (44°),-,14.2 (44°),14.1 (36°)
+DAG,"DAG Erzurum (4 m, ATA050, DAGTPS) / dag_visitor_fast",Ic,TR,13.9 (44°),12.2 (44°),14.1 (42°),low,9.4 (44°),14.2 (42°),14.1 (44°),11.6 (44°),-,13.9 (44°),13.9 (36°)
+AUKR,Ankara Univ. Kreiken (T80/T40) / amateur_class,broad,TR,11.0 (50°),9.2 (50°),11.1 (35°),low,6.5 (50°),11.2 (35°),11.2 (50°),8.7 (50°),-,11.0 (50°),11.0 (41°)
+ULUP,COMU Ulupinar (T122/IST60) / amateur_class,broad,TR,11.0 (55°),9.2 (55°),11.1 (31°),twilight/day,6.5 (55°),11.1 (31°),11.2 (55°),8.7 (55°),-,11.0 (55°),11.0 (44°)
+EGE,Ege Univ. Observatory (approx) / amateur_class,broad,TR,11.0 (55°),9.2 (55°),11.1 (31°),10.9 (24°),6.5 (55°),11.1 (31°),11.2 (55°),8.7 (55°),-,11.0 (55°),11.0 (45°)
+IST,Istanbul amateur (ISTEK Belde area) / amateur_class,broad,TR,10.9 (53°),9.2 (53°),11.0 (32°),10.9 (22°),6.4 (53°),11.1 (32°),11.1 (53°),8.7 (53°),-,10.9 (53°),10.9 (42°)
+ERC,Erciyes Univ. UZAYBIMER (approx) / amateur_class,broad,TR,11.0 (48°),9.2 (48°),11.1 (38°),low,6.5 (48°),11.2 (38°),11.2 (48°),8.7 (48°),-,11.0 (48°),11.0 (40°)
+KRY,Kryoneri 1.2 m (NELIOTA) / lunar_impact_system,Rc,GR,11.8 (58°),10.0 (58°),11.9 (28°),twilight/day,7.3 (58°),11.9 (28°),12.0 (58°),9.5 (58°),-,11.8 (58°),11.8 (48°)
+SEV,MIDAS Sevilla / La Hita / midas_video,broad,ES,twilight/day,twilight/day,low,twilight/day,twilight/day,low,twilight/day,twilight/day,-,twilight/day,twilight/day
+CAHA,Calar Alto / fast_camera_possible,Rc,ES,twilight/day,twilight/day,low,twilight/day,twilight/day,low,twilight/day,twilight/day,-,twilight/day,twilight/day
+ORM,"Roque de los Muchachos (GTC/HiPERCAM, LT) / fast_camera_large",Rc,ES,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,twilight/day
+TEI,"Teide (TTT, TCS, IAC80) / fast_camera_possible",Rc,ES,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,twilight/day
+OUK,Oukaimeden (TRAPPIST-N) / amateur_class,broad,MA,twilight/day,twilight/day,low,twilight/day,twilight/day,low,twilight/day,twilight/day,-,twilight/day,twilight/day
+KOT,Kottamia 1.88 m / fast_camera_possible,Rc,EG,12.3 (51°),10.6 (51°),12.5 (36°),12.4 (24°),7.8 (51°),12.6 (36°),12.5 (51°),10.0 (51°),-,12.3 (51°),12.4 (48°)
+SAAO,"Sutherland (SAAO 1.0 m SHOC, 1.9 m, SALT) / fast_camera_large",Rc,ZA,13.7 (23°),11.9 (23°),low,13.8 (37°),9.1 (23°),low,13.9 (23°),11.3 (23°),-,13.7 (23°),twilight/day
+WISE,Wise Observatory (Negev) / amateur_class,broad,IL,11.0 (49°),9.2 (49°),11.1 (39°),10.9 (22°),6.5 (49°),11.2 (39°),11.2 (49°),8.7 (49°),-,11.0 (49°),11.0 (45°)
+SAO,SAO RAS Zelenchukskaya 6 m / fast_camera_large,Rc,RU,13.7 (43°),11.9 (43°),13.9 (41°),low,9.2 (43°),14.0 (41°),13.9 (43°),11.4 (43°),-,13.7 (43°),13.8 (34°)
+BYU,Byurakan 2.6 m / fast_camera_possible,Rc,AM,12.3 (41°),10.6 (41°),12.5 (44°),low,7.8 (41°),12.6 (44°),12.5 (41°),10.0 (41°),-,12.3 (41°),12.3 (34°)
+MAID,Maidanak 1.5 m / fast_camera_possible,Rc,UZ,12.3 (24°),10.6 (24°),twilight/day,set,7.8 (24°),twilight/day,12.5 (24°),10.0 (24°),-,12.3 (24°),low
+HAN,Hanle (HCT 2 m) / fast_camera_possible,Rc,IN,low,low,twilight/day,set,low,twilight/day,low,low,-,low,low
+TNO,Doi Inthanon (TNT 2.4 m ULTRASPEC) / fast_camera_large,Rc,TH,set,set,twilight/day,set,set,twilight/day,set,set,-,set,set
+LIJ,Lijiang 2.4 m / fast_camera_possible,Rc,CN,set,set,twilight/day,set,set,twilight/day,set,set,-,set,set
+OKA,Okayama (Seimei 3.8 m TriCCS) / fast_camera_large,Rc,JP,set,set,twilight/day,set,set,twilight/day,set,set,-,set,set
+KISO,Kiso (Tomo-e Gozen) / fast_camera_possible,Rc,JP,set,set,twilight/day,set,set,twilight/day,set,set,-,set,set
+SSO,"Siding Spring (AAT, ANU 2.3 m, LCO 2 m) / fast_camera_large",Rc,AU,set,set,twilight/day,set,set,twilight/day,set,set,-,set,set
+MTJ,Mt John (NZ) / fast_camera_possible,Rc,NZ,set,set,set,set,set,set,set,set,-,set,set
+MKO,"Maunakea (CFHT WIRCam, IRTF MORIS, Gemini N) / nir_large",Ks,US,set,set,set,set,set,set,set,set,-,set,set
+MKO,"Maunakea (CFHT WIRCam, IRTF MORIS, Gemini N) / fast_camera_large",Rc,US,set,set,set,set,set,set,set,set,-,set,set
+HAL,Haleakala (LCO FTN) / fast_camera_possible,Rc,US,set,set,set,set,set,set,set,set,-,set,set
+APO,Apache Point 3.5 m / fast_camera_large,Rc,US,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,set
+PAL,Palomar 5.1 m (CHIMERA) / fast_camera_large,Rc,US,twilight/day,twilight/day,set,set,twilight/day,set,twilight/day,twilight/day,-,twilight/day,set
+SPM,San Pedro Martir 2.1 m / fast_camera_possible,Rc,MX,twilight/day,twilight/day,set,set,twilight/day,set,twilight/day,twilight/day,-,twilight/day,set
+CTIO,Cerro Tololo / Pachon / La Silla cluster / fast_camera_large,Rc,CL,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,twilight/day
+PAR,Paranal (VLT HAWK-I) / nir_large,Ks,CL,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,twilight/day
+OPD,Pico dos Dias 1.6 m (Brazil) / fast_camera_possible,Rc,BR,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,twilight/day
+CAS,CASLEO 2.15 m (Argentina) / fast_camera_possible,Rc,AR,twilight/day,twilight/day,set,twilight/day,twilight/day,set,twilight/day,twilight/day,-,twilight/day,twilight/day

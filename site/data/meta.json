@@ -1,0 +1,16 @@
+{
+  "_help": "Site metadata. 'repo' is detected automatically on github.io; set it only for a custom domain.",
+  "author": "Arif Solmaz",
+  "affiliation": {
+    "tr": "İstanbul Sağlık ve Teknoloji Üniversitesi (İSTÜN)",
+    "en": "Istanbul Health and Technology University (İSTÜN)"
+  },
+  "contact": "",
+  "repo": "",
+  "version": "1.0.0",
+  "evidence_cutoff": "2026-10-05",
+  "manuscript": {
+    "tr": "Bilimsel makale hazırlanıyor; yayımlandığında burada bağlantısı verilecek.",
+    "en": "The scientific paper is in preparation; a link will appear here once it is published."
+  }
+}

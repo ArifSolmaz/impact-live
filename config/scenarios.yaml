@@ -1,0 +1,150 @@
+# Representative HYPOTHETICAL impact scenarios.  Coordinates are test points chosen by the screening; they are
+# NOT AYAP-1 targets and no official target has been published (evidence cutoff 2026-10-05).  Latitude north-
+# positive, longitude east-positive (ME frame).  Each scenario states its linked assumptions.
+site_templates:
+  TUG:  [tug_t100_qhy, rtt150_fast]
+  DAG:  [dag_dirac, dag_visitor_fast]
+  AUKR: [amateur_class]
+  ULUP: [amateur_class]
+  EGE:  [amateur_class]
+  IST:  [amateur_class]
+  ERC:  [amateur_class]
+  KRY:  [lunar_impact_system]
+  SEV:  [midas_video]
+  CAHA: [fast_camera_possible]
+  ORM:  [fast_camera_large]
+  TEI:  [fast_camera_possible]
+  OUK:  [amateur_class]
+  KOT:  [fast_camera_possible]
+  SAAO: [fast_camera_large]
+  WISE: [amateur_class]
+  SAO:  [fast_camera_large]
+  BYU:  [fast_camera_possible]
+  MAID: [fast_camera_possible]
+  HAN:  [fast_camera_possible]
+  TNO:  [fast_camera_large]
+  LIJ:  [fast_camera_possible]
+  OKA:  [fast_camera_large]
+  KISO: [fast_camera_possible]
+  SSO:  [fast_camera_large]
+  MTJ:  [fast_camera_possible]
+  MKO:  [nir_large, fast_camera_large]
+  HAL:  [fast_camera_possible]
+  APO:  [fast_camera_large]
+  PAL:  [fast_camera_large]
+  SPM:  [fast_camera_possible]
+  CTIO: [fast_camera_large]
+  PAR:  [nir_large]
+  OPD:  [fast_camera_possible]
+  CAS:  [fast_camera_possible]
+strategies:
+  A_turkiye_priority:
+    description: "Turkish facilities only (TUG T100+QHY, RTT150 fast, DAG, university/amateur stations); TUG T100 streamed live"
+    include_groups: [turkiye]
+    include_templates: all
+    streaming: [TUG:tug_t100_qhy]
+  B_global_science:
+    description: "all professional stations worldwide with fast or NIR cameras plus NELIOTA and MIDAS; no amateur stations; TUG T100 and NELIOTA streamed"
+    include_groups: all
+    include_templates: [lunar_impact_system, midas_video, fast_camera_large, nir_large, fast_camera_possible, tug_t100_qhy, rtt150_fast, dag_dirac, dag_visitor_fast]
+    streaming: [TUG:tug_t100_qhy, KRY:lunar_impact_system]
+  C_public_participation:
+    description: "Turkish stations, NELIOTA, MIDAS and amateur-class stations at every site (public venues), with streaming from TUG, NELIOTA and three amateur venues"
+    include_groups: all
+    include_templates: [lunar_impact_system, midas_video, amateur_class, tug_t100_qhy, rtt150_fast, dag_visitor_fast]
+    add_amateur_everywhere: true
+    streaming: [TUG:tug_t100_qhy, KRY:lunar_impact_system, IST:amateur_class, AUKR:amateur_class, SEV:midas_video]
+physics:
+  V_BAL: {label: "ballistic de-orbit, 1.68 km/s, 3 deg, 1.6-2.4 t", v_km_s: 1.68, angle_deg: 3, mass_kg: [1600, 2400], sigma_along_km: 12, sigma_cross_km: 2, sigma_t_min: 2, status: "mission-consistent (no braking); mass from launch-mass/propellant reasoning, unpublished"}
+  V_MOD: {label: "moderate retro burn, 1.35 km/s, 15 deg", v_km_s: 1.35, angle_deg: 15, mass_kg: [1500, 2300], sigma_along_km: 6, sigma_cross_km: 2, sigma_t_min: 3, status: "conditional on undisclosed propellant reserve"}
+  V_STR: {label: "strong guided deceleration, 0.8 km/s, 40 deg", v_km_s: 0.8, angle_deg: 40, mass_kg: [1400, 2200], sigma_along_km: 4, sigma_cross_km: 3, sigma_t_min: 5, status: "conditional on undisclosed thrust/propellant"}
+  V_NSL: {label: "near-soft-landing residual, 0.3 km/s, 70 deg", v_km_s: 0.3, angle_deg: 70, mass_kg: [1400, 2000], sigma_along_km: 3, sigma_cross_km: 3, sigma_t_min: 10, status: "illustrative lower bound"}
+scenarios:
+  - id: S1
+    name: "Favourable: dark near-side mare, Türkiye spring evening"
+    class: favourable
+    lat: 8.0
+    lon: -22.0
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_BAL
+    rationale: "Waxing Moon (illum 0.39) 52 deg high at TUG at 21:00 Istanbul; site ~29 deg west of the sunrise terminator (Mare Insularum / Copernicus region, hypothetical), low emission angle, 14 configured sites in dark sky"
+  - id: S2
+    name: "Favourable for plume: 3 deg beyond the sunrise terminator"
+    class: favourable
+    lat: -5.0
+    lon: 3.5
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_BAL
+    rationale: "Same evening; surface in darkness but ejecta above ~2.9 km sunlit (Sinus Medii region, hypothetical); scattered light from the nearby sunlit terrain penalises the flash"
+  - id: S3
+    name: "Intermediate: summer morning, waning Moon, eastern near side"
+    class: intermediate
+    lat: -15.0
+    lon: 45.0
+    epoch_utc: "2028-07-15 00:00:00"
+    physics: V_BAL
+    rationale: "Last-quarter Moon at 03:00 Istanbul (public-unfriendly hour), 12 sites available, Mare Fecunditatis region (hypothetical)"
+  - id: S4
+    name: "Intermediate: summer evening, low Moon, few sites"
+    class: intermediate
+    lat: -10.0
+    lon: -25.0
+    epoch_utc: "2028-06-28 19:00:00"
+    physics: V_BAL
+    rationale: "Short summer night; Moon only ~23 deg high at TUG, 6 sites available"
+  - id: S5
+    name: "Unfavourable: sunlit terrain"
+    class: unfavourable
+    lat: 8.0
+    lon: 40.0
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_BAL
+    rationale: "Same evening as S1 but the site is in daylight (33 deg inside the sunlit side): flash contrast against a 3-4 mag per square arcsecond surface; plume against bright ground (LCROSS-like)"
+  - id: S6
+    name: "Unfavourable/limb: dark eastern limb (morning)"
+    class: unfavourable
+    lat: 0.0
+    lon: 80.0
+    epoch_utc: "2028-07-15 00:00:00"
+    physics: V_BAL
+    rationale: "Emission ~85 deg; terrain occultation likely; uncertainty ellipse foreshortened"
+  - id: S7
+    name: "Unfavourable/limb: dark western limb (evening)"
+    class: unfavourable
+    lat: 0.0
+    lon: -86.0
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_BAL
+    rationale: "Favourable libration (sub-Earth lon -6 deg) brings the point to emission ~80 deg; still terrain-limited"
+  - id: S8
+    name: "Polar: south polar highlands near the limb"
+    class: intermediate
+    lat: -86.0
+    lon: -20.0
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_BAL
+    rationale: "Reachable on nearly every orbit (timing flexibility), surface in shadow, plume sunlit above ~2.8 km, but emission ~83 deg and rough polar terrain"
+  - id: S9
+    name: "Far-side control"
+    class: unfavourable
+    lat: 0.0
+    lon: 150.0
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_BAL
+    rationale: "Not visible from Earth at any time; only onboard telemetry (via relay, none available) and orbiter follow-up"
+  - id: S10
+    name: "Weakened signal: S1 geometry with strong guided deceleration"
+    class: intermediate
+    lat: 8.0
+    lon: -22.0
+    epoch_utc: "2028-04-01 18:00:00"
+    physics: V_STR
+    rationale: "Kinetic energy reduced ~4.9x relative to ballistic; steeper impact; larger timing uncertainty"
+  - id: S11
+    name: "Favourable alternative: winter evening (12 sites, January weather)"
+    class: favourable
+    lat: 8.0
+    lon: -25.0
+    epoch_utc: "2028-01-03 17:00:00"
+    physics: V_BAL
+    rationale: "Illum 0.37, Moon 45 deg high at TUG at 20:00 Istanbul, 12 configured sites in dark sky; January clear-sky probability in Türkiye ~0.3-0.4"

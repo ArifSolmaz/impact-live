@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# large regenerable screening array (make dirs screen)
+outputs/screening/classes.npz
+# manuscript (released later)
+paper/
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+research/engagement.md

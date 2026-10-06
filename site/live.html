@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canlı · AYAP-1 Ay Çarpması</title>
+<meta name="description" content="AYAP-1 Ay çarpması günü takip sayfası: geri sayım, bulunduğunuz yerden görünürlük, izleme etkinlikleri ve canlı yayınlar.">
+<meta property="og:title" content="AYAP-1 Ay Çarpması — Canlı takip">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="theme-color" content="#06080d">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="live" data-title-key="nav.live">
+<a class="skip" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+  <section class="section tight">
+    <div class="container">
+      <div class="kicker" data-i18n="live.kicker"></div>
+      <div class="row"><h1 data-i18n="live.title" style="margin:0"></h1><span id="status-badge"></span></div>
+      <p class="lead" style="margin-top:12px" data-i18n="live.lead"></p>
+      <p class="small muted" id="updated"></p>
+      <div class="banner-demo hidden" id="demo-banner" data-i18n="live.demo_banner"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container grid two" style="align-items:start">
+      <div>
+        <div class="card" id="planning">
+          <h2 data-i18n="live.planning_title"></h2>
+          <h3 data-i18n="live.known_title"></h3>
+          <ul class="clean">
+            <li data-i18n="live.known_1"></li><li data-i18n="live.known_2"></li><li data-i18n="live.known_3"></li><li data-i18n="live.known_4"></li>
+          </ul>
+          <button class="btn" id="demo-btn" type="button" data-i18n="live.demo_btn"></button>
+        </div>
+        <div class="card hidden" id="countdown-card">
+          <h2 data-i18n="live.countdown_title"></h2>
+          <div class="countdown" id="countdown" aria-live="off"></div>
+          <dl class="kv" id="times"></dl>
+          <p class="small muted" id="uncertainty" style="margin:10px 0 0"></p>
+          <button class="btn small hidden" id="demo-exit" type="button" style="margin-top:12px" data-i18n="live.demo_exit"></button>
+        </div>
+        <div class="card hidden" id="results-card"><h2 data-i18n="live.results_title"></h2><div id="results"></div></div>
+      </div>
+      <div class="viz">
+        <div class="viz-head"><div><h3 data-i18n="live.target_title"></h3><div class="sub" id="target-sub"></div></div><span class="evid" data-i18n="common.geometry"></span></div>
+        <div class="moon-wrap"><canvas id="moon" aria-label="Moon at impact time"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <h2 data-i18n="live.where_title"></h2>
+      <div class="card" id="loc"></div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container grid two" style="align-items:start">
+      <div class="card"><h3 data-i18n="live.streams_title"></h3><div id="streams"></div></div>
+      <div class="card"><h3 data-i18n="live.watch_title"></h3><div id="watch"></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid two" style="align-items:start">
+      <div><h2 data-i18n="live.timeline_title"></h2><ol class="timeline" id="timeline"></ol></div>
+      <div><h2 data-i18n="live.updates_title"></h2><ul class="updates" id="updates"></ul></div>
+    </div>
+  </section>
+</main>
+<footer id="site-footer"></footer>
+<script src="assets/vendor/astronomy.browser.min.js"></script>
+<script type="module" src="assets/js/pages/live.js"></script>
+</body>
+</html>
