@@ -11,4 +11,7 @@ paper/
 .DS_Store
 .idea/
 .vscode/
+# notes kept private until the paper is published
 research/engagement.md
+# reproduction check scratch folder (make check)
+.check/

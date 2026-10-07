@@ -25,7 +25,7 @@ for ax, (name, r) in zip(axs, results.items()):
     ax.axvline(r['analytic_8sigma_limit'], color=P.CAT[1], ls='--', lw=1.2, label='analytic 8-sigma limit')
     ax.set_title(name, fontsize=7.5, loc='left'); ax.set_xlabel(f"injected peak magnitude ({r['band']})"); ax.set_ylim(-0.02, 1.08); ax.set_xlim(m.min(), m.max())
     ax.text(0.03, 0.30, f"single-camera false alarms\nper frame (5-sigma, whole field):\n{r['false_alarm_per_frame']:.2f}" + ("\n(dual-camera coincidence\nrequired for recovery)" if r.get('dual') else ''), transform=ax.transAxes, fontsize=6.2, ha='left', va='top')
-axs[0].set_ylabel('recovery completeness'); axs[0].legend(fontsize=6.5, loc='upper right')
+axs[0].set_ylabel('recovery completeness'); axs[0].legend(fontsize=6.5, loc='center left')
 fig.suptitle('Injection-recovery on synthetic lunar video (SIMULATION; illuminated fraction 0.35, flash durations 0.1-1 s, 5-sigma matched filter; shaded: binomial 1-sigma)', fontsize=9)
 P.evidence_tag(fig, 'SIMULATION - synthetic frames with injected flashes; not observed footage')
 fig.tight_layout(); print(P.savefig(fig, 'fig_injection_recovery'))

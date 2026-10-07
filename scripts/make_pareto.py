@@ -54,14 +54,17 @@ for ax, (xk, yk, xl, yl) in zip(axs, [('cost_units', 'p_confirmed', 'cost (teles
     if xk == 'cost_units':
         pts[:, 0] = -pts[:, 0]
     pf = pareto(list(map(tuple, pts)))
+    labels = {}  # Pareto points at the same position share one label
     for (_, r), ok in zip(w.iterrows(), pf):
         ax.scatter(r[xk], r[yk], color=col[r.strategy], marker=mk[r.cls], s=55 if ok else 25, edgecolor='k' if ok else 'none', linewidth=0.8, alpha=0.95 if ok else 0.6)
         if ok:
-            ax.text(r[xk], r[yk] + 0.012, f"{r.scenario}-{r.strategy[0]}", fontsize=6)
+            labels.setdefault((round(float(r[xk]), 6), round(float(r[yk]), 6)), {}).setdefault(r.scenario, []).append(r.strategy[0])
+    for (x, y), by_s in labels.items():
+        ax.text(x, y + 0.012, ', '.join(f"{s}-{'/'.join(v)}" for s, v in by_s.items()), fontsize=6)
     ax.set_xlabel(xl, fontsize=8); ax.set_ylabel(yl, fontsize=8)
 from matplotlib.lines import Line2D
 h = [Line2D([], [], color=col[k], marker='o', ls='', label=k) for k in col] + [Line2D([], [], color='k', marker=mk[k], ls='', label=k, mfc='none') for k in mk] + [Line2D([], [], color='k', marker='o', ls='', mfc='w', label='Pareto-efficient (large, outlined)')]
-axs[2].legend(handles=h, fontsize=6.5, loc='lower right')
+axs[2].legend(handles=h, fontsize=6.5, loc='upper left')
 fig.suptitle('Strategy A/B/C objectives across hypothetical scenarios (wide luminous-efficiency prior; probabilities conditional on reaching the terminal state)', fontsize=9)
 P.evidence_tag(fig, 'MODEL (Monte Carlo) on HYPOTHETICAL SCENARIOS')
 fig.tight_layout(); P.savefig(fig, 'fig_pareto')

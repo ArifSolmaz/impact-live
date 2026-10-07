@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use this code, data or website, please cite it as below."
 title: "AYAP-1 lunar impact: observability study and interactive site (impact-live)"
-version: 1.0.0
-date-released: 2026-10-06
+version: 1.0.1
+date-released: 2026-10-07
 authors:
   - family-names: Solmaz
     given-names: Arif

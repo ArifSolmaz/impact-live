@@ -182,10 +182,13 @@ for scn in cfg['scenarios']:
         g = geom[s['id']]; ax1.plot(s['lon'], s['lat'], marker='o' if g['available'] else 'x', ms=4, color='#eb6834' if g['available'] else '#9a9994', mec='k', mew=0.3)
     ax1.set_xlim(-180, 180); ax1.set_ylim(-90, 90); ax1.set_xlabel('longitude'); ax1.set_ylabel('latitude')
     from matplotlib.patches import Patch
+    from matplotlib.lines import Line2D
     ax1.legend(handles=[Patch(color='#f4f4f2', label='Moon below horizon (online only)'), Patch(color='#cde2fb', label='Moon up (daylight/twilight or point hidden)'),
-                        Patch(color='#5598e7', label='public practical: Moon>15 deg, Sun<-6 deg, point visible'), Patch(color='#0d366b', label='facility grade: Moon>20 deg, Sun<-12 deg')],
-               loc='upper center', bbox_to_anchor=(0.5, -0.12), fontsize=6.5, ncol=2)
-    ax1.set_title(f"{scn['id']}: Earth coverage at {scn['epoch_utc']} UTC ({card['epoch_istanbul']}) - dots: configured sites (orange = available)", loc='left')
+                        Patch(color='#5598e7', label='public practical: Moon>15 deg, Sun<-6 deg, point visible'), Patch(color='#0d366b', label='facility grade: Moon>20 deg, Sun<-12 deg'),
+                        Line2D([], [], ls='none', marker='o', ms=4, color='#eb6834', mec='k', mew=0.3, label='configured site, available'),
+                        Line2D([], [], ls='none', marker='x', ms=4, color='#9a9994', mec='k', mew=0.3, label='configured site, not available')],
+               loc='upper center', bbox_to_anchor=(0.5, -0.12), fontsize=6.5, ncol=3)
+    ax1.set_title(f"{scn['id']}: Earth coverage at {scn['epoch_utc'][:16]} UTC, {card['epoch_istanbul'].replace(' (UTC+3)', ' in Türkiye (UTC+3)')}", loc='left')
     # disk view with sunlit mask and point
     la, lo, _, _ = Gd.healpix_grid(64); em, inc = S.surface_classes(es.r_moon, es.r_sun, es.M, la, lo)
     vals = np.where(inc < 90, 1.0, 0.0)
@@ -193,7 +196,9 @@ for scn in cfg['scenarios']:
     la0, lo0 = np.radians(es.subearth_lat), np.radians(es.subearth_lon); lar, lor = np.radians(scn['lat']), np.radians(scn['lon'])
     if np.sin(la0) * np.sin(lar) + np.cos(la0) * np.cos(lar) * np.cos(lor - lo0) > 0:
         xg = np.cos(lar) * np.sin(lor - lo0); yg = np.cos(la0) * np.sin(lar) - np.sin(la0) * np.cos(lar) * np.cos(lor - lo0)
-        ax2.plot(xg, yg, marker='*', ms=14, color='#e34948', mec='k'); ax2.text(xg + 0.05, yg - 0.08, 'hypothetical\nimpact point', color='#e34948', fontsize=7)
+        ax2.plot(xg, yg, marker='*', ms=14, color='#e34948', mec='k')
+        # label on the inner side of the point so that it stays on the disk near the right limb
+        ax2.text(xg - 0.06 if xg > 0.4 else xg + 0.05, yg - 0.08, 'hypothetical\nimpact point', color='#e34948', fontsize=7, ha='right' if xg > 0.4 else 'left')
     else:
         ax2.text(0, 0, 'impact point on far side\n(not visible)', ha='center', color='#e34948', fontsize=8)
     P.evidence_tag(fig, 'HYPOTHETICAL SCENARIO - computed geometry (DE421); not an AYAP-1 prediction')

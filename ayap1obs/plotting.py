@@ -6,16 +6,26 @@ import os, numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
 from matplotlib.colors import LinearSegmentedColormap, ListedColormap
 import healpy as hp
 import shapefile
+
+# Figures use the Inter typeface shipped in data/fonts (SIL Open Font License), so that they look the same on every
+# computer instead of depending on the fonts and matplotlib settings installed locally. matplotlib's bundled
+# DejaVu Sans supplies any glyph Inter lacks.
+_FONT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'data', 'fonts')
+for _f in ('Inter-Regular.otf', 'Inter-Italic.otf'):
+    if os.path.exists(os.path.join(_FONT_DIR, _f)):
+        font_manager.fontManager.addfont(os.path.join(_FONT_DIR, _f))
 
 CAT = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#4a3aa7', '#e34948']
 SEQ_BLUE = LinearSegmentedColormap.from_list('seqblue', ['#f4f8fd', '#cde2fb', '#9ec5f4', '#6da7ec', '#3987e5', '#256abf', '#184f95', '#0d366b'])
 SEQ_ORANGE = LinearSegmentedColormap.from_list('seqorange', ['#fff5ef', '#fbd4c0', '#f5ab85', '#eb6834', '#b84a1f', '#7a2f12'])
 DIV = LinearSegmentedColormap.from_list('div', ['#0d366b', '#3987e5', '#f0efec', '#e34948', '#7a1b1a'])
 TEXT = '#0b0b0b'; TEXT2 = '#52514e'; GRID = '#dcdbd6'
-plt.rcParams.update({'font.size': 9, 'axes.edgecolor': '#9a9994', 'axes.labelcolor': TEXT, 'xtick.color': TEXT2, 'ytick.color': TEXT2,
+plt.rcdefaults()  # ignore any local matplotlibrc or style customisation
+plt.rcParams.update({'font.family': ['Inter', 'DejaVu Sans'], 'font.size': 9,'axes.edgecolor': '#9a9994', 'axes.labelcolor': TEXT, 'xtick.color': TEXT2, 'ytick.color': TEXT2,
                      'axes.titlesize': 10, 'figure.dpi': 150, 'savefig.dpi': 200, 'axes.grid': False, 'legend.frameon': False})
 
 FEATURES = {  # reference features (lat, lon E) for orientation only - not targets
@@ -41,10 +51,12 @@ def lunar_map(ax, values, nside, title='', cmap=SEQ_BLUE, vmin=None, vmax=None, 
         ax.axvline(x, color=TEXT2, lw=0.8, ls='--')
     if nearside_box:
         ax.text(-178, 84, 'far side', color=TEXT2, fontsize=7, va='top'); ax.text(100, 84, 'far side', color=TEXT2, fontsize=7, va='top')
-        ax.text(-40, 84, 'near side (centre 0,0)', color=TEXT2, fontsize=7, va='top')
+        ax.text(-40, 84, 'near side (centre 0,0)', color=TEXT2, fontsize=7, va='top', bbox=dict(facecolor='white', alpha=0.75, edgecolor='none', pad=1.5))
     if features:
         for name, (la, lo) in FEATURES.items():
-            ax.plot(lo, la, 'k.', ms=3); ax.text(lo + 2, la + 2, name, fontsize=6, color=TEXT)
+            ax.plot(lo, la, 'k.', ms=3)
+            # labels of features near the right edge go to the left of the point so they are not cut off
+            ax.text(lo - 2 if lo > 120 else lo + 2, la + 2, name, fontsize=6, color=TEXT, ha='right' if lo > 120 else 'left')
     ax.set_title(title, loc='left')
     cb = plt.colorbar(im, ax=ax, fraction=0.025, pad=0.02); cb.set_label(cbar_label)
     return im
@@ -117,12 +129,25 @@ def country_outline(ax, name='Turkey', color=TEXT, lw=0.8):
                 ax.plot(pts[a:b, 0], pts[a:b, 1], color=color, lw=lw)
 
 def evidence_tag(fig, tag):
-    fig.text(0.995, 0.005, tag, ha='right', va='bottom', fontsize=7, color=TEXT2, style='italic')
+    fig.text(0.995, 0.005, tag, ha='right', va='bottom', fontsize=7, color=TEXT2, style='italic', gid='evidence-tag')
+
+def _place_evidence_tags(fig):
+    """Move evidence tags just below the lowest element of the figure, right-aligned with it, so they never cover axis labels."""
+    tags = [t for t in fig.texts if t.get_gid() == 'evidence-tag']
+    if not tags:
+        return
+    for t in tags: t.set_visible(False)
+    fig.canvas.draw(); bb = fig.get_tightbbox(fig.canvas.get_renderer())  # inches
+    for t in tags:
+        t.set_visible(True); t.set_va('top')
+        t.set_position((bb.x1 / fig.get_figwidth(), (bb.y0 - 0.04) / fig.get_figheight()))
 
 def savefig(fig, name, outdir=None):
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     outdir = outdir or f'{here}/outputs/figures'
     os.makedirs(outdir, exist_ok=True)
-    fig.savefig(f'{outdir}/{name}.png', bbox_inches='tight'); fig.savefig(f'{outdir}/{name}.pdf', bbox_inches='tight')
+    _place_evidence_tags(fig)
+    # no creation date in the PDF, so repeated runs give byte-identical files
+    fig.savefig(f'{outdir}/{name}.png', bbox_inches='tight'); fig.savefig(f'{outdir}/{name}.pdf', bbox_inches='tight', metadata={'CreationDate': None})
     plt.close(fig)
     return f'{outdir}/{name}.png'

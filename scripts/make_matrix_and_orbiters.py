@@ -58,12 +58,16 @@ for k, (a, b) in enumerate(orb['lro']['near_noon_windows']):
     ax.axvspan(dt.datetime.strptime(a, '%Y-%m-%d'), dt.datetime.strptime(b, '%Y-%m-%d'), ymin=0.55, ymax=0.95, color=P.CAT[3], alpha=0.35, label='LRO near-noon window (albedo ratios; poor topography)' if k == 0 else None)
 for k, (a, b) in enumerate(orb['danuri']['low_sun_windows']):
     ax.axvspan(dt.datetime.strptime(a, '%Y-%m-%d'), dt.datetime.strptime(b, '%Y-%m-%d'), ymin=0.1, ymax=0.5, color=P.CAT[2], alpha=0.35, label='Danuri low-Sun window (derived; mission extension to 2027 only)' if k == 0 else None)
-for sid in order:
-    t = dt.datetime.strptime(cards[sid]['epoch_utc'], '%Y-%m-%d %H:%M:%S')
-    ax.axvline(t, color=P.CAT[7], lw=1); ax.text(t, 0.97, sid, rotation=90, fontsize=6, va='top', color=P.CAT[7])
-ax.axvline(dt.datetime(2027, 12, 31), color=P.TEXT2, lw=1.2, ls='--'); ax.text(dt.datetime(2028, 1, 5), 0.3, 'LRO fuel statement: "until 2027" (NASA, 2024); FY2027 budget risk; no approved end date found', fontsize=7, color=P.TEXT2)
+by_epoch = {}
+for sid in order:  # scenarios sharing an epoch get one combined label
+    by_epoch.setdefault(cards[sid]['epoch_utc'], []).append(sid)
+for k, (e, sids) in enumerate(by_epoch.items()):
+    t = dt.datetime.strptime(e, '%Y-%m-%d %H:%M:%S')
+    ax.axvline(t, color=P.CAT[7], lw=1, label='scenario epochs' if k == 0 else None)
+    ax.text(t, 0.97, ' ' + ', '.join(sorted(sids, key=lambda s: int(s[1:]))), rotation=90, fontsize=6, va='top', ha='left', color=P.CAT[7])
+ax.axvline(dt.datetime(2027, 12, 31), color=P.TEXT2, lw=1.2, ls='--', label='LRO fuel statement: "until 2027" (NASA, 2024); FY2027 budget risk; no approved end date found')
 ax.set_yticks([0.3, 0.75]); ax.set_yticklabels(['Danuri/KPLO', 'LRO']); ax.set_xlim(dt.datetime(2027, 3, 1), dt.datetime(2029, 3, 1)); ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2)); ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
-ax.legend(fontsize=7, loc='lower left', ncol=2); ax.set_title('Orbiter follow-up: illumination windows (derived from the 331-day LRO beta cycle; research/orbiters.md) and scenario epochs', loc='left', fontsize=9)
+ax.legend(fontsize=7, loc='upper center', bbox_to_anchor=(0.5, -0.16), ncol=2); ax.set_title('Orbiter follow-up: illumination windows (derived from the 331-day LRO beta cycle; research/orbiters.md) and scenario epochs', loc='left', fontsize=9)
 P.evidence_tag(fig, 'DERIVED from Horizons orbital elements and LROC-reported incidence angles; windows uncertain by +-3 weeks; orbiter availability in 2028 is NOT assured')
 fig.tight_layout(); P.savefig(fig, 'fig_orbiter_windows')
 # latency precedent figure

@@ -22,7 +22,7 @@ for ax, band in zip(axs, ['Rc', 'Ic', 'J', 'Ks']):
     im = ax.imshow(Z, origin='lower', extent=(np.log10(etas[0]), np.log10(etas[-1]), T0s[0], T0s[-1]), aspect='auto', cmap=P.SEQ_BLUE.reversed(), vmin=4, vmax=18)
     cs = ax.contour(np.log10(etas), T0s, Z, levels=[6, 8, 10, 12, 14, 16], colors='white', linewidths=0.8); ax.clabel(cs, fmt='%d', fontsize=7)
     ax.set_title(f'{band} peak magnitude', loc='left'); ax.set_xlabel('log10 eta_vis (0.40-0.90 um)')
-    ax.axvspan(np.log10(5e-4), np.log10(3e-3), color=P.CAT[1], alpha=0.15); ax.text(np.log10(6e-4), 1850, 'natural-flash\nrange (16-72 km/s)', fontsize=6, color=P.CAT[1])
+    ax.axvspan(np.log10(5e-4), np.log10(3e-3), color=P.CAT[1], alpha=0.15); ax.text(np.log10(np.sqrt(5e-4 * 3e-3)), 1850, 'natural-flash\nrange\n(16-72 km/s)', fontsize=6, color=P.CAT[1], ha='center')
 axs[0].set_ylabel('initial temperature T0 (K)')
 cb = fig.colorbar(im, ax=axs, fraction=0.02, pad=0.01); cb.set_label('peak Vega magnitude')
 fig.suptitle(f'Flash brightness sensitivity, ballistic scenario (E_k = {E_k:.2e} J, 2.0 t at 1.68 km/s), cooling blackbody, tau = 0.5 s, isotropic emission, d = 380 000 km', fontsize=9)
@@ -64,7 +64,7 @@ for k, (key, col) in enumerate([('V_BAL', P.CAT[0]), ('V_MOD', P.CAT[1]), ('V_ST
     axs[0].plot(v, I.ejecta_mass_above_speed(np.mean(ph['mass_kg']), ph['v_km_s'], v, angle_deg=ph['angle_deg']), color=col, lw=1.8, label=ph['label'])
     axs[0].plot(v, I.ejecta_mass_above_speed(np.mean(ph['mass_kg']), ph['v_km_s'], v, angle_deg=90.0), color=col, lw=1.0, ls='--')
 axs[0].plot([], [], color=P.TEXT2, lw=1.8, label='solid: vertical velocity component (nominal)'); axs[0].plot([], [], color=P.TEXT2, lw=1.0, ls='--', label='dashed: full impact speed (upper bound)')
-axs[0].set_xscale('log'); axs[0].set_yscale('log'); axs[0].set_xlabel('ejecta speed v (m/s)'); axs[0].set_ylabel('mass ejected faster than v (kg)'); axs[0].set_title('a) Ejecta mass-velocity (Housen & Holsapple 2011 scaling)', loc='left', fontsize=8); axs[0].legend(fontsize=5.5)
+axs[0].set_xscale('log'); axs[0].set_yscale('log'); axs[0].set_xlabel('ejecta speed v (m/s)'); axs[0].set_ylabel('mass ejected faster than v (kg)'); axs[0].set_title('a) Ejecta mass-velocity (Housen & Holsapple 2011 scaling)', loc='left', fontsize=8); axs[0].legend(fontsize=5.5, loc='lower left')
 ax2 = axs[0].twiny(); ax2.set_xscale('log'); ax2.set_xlim(axs[0].get_xlim()); hts = [0.1, 1, 10, 100]; ax2.set_xticks([float(I.speed_for_height(h * 1e3)) for h in hts]); ax2.set_xticklabels([f'{h} km' for h in hts]); ax2.set_xlabel('max height (45 deg launch)')
 th = np.linspace(0, 20, 200); axs[1].plot(th, I.G_MOON * 0 + 1737.4 * (1 / np.cos(np.radians(th)) - 1), color=P.CAT[0], lw=2)
 axs[1].set_xlabel('angular distance beyond the terminator (deg)'); axs[1].set_ylabel('height of the shadow edge (km)'); axs[1].set_title('b) Height a plume must reach to be sunlit (spherical Moon)', loc='left', fontsize=8); axs[1].set_ylim(0, 110)
@@ -83,10 +83,16 @@ ILLUM_PUB = 0.39
 fig, ax = plt.subplots(figsize=(7, 3.4))
 m = np.linspace(-2, 20, 400)
 for k, (aid, lab) in enumerate([('none', 'naked eye'), ('binoculars', '7x50 binoculars'), ('telescope20cm', '20-cm telescope eyepiece')]):
-    ax.axvline(D.naked_eye_threshold_mag(0.3, ILLUM_PUB, aid), color=P.CAT[k], lw=1.5, ls='--'); ax.text(D.naked_eye_threshold_mag(0.3, ILLUM_PUB, aid) + 0.1, 0.9 - 0.1 * k, lab, color=P.CAT[k], fontsize=7)
+    thr = D.naked_eye_threshold_mag(0.3, ILLUM_PUB, aid)
+    # vertical labels along each line, placed in axes-fraction height (they used to be in data units and floated far above
+    # the plot); the x axis is inverted, so 'thr + 0.15' is just left of the line and 'thr - 0.15' just right of it
+    left = aid == 'telescope20cm'
+    ax.axvline(thr, color=P.CAT[k], lw=1.5, ls='--')
+    ax.text(thr + 0.15 if left else thr - 0.15, 0.97, lab, color=P.CAT[k], fontsize=7, rotation=90, va='top', ha='right' if left else 'left', transform=ax.get_xaxis_transform())
 for k, (mode, lab) in enumerate([('standalone', 'phone video, standalone'), ('afocal', 'phone video through 20 cm')]):
     lim = D.limiting_magnitude(D.phone_instrument(mode), D.total_background_sb('broad', ILLUM_PUB, 10, -20), 8 / D.phone_processing_penalty(mode))
-    ax.axvline(lim, color=P.CAT[3 + k], lw=1.5, ls=':'); ax.text(lim + 0.1, 0.55 - 0.1 * k, lab, color=P.CAT[3 + k], fontsize=7)
+    ax.axvline(lim, color=P.CAT[3 + k], lw=1.5, ls=':')
+    ax.text(lim - 0.15, 0.97, lab, color=P.CAT[3 + k], fontsize=7, rotation=90, va='top', ha='left', transform=ax.get_xaxis_transform())
 # predicted peak V distribution (wide prior, ballistic)
 rng = np.random.default_rng(1); n = 20000
 log_eta = I.luminous_efficiency_prior(1.68, rng, n, 'slow-impact-wide'); T0 = rng.uniform(1800, 3500, n); tau = np.exp(rng.uniform(np.log(0.1), np.log(2), n))
@@ -101,7 +107,8 @@ peak = -2.5 * np.log10(10 ** log_eta * Ek) + fo(np.stack([T0, np.log(tau)], axis
 log_eta2 = I.luminous_efficiency_prior(1.68, rng, n, 'v3-scaled'); peak2 = -2.5 * np.log10(10 ** log_eta2 * Ek) + fo(np.stack([T0, np.log(tau)], axis=1))
 ax.hist(peak, bins=60, range=(-2, 20), density=True, color=P.CAT[0], alpha=0.5, label='predicted peak V, ballistic, wide eta prior (1e-6..3e-3)')
 ax.hist(peak2, bins=60, range=(-2, 20), density=True, color=P.CAT[1], alpha=0.4, label='v^3-scaled eta prior')
-ax.set_xlabel('peak V magnitude (brighter to the left)'); ax.set_ylabel('probability density'); ax.invert_xaxis(); ax.legend(fontsize=7, loc='upper left'); ax.set_title('Predicted flash brightness vs human and phone thresholds (0.3-s flash, 39 % illuminated Moon as in S1)', loc='left', fontsize=8)
+ax.set_ylim(0, ax.get_ylim()[1] * 1.4)  # headroom for the legend and the threshold labels
+ax.set_xlabel('peak V magnitude (brighter to the right)'); ax.set_ylabel('probability density'); ax.invert_xaxis(); ax.legend(fontsize=7, loc='upper left'); ax.set_title('Predicted flash brightness vs human and phone thresholds (0.3-s flash, 39 % illuminated Moon as in S1)', loc='left', fontsize=8)
 P.evidence_tag(fig, 'MODEL / HYPOTHETICAL SCENARIO')
 fig.tight_layout(); P.savefig(fig, 'fig_public_thresholds')
 json.dump(dict(peakV_wide=dict(p5=float(np.percentile(peak, 5)), p50=float(np.percentile(peak, 50)), p95=float(np.percentile(peak, 95)), p_brighter_than_eyepiece=float(np.mean(peak < D.naked_eye_threshold_mag(0.3, ILLUM_PUB, 'telescope20cm'))), p_brighter_than_binoculars=float(np.mean(peak < D.naked_eye_threshold_mag(0.3, ILLUM_PUB, 'binoculars'))), p_brighter_than_naked_eye=float(np.mean(peak < D.naked_eye_threshold_mag(0.3, ILLUM_PUB, 'none')))),

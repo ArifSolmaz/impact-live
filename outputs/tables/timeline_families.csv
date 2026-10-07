@@ -6,7 +6,7 @@ L1,2027-04-15,min,2027-05-30,2027-06-18,18,2028-12-19,date only; hour set by the
 L1,2027-04-15,nominal,2027-06-14,2027-07-15,3,2027-10-24,date only; hour set by the pass,2,2027-11-05 17:00 UTC,True
 L1,2027-04-15,nominal,2027-06-14,2027-07-15,6,2028-01-23,date only; hour set by the pass,3,2028-02-02 18:59 UTC,False
 L1,2027-04-15,nominal,2027-06-14,2027-07-15,12,2028-07-24,date only; hour set by the pass,0,none (summer: low evening crescent),False
-L1,2027-04-15,nominal,2027-06-14,2027-07-15,18,2029-01-22,date only; hour set by the pass,4,2029-01-22 18:59 UTC,False
+L1,2027-04-15,nominal,2027-06-14,2027-07-15,18,2029-01-22,date only; hour set by the pass,4,2029-01-21 18:59 UTC,False
 L1,2027-04-15,max,2027-07-04,2027-08-23,3,2027-12-12,date only; hour set by the pass,3,2027-12-05 15:59 UTC,True
 L1,2027-04-15,max,2027-07-04,2027-08-23,6,2028-03-12,date only; hour set by the pass,4,2028-03-03 20:00 UTC,False
 L1,2027-04-15,max,2027-07-04,2027-08-23,12,2028-09-11,date only; hour set by the pass,0,none (summer: low evening crescent),True
@@ -52,7 +52,7 @@ L5,2028-04-15,min,2028-05-30,2028-06-18,6,2028-12-20,date only; hour set by the 
 L5,2028-04-15,min,2028-05-30,2028-06-18,12,2029-06-21,date only; hour set by the pass,beyond computed domain,n/a (beyond domain),False
 L5,2028-04-15,min,2028-05-30,2028-06-18,18,2029-12-20,date only; hour set by the pass,beyond computed domain,n/a (beyond domain),False
 L5,2028-04-15,nominal,2028-06-14,2028-07-15,3,2028-10-24,date only; hour set by the pass,1,2028-10-24 17:00 UTC,True
-L5,2028-04-15,nominal,2028-06-14,2028-07-15,6,2029-01-23,date only; hour set by the pass,4,2029-01-22 18:59 UTC,False
+L5,2028-04-15,nominal,2028-06-14,2028-07-15,6,2029-01-23,date only; hour set by the pass,4,2029-01-21 18:59 UTC,False
 L5,2028-04-15,nominal,2028-06-14,2028-07-15,12,2029-07-25,date only; hour set by the pass,beyond computed domain,n/a (beyond domain),False
 L5,2028-04-15,nominal,2028-06-14,2028-07-15,18,2030-01-23,date only; hour set by the pass,beyond computed domain,n/a (beyond domain),False
 L5,2028-04-15,max,2028-07-04,2028-08-23,3,2028-12-12,date only; hour set by the pass,4,2028-12-23 18:59 UTC,False

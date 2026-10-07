@@ -24,7 +24,7 @@ for L in tl['launch_families']:
             lro = any(dt.datetime.strptime(a, '%Y-%m-%d') <= t_imp <= dt.datetime.strptime(b, '%Y-%m-%d') for a, b in orb['lro']['low_sun_windows'])
             beyond = t_imp > dt.datetime(2029, 2, 15)
             rows.append(dict(launch=L['id'], launch_date=L['date'], phase_case=key, loi_date=t_loi.date(), science_start=t_sci.date(), science_months=S, impact_date=t_imp.date(),
-                             impact_istanbul_note='date only; hour set by the pass', n_evening_windows_pm15d=('beyond computed domain' if beyond else len(w)), best_window=(w.sort_values('n_sites_available', ascending=False).iloc[0].best_hour_utc + ' UTC' if len(w) else ('n/a (beyond domain)' if beyond else 'none (summer: low evening crescent)')),
+                             impact_istanbul_note='date only; hour set by the pass', n_evening_windows_pm15d=('beyond computed domain' if beyond else len(w)), best_window=(w.sort_values(['n_sites_available', 'date_utc'], ascending=[False, True], kind='stable').iloc[0].best_hour_utc + ' UTC' if len(w) else ('n/a (beyond domain)' if beyond else 'none (summer: low evening crescent)')),
                              in_LRO_low_sun_window=lro))
 df = pd.DataFrame(rows); df.to_csv(f'{root}/outputs/tables/timeline_families.csv', index=False)
 # figure

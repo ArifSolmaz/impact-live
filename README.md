@@ -47,6 +47,10 @@ pip install -r requirements.txt
 make all                       # ~1 h on two cores; regenerates outputs/ and the site data
 make all NMC=400 NTRIAL=2      # quicker, lower-precision run (~30 min)
 make site                      # only refresh site/data from existing outputs
+
+# check a reproduction (runs in a clean copy, leaves this folder untouched)
+make check-quick               # reduced Monte Carlo (30–70 min); prints PASS or FAIL
+make check                     # full precision (1–2 h); see docs/REPRODUCING.md
 ```
 
 `outputs/screening/classes.npz` (67 MB) is not committed; `make dirs screen` regenerates it in a few minutes.
@@ -69,10 +73,10 @@ gh api -X POST "repos/{owner}/{repo}/pages" -f build_type=workflow
 | `ayap1obs/` | Python package: ephemeris and lunar orientation, topocentric geometry, surface screening, reachability, terrain, impact physics, detectability, weather, population, Monte Carlo, plotting |
 | `scripts/` | pipeline steps (see `Makefile`), `make_site_data.py` (site data), `make_site_moon_assets.py` (Moon texture and feature labels) |
 | `config/` | sites, scenarios, instruments, orbit families, orbiters, timeline |
-| `data/` | JPL DE421 arrays, Natural Earth coastlines, JPL Horizons validation tables |
+| `data/` | JPL DE421 arrays, Natural Earth coastlines, JPL Horizons validation tables, the typeface used in the figures |
 | `outputs/` | validation, screening and reachability maps, scenario cards (JSON), tables (CSV/JSON), figures (PNG/PDF), run logs |
 | `research/` | evidence reports with source logs (mission baseline, impact precedents, facilities, orbiters) |
-| `docs/` | public-event sequence, live-mode guide |
+| `docs/` | reproduction guide for reviewers, public-event sequence, live-mode guide |
 
 ## Method in brief
 
@@ -93,9 +97,19 @@ naked-eye and binocular witnessing practically impossible; a 7–15 m crater for
 
 ## Reproducibility
 
-Fixed seeds (Monte Carlo and injection–recovery 20261005), pinned package versions (`requirements.txt`), verbatim
-Horizons validation tables, and a recorded clean-room run (`outputs/validation/clean_room_run.md`): deterministic
-products were bit-identical and Monte Carlo products agreed within sampling error.
+`make check` re-runs the complete pipeline in a clean copy and compares the result with the archived outputs,
+printing PASS or FAIL against stated tolerances; see [docs/REPRODUCING.md](docs/REPRODUCING.md). Fixed seeds
+(Monte Carlo and injection-recovery 20261005), pinned package versions (`requirements.txt`), a typeface shipped with
+the code for the figures, and verbatim Horizons validation tables make the runs repeatable:
+
+* **Same computer:** every output repeats bit for bit, including the Monte Carlo.
+* **Different computer** (macOS on Apple silicon vs Linux on x86-64): deterministic products agree to
+  floating-point rounding and Monte Carlo probabilities within sampling error
+  ([`outputs/validation/cross_platform_run.md`](outputs/validation/cross_platform_run.md)).
+* **From scratch:** a clean-room run starting from an empty `outputs/` folder regenerated every product
+  ([`outputs/validation/clean_room_run.md`](outputs/validation/clean_room_run.md)).
+
+Changes between releases are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Credits and licences
 
@@ -104,6 +118,7 @@ products were bit-identical and Monte Carlo products agreed within sampling erro
   derived from NASA lunar imagery. Any equirectangular map with longitude −180…180 (0° at the centre) can replace it,
   e.g. the public-domain NASA SVS "CGI Moon Kit" colour map.
 * Lunar feature names and positions: IAU/USGS Gazetteer of Planetary Nomenclature via *pylunar* (BSD-3-Clause).
+* Figure typeface: [Inter](https://github.com/rsms/inter) 4.0 (SIL Open Font License, The Inter Project Authors), `data/fonts/`.
 * Sky calculations in the browser: [Astronomy Engine](https://github.com/cosinekitty/astronomy) (MIT, D. Cross).
 * World map: [Natural Earth](https://www.naturalearthdata.com/) (public domain). Cities: GeoNames via *geonamescache* (CC BY 4.0).
 * Ephemeris: JPL DE421 (Folkner et al. 2009) as packaged in the `de421` Python distribution; validation tables from JPL Horizons.

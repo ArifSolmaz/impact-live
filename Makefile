@@ -36,8 +36,13 @@ site:
 	$(PY) scripts/make_site_data.py
 serve:
 	$(PY) -m http.server -d site 8000
+# re-run everything in a clean copy (.check/run) and compare with the archived outputs; see docs/REPRODUCING.md
+check:
+	$(PY) scripts/check_reproduction.py
+check-quick:
+	$(PY) scripts/check_reproduction.py --quick
 pdf:
 	@if [ -f paper/main.tex ]; then cd paper && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex; else echo "Manuscript not included in this repository yet; skipping the PDF step."; fi
-.PHONY: all dirs validate screen converge refine reach stats calendar scenarios injection figures tables site serve pdf clean
+.PHONY: all dirs validate screen converge refine reach stats calendar scenarios injection figures tables site serve check check-quick pdf clean
 clean:
 	rm -rf outputs/screening outputs/reachability outputs/scenarios outputs/figures/*.png outputs/figures/*.pdf
