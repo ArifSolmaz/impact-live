@@ -1,6 +1,8 @@
-"""Grid and time-step convergence of the Stage-1 screening: regional means of the Earth-facing fraction and of the
-flash-favourable fraction at HEALPix nside 32 vs 64 (on a 6-hourly subsample of epochs), and hourly vs 6-hourly
-sampling at nside 32.  Writes outputs/tables/convergence.csv."""
+"""BROAD REGIONAL-FRACTION convergence of the Stage-1 screening only: regional means of the Earth-facing fraction and of
+the flash-favourable fraction at HEALPix nside 32 vs 64 (on a 6-hourly subsample of epochs), and hourly vs 6-hourly
+sampling at nside 32. Stable regional means do not show that narrow windows, individual overflights or opportunity
+probabilities have converged; those decision quantities are tested in check_reachability_convergence.py.
+Writes outputs/tables/convergence.csv."""
 import sys, os, numpy as np, pandas as pd, yaml
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from astropy.time import Time

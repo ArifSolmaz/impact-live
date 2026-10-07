@@ -1,7 +1,10 @@
 PY=python3
-NMC?=6000
-NTRIAL?=10
-all: dirs validate screen converge reach stats calendar refine scenarios injection figures tables site pdf
+# Monte Carlo sizes (release 2.0 archive: MC_OUTER=200 MC_INNER=150 NTRIAL=100 NSEQ=3000)
+MC_OUTER?=200
+MC_INNER?=150
+NTRIAL?=100
+NSEQ?=3000
+all: dirs validate screen converge reach stats reachconv calendar refine scenarios injection figures tables site pdf manifest
 dirs:
 	mkdir -p outputs/validation outputs/screening outputs/reachability outputs/scenarios outputs/tables outputs/figures outputs/logs
 validate:
@@ -16,12 +19,14 @@ reach:
 	$(PY) scripts/run_reachability.py
 stats:
 	$(PY) scripts/run_opportunity_statistics.py
+reachconv:
+	$(PY) scripts/check_reachability_convergence.py
 calendar:
 	$(PY) scripts/make_windows_calendar.py
 scenarios:
-	NMC=$(NMC) $(PY) scripts/run_scenarios.py
+	MC_OUTER=$(MC_OUTER) MC_INNER=$(MC_INNER) $(PY) scripts/run_scenarios.py
 injection:
-	NTRIAL=$(NTRIAL) $(PY) scripts/run_injection_recovery.py
+	NTRIAL=$(NTRIAL) NSEQ=$(NSEQ) $(PY) scripts/run_injection_recovery.py
 figures:
 	$(PY) scripts/make_surface_maps.py
 	$(PY) scripts/make_reachability_figure.py
@@ -34,6 +39,8 @@ tables:
 	$(PY) scripts/make_tables.py
 site:
 	$(PY) scripts/make_site_data.py
+manifest:
+	$(PY) scripts/make_release_manifest.py
 serve:
 	$(PY) -m http.server -d site 8000
 # re-run everything in a clean copy (.check/run) and compare with the archived outputs; see docs/REPRODUCING.md
@@ -43,6 +50,6 @@ check-quick:
 	$(PY) scripts/check_reproduction.py --quick
 pdf:
 	@if [ -f paper/main.tex ]; then cd paper && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex; else echo "Manuscript not included in this repository yet; skipping the PDF step."; fi
-.PHONY: all dirs validate screen converge refine reach stats calendar scenarios injection figures tables site serve check check-quick pdf clean
+.PHONY: all dirs validate screen converge refine reach stats reachconv calendar scenarios injection figures tables site manifest serve check check-quick pdf clean
 clean:
 	rm -rf outputs/screening outputs/reachability outputs/scenarios outputs/figures/*.png outputs/figures/*.pdf

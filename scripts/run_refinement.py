@@ -1,9 +1,10 @@
-"""Stage-2 refinement around each hypothetical scenario: 5-min epochs over +-3 h and HEALPix nside-128 neighbourhood
-(pixels within 1 deg of the site), with exact topocentric geometry for every configured site.  Reports the refined
-observing window (contiguous interval containing the scenario epoch during which the site stays Earth-facing for the
-available stations and at least one station remains facility-grade available), the number of stations over the
-window, the Turkish (TUG) window, and the spread of emission/incidence across the neighbourhood.
-Writes outputs/tables/refined_windows.csv."""
+"""Local refinement around each hypothetical scenario only: 5-min epochs over +-3 h with exact topocentric geometry for
+every configured site and the SHARED operational availability (screening.observer_availability: Moon/Sun limits and
+seasonal closures), and the spread of geocentric emission/incidence over the HEALPix nside-128 pixels within 1 deg of
+the point at the scenario epoch. Reports the observing window (contiguous interval containing the epoch with at least
+one station available and the point Earth-facing for it), the station counts, and the TUG window. This refines eleven
+selected points; it is not a convergence test of the full-domain opportunity statistics (see
+check_reachability_convergence.py). Writes outputs/tables/refined_windows.csv."""
 import sys, os, json, yaml, numpy as np, pandas as pd, healpy as hp
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from astropy.time import Time
@@ -20,11 +21,14 @@ for scn in cfg['scenarios']:
     _, _, moon, sun, M = S.epoch_arrays(times)
     lat0, lon0 = np.array([scn['lat']]), np.array([scn['lon']])
     avail = np.zeros((len(sites), len(times)), bool)
+    months = np.array([x.month for x in times.to_datetime()])
+    crit = yaml.safe_load(open(f'{root}/config/domain.yaml'))['criteria']['observer']
     for k, s in enumerate(sites):
         sky = S.observer_sky(s['lon'], s['lat'], s['alt'], times, moon, sun)
+        _, oper = S.observer_availability(sky['moon_alt'], sky['sun_alt'], months, s, crit)
         for i in range(len(times)):
             em, inc = S.surface_classes(moon[i], sun[i], M[i], lat0, lon0, sky['obs_gcrs'][i])
-            avail[k, i] = (em[0] < 90) and (sky['moon_alt'][i] >= 20) and (sky['sun_alt'][i] <= -12)
+            avail[k, i] = (em[0] < 90) and bool(oper[i])
     n = avail.sum(axis=0); i0 = int(np.where(dt_min == 0)[0][0])
     def window(mask):
         if not mask[i0]:
@@ -43,6 +47,6 @@ for scn in cfg['scenarios']:
     rows.append(dict(id=scn['id'], epoch_utc=scn['epoch_utc'], n_at_epoch=int(n[i0]), window_start_min=wa, window_end_min=wb,
                      window_length_min=(None if wa is None else wb - wa), n_min_in_window=(None if wa is None else int(n[(dt_min >= wa) & (dt_min <= wb)].min())),
                      n_max_pm3h=int(n.max()), tug_window_start_min=ta, tug_window_end_min=tb, n_pix_1deg=len(pix),
-                     emission_range_deg=f'{em.min():.1f}-{em.max():.1f}', incidence_range_deg=f'{inc.min():.1f}-{inc.max():.1f}'))
+                     emission_range_deg=f'{em.min():.1f}-{em.max():.1f}', incidence_range_deg=f'{inc.min():.1f}-{inc.max():.1f}', neighbourhood_geometry='geocentric, at the scenario epoch'))
 df = pd.DataFrame(rows); df.to_csv(f'{root}/outputs/tables/refined_windows.csv', index=False)
 print(df.to_string())

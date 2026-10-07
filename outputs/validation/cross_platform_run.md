@@ -68,7 +68,38 @@ Accelerate on Apple silicon), and equally valid factorisations turn the same ran
 statistically equivalent, samples. Library maths functions can also differ in the last bit. The Monte Carlo
 outputs are therefore compared statistically, and they agree within sampling error.
 
-## Status
+## Result (release 1.0.1)
 
-Release 1.0.1 removes the two platform dependencies above. `make check` on the independent platform with
-release 1.0.1 is expected to pass and should be recorded here when it has been run.
+`make check` was run on the independent platform (macOS, Apple silicon, Python 3.13.13, numpy 2.5.3) with release
+1.0.1 (git b6ce656) at the production sample sizes (NMC = 6000, NTRIAL = 10); the pipeline took 70 minutes.
+Verbatim report (`.check/report.md`):
+
+```
+[PASS] Deterministic tables: 12 of 12 equal to rounding (largest relative difference 3.2e-16)
+[PASS] Arrays (screening, reachability): 29 of 29 equal to rounding (largest relative difference 1.5e-14)
+[PASS] Scenario cards, deterministic values: 7129 of 7129 equal to rounding (largest relative difference 7.0e-10); 0 text differences
+[PASS] Monte Carlo probabilities (NMC 6000 vs 6000): 4774 values, 76 % identical; largest difference 0.026; largest 2.5 standard errors (limit 5); 0.00 % beyond 3 (limit 1 %)
+[info] Other Monte Carlo summaries in the scenario cards (medians, means, quantiles): 671 values, largest relative difference 0.0338
+[PASS] Ephemeris validation against JPL Horizons: report identical
+
+[info] Seeded flash-magnitude sample: 5 of 10 values identical, largest difference 5.33e-15
+[info] Injection-recovery curves: 172 of 172 values identical, largest difference 0
+[info] Numbers quoted in the manuscript: 677 of 776 identical, largest numeric difference 0.01
+[info] Website data files: 8 of 9 identical; largest numeric difference 0.011 (Monte Carlo values)
+[info] Figures: 0 of 25 pixel-identical; differing: fig_availability_timeseries.png, fig_ejecta_crater.png, fig_flash_sensitivity.png, fig_injection_recovery.png, fig_lightcurves_limits.png, fig_orbiter_latency.png ...
+
+[PASS] RESULT: the run reproduces the archived outputs
+```
+
+The tie in the launch-to-impact table is resolved: all 12 deterministic tables now agree. The comparison counts
+(12 tables, 29 arrays, 11 scenario cards, 4774 Monte Carlo probabilities) show that every compared product was
+present in both trees. Figures still differ at the pixel level between the two platforms (anti-aliasing of text and
+lines differs slightly between builds), so they are reported for information only.
+
+## Limitations of this check
+
+This record establishes computational reproducibility of release 1.0.1, not the correctness of its models. An
+independent scientific audit of the same commit (7 October 2026) found errors in the physical models and in some
+labels; they are corrected in a later release. The audit also noted that the 1.0.1 checker skipped a product when it
+was missing from either tree instead of failing (it did not affect this run, in which every product was present);
+the checker of the corrected release requires every product listed in a release manifest.

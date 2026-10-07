@@ -1,10 +1,14 @@
-# Orbit-plane scenario families (the real AYAP-1 orbit plane is unpublished).
-reference_epoch_utc: "2027-09-01 00:00:00"   # assumed start of the orbital phase (launch Q2 2027 + ~2-month transfer + commissioning)
-node_longitudes_deg: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330]
-inclination_deg: 90.0
+# Orbit-plane and phase families for the impact-opportunity analysis (the real AYAP-1 plane and phase are unpublished).
+reference_epoch_utc: "2027-09-01 00:00:00"   # epoch at which family node longitudes are defined (and the fixed-start statistic begins)
 altitude_km: 100.0
-node_drift_deg_day: [0.0]          # inertial drift of the orbit plane; sensitivity runs use +-0.5 deg/day
-cross_track_tolerance_deg: [0.6, 2.5]   # ~0 m/s and ~70 m/s plane-change budget (dv = 2 v sin(di/2), v = 1.633 km/s)
+time_step_min: 10                            # grid for overflight times (crossings are interpolated inside a step)
+phases: 8                                    # orbital phases u0 = k x 45 deg (marginalised with equal weight)
+cross_track_tolerance_deg: [0.6, 2.5]        # plane-change allowances: ~17 and ~71 m/s (dv = 2 v sin(delta/2), v = 1.633 km/s)
+family_sets:
+  main:       {inclination_deg: 90.0, node_start: 0, node_stop: 180, node_step: 5, drift: 0.0}      # unique planes for i = 90
+  incl88_j2:  {inclination_deg: 88.0, node_start: 0, node_stop: 360, node_step: 10, drift: j2}     # sensitivity: 88 deg with J2 nodal drift
+deorbit_dv_m_s: [25, 50]                     # in-plane retrograde burns used to place the burn before each overflight
+terminal_windows_days: [7, 14, 30, 60, 90]
 terminal_velocity_scenarios:
   - {id: V_BAL, label: "ballistic de-orbit (dv ~25-50 m/s)", v_km_s: 1.68, angle_deg: 3, mass_kg: 2000, status: "mission-consistent scenario (no braking)"}
   - {id: V_MOD, label: "moderate retro burn (dv ~400 m/s)", v_km_s: 1.35, angle_deg: 15, mass_kg: 1900, status: "conditional on undisclosed propellant reserve"}

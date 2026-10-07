@@ -1,135 +1,222 @@
-"""Dynamic reachability of impact sites from a 100-km polar circular lunar orbit (scenario families).
+"""Orbit-plane compatibility and trajectory-level impact opportunities from a ~100-km near-polar circular orbit.
 
-The AYAP-1 orbit plane orientation (node longitude at a reference epoch), nodal drift, the terminal-burn
-propellant budget and the operational constraints are NOT published.  This module therefore evaluates
-reachability as a *conditional* property under declared scenario families:
+The AYAP-1 orbit plane, orbital phase, terminal-burn plan and propellant budget are not published, so everything here
+is conditional on declared families of planes and phases.
 
-* node longitude at reference epoch: Omega0 in [0, 360) deg (uniform family, or sampled on a grid)
-* nodal drift relative to the inertial frame: dOmega/dt (deg/day), default 0 (small for polar orbits), with
-  the Moon's sidereal rotation (13.1763 deg/day) moving the ground track westward in the ME frame
-* inclination: 90 deg nominal (88-92 explored)
-* cross-track tolerance: max plane change the terminal manoeuvre can buy (deg), from the Delta-v budget via
-  dv = 2 v sin(di/2) with v = 1.633 km/s (100 km circular speed)
-* along-track freedom: the de-orbit burn can be timed anywhere in the orbit, so any latitude on the current
-  ground track is reachable; the arrival time at that latitude is then fixed by the orbital phase.
+Orbit model. A circular orbit of radius a = R + h whose plane is fixed in the ICRF (optionally drifting about the
+lunar spin axis at a stated rate). A family is defined by its inclination i and ascending-node longitude Omega in the
+Mean-Earth (ME) frame at the reference epoch; the ICRF plane is obtained with the full DE421 ICRF->ME rotation at that
+epoch, and the plane is carried to any other epoch with the same full rotation (release 1 used a constant
+13.176 deg/day rotation about the ME z axis, which drifts by 0.2-0.5 deg over the domain). The spacecraft's argument
+of latitude is u(t) = u0 + n (t - t_ref), with the phase u0 unknown and marginalised.
 
-Reachability of a (site, epoch) pair = the site lies within the cross-track tolerance of the ground track at
-that epoch.  Opportunities for a site are the epochs when this holds (roughly twice per sidereal month,
-ascending and descending passes, each lasting a few consecutive orbits).
+Two products:
+* Orbit-plane compatibility (an envelope): a surface point is compatible at time t if it lies within the cross-track
+  allowance delta of the instantaneous plane. delta = 0.6 deg needs a ~17 m/s plane change and 2.5 deg ~71 m/s
+  (dv = 2 v sin(delta/2), v = 1.633 km/s); 0.6 deg is therefore a plane-change allowance, not 'no plane change'.
+  This ignores where the spacecraft is and is not a reachability statement.
+* Impact opportunities: for each phase u0 the spacecraft passes over (or closest to) a given point once per orbit;
+  an opportunity is such an overflight with the cross-track angle at that moment within delta. The terminal burn is
+  then placed one deorbit flight time earlier (deorbit_trajectory), so every opportunity is a definite impact time.
+  Observing conditions are evaluated at those times.
+Limitations: two-body circular motion; no gravity-field evolution, third-body perturbations or orbit maintenance
+(100-km near-polar orbits decay within months without maintenance: Ramanan & Adimurthy 2005; Genova 2026, NTRS
+20260002233); no terrain along the 3-degree descent path (1 km of terrain shifts a 3-degree impact point ~19 km
+along track). Inclinations i and 180 - i with nodes 180 deg apart describe the same plane traversed in the opposite
+direction, so for i = 90 deg Omega in [0, 180) covers every plane.
 """
 from __future__ import annotations
 import numpy as np
 from dataclasses import dataclass
+from . import ephem as E
 
 MU_MOON = 4902.800066     # km^3/s^2
 R_MOON = 1737.4
-OMEGA_MOON_DEG_DAY = 13.17635815   # sidereal rotation rate (pck00011 W rate)
+
+def circular_speed(alt_km=100.0):
+    return float(np.sqrt(MU_MOON / (R_MOON + alt_km)))             # 1.633 km/s at 100 km (orbital, not ground speed)
+
+def ground_track_speed(alt_km=100.0):
+    return circular_speed(alt_km) * R_MOON / (R_MOON + alt_km)     # 1.545 km/s along the surface (before lunar rotation)
+
+def plane_change_dv(di_deg, v=None):
+    v = circular_speed() if v is None else v
+    return 2 * v * np.sin(np.radians(di_deg) / 2) * 1000.0           # m/s
+
+def period_s(alt_km=100.0):
+    a = R_MOON + alt_km
+    return float(2 * np.pi * np.sqrt(a ** 3 / MU_MOON))
+
+def j2_nodal_rate_deg_day(inclination_deg, alt_km=100.0, J2=2.0330e-4):
+    """Secular nodal rate from the lunar J2 (deg/day); ~ -0.04 deg/day at 88 deg, 0 at 90 deg."""
+    a = R_MOON + alt_km; n = np.sqrt(MU_MOON / a ** 3)
+    return float(np.degrees(-1.5 * n * J2 * (R_MOON / a) ** 2 * np.cos(np.radians(inclination_deg))) * 86400)
 
 @dataclass
-class OrbitScenario:
-    name: str
-    omega0_deg: float          # node longitude in the ME frame at t_ref (deg E)
-    t_ref_jd: float            # reference epoch (JD, UTC)
-    altitude_km: float = 100.0
+class Plane:
+    """An orbit plane fixed in the ICRF (plus optional drift about the lunar pole axis at t_ref)."""
+    node_deg: float           # ascending-node longitude in the ME frame at t_ref
+    t_ref_jd: float           # reference epoch (TDB JD)
     inclination_deg: float = 90.0
-    node_drift_deg_day: float = 0.0   # inertial nodal drift (deg/day), positive eastward
-    u0_deg: float = 0.0        # argument of latitude at t_ref (deg)
-    cross_track_tol_deg: float = 0.6  # half-width of reachable band around the track (deg)
-    @property
-    def period_s(self):
-        a = R_MOON + self.altitude_km
-        return 2 * np.pi * np.sqrt(a ** 3 / MU_MOON)
-    @property
-    def speed_km_s(self):
-        return np.sqrt(MU_MOON / (R_MOON + self.altitude_km))
-
-def plane_change_dv(di_deg, v=1.633):
-    return 2 * v * np.sin(np.radians(di_deg) / 2) * 1000.0   # m/s
-
-def node_longitude(sc: OrbitScenario, jd):
-    """Node longitude (deg E, ME frame) at epoch(s) jd."""
-    dt = np.asarray(jd) - sc.t_ref_jd
-    return (sc.omega0_deg - OMEGA_MOON_DEG_DAY * dt + sc.node_drift_deg_day * dt) % 360.0
-
-def ground_track(sc: OrbitScenario, jd):
-    """Sub-spacecraft latitude/longitude (deg) at epoch(s) jd."""
-    dt = (np.asarray(jd) - sc.t_ref_jd) * 86400.0
-    u = np.radians(sc.u0_deg) + 2 * np.pi * dt / sc.period_s
-    i = np.radians(sc.inclination_deg)
-    lat = np.degrees(np.arcsin(np.sin(i) * np.sin(u)))
-    dlon = np.degrees(np.arctan2(np.cos(i) * np.sin(u), np.cos(u)))
-    lon = (node_longitude(sc, jd) + dlon + 180.0) % 360.0 - 180.0
-    return lat, lon
-
-def cross_track_distance_deg(sc: OrbitScenario, jd, lat_deg, lon_deg):
-    """Angular distance (deg) of surface points from the orbit plane's ground track at epoch jd (scalar epoch),
-    i.e. the plane change needed to overfly them on this pass."""
-    lam = np.radians(node_longitude(sc, jd))
-    i = np.radians(sc.inclination_deg)
-    # orbit normal in ME frame for node longitude lam and inclination i
-    n = np.array([np.sin(i) * np.sin(lam), -np.sin(i) * np.cos(lam), np.cos(i)])
-    la, lo = np.radians(lat_deg), np.radians(lon_deg)
-    p = np.stack([np.cos(la) * np.cos(lo), np.cos(la) * np.sin(lo), np.sin(la)], axis=-1)
-    return np.degrees(np.abs(np.arcsin(np.clip(p @ n, -1, 1))))
-
-def reachable(sc: OrbitScenario, jd, lat_deg, lon_deg):
-    return cross_track_distance_deg(sc, jd, lat_deg, lon_deg) <= sc.cross_track_tol_deg
-
-def pass_times(sc: OrbitScenario, lat_deg, lon_deg, jd_start, jd_stop, step_min=10.0):
-    """Epochs (JD) in [jd_start, jd_stop] when the site is within the cross-track tolerance (grouped passes).
-    Returns list of (jd_centre, min_cross_track_deg, ascending_flag)."""
-    jds = np.arange(jd_start, jd_stop, step_min / 1440.0)
-    ct = cross_track_distance_deg(sc, jds[:, None], lat_deg, lon_deg).ravel() if False else np.array(
-        [cross_track_distance_deg(sc, j, lat_deg, lon_deg) for j in jds])
-    ok = ct <= sc.cross_track_tol_deg
-    out = []
-    if not ok.any():
+    altitude_km: float = 100.0
+    drift_deg_day: float = 0.0
+    def __post_init__(self):
+        i, O = np.radians(self.inclination_deg), np.radians(self.node_deg)
+        M = E.icrf_to_me(self.t_ref_jd)
+        n_me = np.array([np.sin(i) * np.sin(O), -np.sin(i) * np.cos(O), np.cos(i)])
+        e_me = np.array([np.cos(O), np.sin(O), 0.0])
+        self.n_icrf = M.T @ n_me; self.e_icrf = M.T @ e_me
+        self.f_icrf = np.cross(self.n_icrf, self.e_icrf)
+        self.k_icrf = M.T @ np.array([0, 0, 1.0])                   # lunar pole at t_ref (drift axis)
+        self.mean_motion = 2 * np.pi / period_s(self.altitude_km)   # rad/s
+    def vectors_icrf(self, jd):
+        """Plane normal, node and in-plane quadrature unit vectors in the ICRF at epochs jd (arrays (N,3))."""
+        jd = np.atleast_1d(jd)
+        if self.drift_deg_day == 0.0:
+            return [np.tile(v, (len(jd), 1)) for v in (self.n_icrf, self.e_icrf, self.f_icrf)]
+        ang = np.radians(self.drift_deg_day * (jd - self.t_ref_jd))
+        k = self.k_icrf; out = []
+        for v in (self.n_icrf, self.e_icrf, self.f_icrf):           # Rodrigues rotation about k
+            c, s = np.cos(ang)[:, None], np.sin(ang)[:, None]
+            out.append(v * c + np.cross(k, v)[None, :] * s + k[None, :] * (k @ v) * (1 - c))
         return out
-    idx = np.where(ok)[0]
-    groups = np.split(idx, np.where(np.diff(idx) > 1)[0] + 1)
-    for g in groups:
-        k = g[np.argmin(ct[g])]
-        lat_t, lon_t = ground_track(sc, jds[k])
-        # ascending if node longitude is close to site longitude (vs +180)
-        dl = (node_longitude(sc, jds[k]) - lon_deg + 180) % 360 - 180
-        out.append((float(jds[k]), float(ct[k]), bool(abs(dl) < 90)))
+
+def time_grid(jd_start, jd_stop, step_min):
+    """TDB JDs and batched Moon/Sun/ICRF->ME matrices on a regular grid (uses screening.epoch_arrays)."""
+    from astropy.time import Time
+    from . import screening as S
+    n = int(np.floor((jd_stop - jd_start) * 1440.0 / step_min)) + 1
+    t = Time(jd_start + np.arange(n) * step_min / 1440.0, format='jd', scale='utc')
+    _, jd_tdb, moon, sun, M = S.epoch_arrays(t)
+    return dict(jd_utc=t.utc.jd, jd_tdb=jd_tdb, moon=moon, sun=sun, M=M, step_min=step_min)
+
+def plane_in_me(plane: Plane, grid):
+    """n, e, f of the plane expressed in the ME frame at every grid epoch (N,3 each)."""
+    n_i, e_i, f_i = plane.vectors_icrf(grid['jd_tdb'])
+    M = grid['M']
+    return [np.einsum('nij,nj->ni', M, v) for v in (n_i, e_i, f_i)]
+
+def compatibility_fraction(plane: Plane, grid, pix_me, delta_deg, chunk=200):
+    """Fraction of grid epochs at which each pixel lies within delta of the plane (orbit-plane compatibility
+    envelope; not a reachability statement)."""
+    n_me, _, _ = plane_in_me(plane, grid); s = np.sin(np.radians(delta_deg))
+    cnt = np.zeros(len(pix_me))
+    for a in range(0, len(n_me), chunk):
+        cnt += (np.abs(n_me[a:a + chunk] @ pix_me.T) <= s).sum(axis=0)
+    return cnt / len(n_me)
+
+def overflights(plane: Plane, grid, pix_me, phases_rad, delta_max_deg, chunk=144, time_mask=None, pixel_mask=None):
+    """Overflight opportunities: for each phase u0, every time the spacecraft's argument of latitude equals the
+    in-plane angle of a pixel while the pixel is within delta_max of the plane. Returns a list (one per phase) of
+    dicts with arrays pixel, jd_utc (overflight time), cross_deg (signed cross-track angle at that time), gi (index
+    of the grid step that contains the overflight). Optional time_mask (per grid step) and pixel_mask restrict the
+    output to useful candidates (the overflight times themselves are unaffected)."""
+    n_me, e_me, f_me = plane_in_me(plane, grid)
+    jd_u = grid['jd_utc']; jd_t = grid['jd_tdb']; dtd = grid['step_min'] / 1440.0
+    s_lim = np.sin(np.radians(delta_max_deg + 0.3))
+    omega = plane.mean_motion * 86400.0                                # rad/day
+    step_ang = omega * dtd
+    out = [dict(pixel=[], jd_utc=[], cross_deg=[]) for _ in phases_rad]
+    for a in range(0, len(jd_u) - 1, chunk):
+        b = min(a + chunk, len(jd_u) - 1)
+        S = n_me[a:b] @ pix_me.T                                        # (T, P)
+        cand = np.abs(S) <= s_lim
+        if time_mask is not None:
+            cand &= (time_mask[a:b] | time_mask[a + 1:b + 1])[:, None]
+        if pixel_mask is not None:
+            cand &= pixel_mask[None, :]
+        ti, pi = np.nonzero(cand)
+        if len(ti) == 0:
+            continue
+        ti_g = ti + a
+        pe = np.einsum('ij,ij->i', pix_me[pi], e_me[ti_g]); pf = np.einsum('ij,ij->i', pix_me[pi], f_me[ti_g])
+        u_p = np.arctan2(pf, pe)
+        for k, u0 in enumerate(phases_rad):
+            u_sc = u0 + omega * (jd_t[ti_g] - plane.t_ref_jd)
+            du = (u_sc - u_p + np.pi) % (2 * np.pi) - np.pi              # wrapped to (-pi, pi]
+            hit = (du <= 0) & (du > -step_ang)
+            if not hit.any():
+                continue
+            frac = -du[hit] / step_ang                                  # position of the crossing inside the step
+            t_cross = jd_u[ti_g[hit]] + frac * dtd
+            n_int = n_me[ti_g[hit]] * (1 - frac)[:, None] + n_me[ti_g[hit] + 1] * frac[:, None]
+            n_int /= np.linalg.norm(n_int, axis=1, keepdims=True)
+            cr = np.degrees(np.arcsin(np.clip(np.einsum('ij,ij->i', pix_me[pi[hit]], n_int), -1, 1)))
+            keep = np.abs(cr) <= delta_max_deg
+            out[k]['pixel'].append(pi[hit][keep].astype(np.int32)); out[k]['jd_utc'].append(t_cross[keep]); out[k]['cross_deg'].append(cr[keep].astype(np.float32))
+            out[k].setdefault('gi', []).append((ti_g[hit][keep] + np.round(frac[keep]).astype(int)).astype(np.int32))
+    for d in out:
+        for key in ('pixel', 'jd_utc', 'cross_deg', 'gi'):
+            d[key] = np.concatenate(d[key]) if d.get(key) else np.zeros(0, dtype=np.int32 if key in ('pixel', 'gi') else float)
     return out
 
-def impact_time_on_pass(sc: OrbitScenario, jd_pass, lat_deg, lon_deg):
-    """Within the pass centred at jd_pass, the time at which the spacecraft reaches the site's latitude
-    (ascending or descending leg chosen to match the pass).  Returns JD."""
-    dl = (node_longitude(sc, jd_pass) - lon_deg + 180) % 360 - 180
-    i = np.radians(sc.inclination_deg)
-    u_site = np.arcsin(np.clip(np.sin(np.radians(lat_deg)) / np.sin(i), -1, 1))
-    if abs(dl) >= 90:
-        u_site = np.pi - u_site
-    dt0 = (jd_pass - sc.t_ref_jd) * 86400.0
-    u_now = np.radians(sc.u0_deg) + 2 * np.pi * dt0 / sc.period_s
-    du = (u_site - u_now) % (2 * np.pi)
-    if du > np.pi:
-        du -= 2 * np.pi
-    return jd_pass + du / (2 * np.pi) * sc.period_s / 86400.0
+def interp_rows(grid_jd, arr, jd):
+    """Linear interpolation of arr (N, ...) sampled at grid_jd to times jd."""
+    x = (jd - grid_jd[0]) / (grid_jd[1] - grid_jd[0])
+    i = np.clip(np.floor(x).astype(int), 0, len(grid_jd) - 2); f = (x - i)
+    f = f.reshape(f.shape + (1,) * (arr.ndim - 1))
+    return arr[i] * (1 - f) + arr[i + 1] * f
 
-def ballistic_impact_conditions(altitude_km=100.0, dv_retro_m_s=22.0):
-    """Impact speed and flight-path angle for a retrograde de-orbit burn from a circular orbit (two-body).
-    Returns (v_impact km/s, angle_from_horizontal deg, time_to_impact s)."""
+def geocentric_angles_at(grid, pix_me, pixel, jd_utc):
+    """Geocentric emission and solar incidence (deg) of pixels at arbitrary times (interpolated ephemeris)."""
+    moon = interp_rows(grid['jd_utc'], grid['moon'], jd_utc); sun = interp_rows(grid['jd_utc'], grid['sun'], jd_utc)
+    M = interp_rows(grid['jd_utc'], grid['M'], jd_utc)
+    p = pix_me[pixel]
+    n_icrf = np.einsum('nji,nj->ni', M, p)                            # M^T p
+    pos = moon + n_icrf * R_MOON
+    d = -pos; d /= np.linalg.norm(d, axis=1, keepdims=True)
+    s = sun - pos; s /= np.linalg.norm(s, axis=1, keepdims=True)
+    em = np.degrees(np.arccos(np.clip(np.einsum('ij,ij->i', n_icrf, d), -1, 1)))
+    inc = np.degrees(np.arccos(np.clip(np.einsum('ij,ij->i', n_icrf, s), -1, 1)))
+    return em, inc
+
+def deorbit_trajectory(altitude_km=100.0, dv_retro_m_s=25.0):
+    """Two-body descent after an in-plane retrograde burn from a circular orbit: returns (impact speed km/s,
+    flight-path angle below horizontal at impact deg, flight time s, central angle travelled from the burn deg)."""
     a0 = R_MOON + altitude_km
     v0 = np.sqrt(MU_MOON / a0) - dv_retro_m_s / 1000.0
-    eps = v0 ** 2 / 2 - MU_MOON / a0
-    h = a0 * v0
-    a = -MU_MOON / (2 * eps)
+    eps = v0 ** 2 / 2 - MU_MOON / a0; h = a0 * v0; a = -MU_MOON / (2 * eps)
     e = np.sqrt(max(0.0, 1 - h ** 2 / (MU_MOON * a)))
-    rp = a * (1 - e)
-    if rp > R_MOON:
+    if a * (1 - e) > R_MOON:
         return None
     v_imp = np.sqrt(2 * (eps + MU_MOON / R_MOON))
-    cos_gamma = h / (R_MOON * v_imp)
-    gamma = np.degrees(np.arccos(np.clip(cos_gamma, -1, 1)))
-    # time from burn to impact: from true anomaly at r=a0 (apoapsis side) to r=R
-    nu_imp = np.arccos(np.clip((a * (1 - e ** 2) / R_MOON - 1) / e, -1, 1))
+    gamma = np.degrees(np.arccos(np.clip(h / (R_MOON * v_imp), -1, 1)))
+    nu_imp = np.arccos(np.clip((a * (1 - e ** 2) / R_MOON - 1) / e, -1, 1))   # true anomaly at impact (descending: 2pi - nu)
     def M_of(nu):
         E_ = 2 * np.arctan(np.sqrt((1 - e) / (1 + e)) * np.tan(nu / 2))
         return E_ - e * np.sin(E_)
     n = np.sqrt(MU_MOON / a ** 3)
-    t = (M_of(np.pi) - M_of(nu_imp)) / n
-    return v_imp, gamma, t
+    t = (M_of(np.pi) - M_of(nu_imp)) / n                               # apolune (burn) to impact
+    return float(v_imp), float(gamma), float(abs(t)), float(np.degrees(np.pi - nu_imp))
+
+def planes_through_point(jd_utc_epoch, lat_deg, lon_deg, inclination_deg=90.0, jd_ref_utc=None):
+    """Node longitudes (ME, at the reference epoch) of the two planes of the given inclination that contain the point
+    at the epoch (ascending and descending passes), using the full ICRF->ME rotation at both epochs."""
+    from astropy.time import Time
+    jd_t = Time(jd_utc_epoch, format='jd', scale='utc').tdb.jd
+    p = E.latlon_to_vec(np.array([lat_deg]), np.array([lon_deg]), 1.0)[0]
+    i = np.radians(inclination_deg)
+    # node longitude O (ME at the epoch) such that p . n(O) = 0: sin i (px sin O - py cos O) + pz cos i = 0
+    A, B, C = np.sin(i) * p[0], -np.sin(i) * p[1], np.cos(i) * p[2]
+    r = np.hypot(A, B)
+    if abs(C) > r:
+        return []
+    phi = np.arctan2(B, A); base = np.arcsin(-C / r)
+    sols = [(base - phi), (np.pi - base - phi)]
+    out = []
+    M_t = E.icrf_to_me(jd_t)
+    jd_ref_t = Time(jd_ref_utc, format='jd', scale='utc').tdb.jd if jd_ref_utc else jd_t
+    M_ref = E.icrf_to_me(jd_ref_t)
+    for O in sols:
+        n_me_t = np.array([np.sin(i) * np.sin(O), -np.sin(i) * np.cos(O), np.cos(i)])
+        e_me_t = np.array([np.cos(O), np.sin(O), 0.0])
+        n_ref = M_ref @ (M_t.T @ n_me_t); e_ref = M_ref @ (M_t.T @ e_me_t)
+        # node longitude at t_ref: direction of z x n (ascending node) in the ME frame at t_ref
+        node = np.cross([0, 0, 1.0], n_ref); node /= np.linalg.norm(node)
+        incl_ref = np.degrees(np.arccos(np.clip(n_ref[2], -1, 1)))
+        f_me_t = np.cross(n_me_t, e_me_t)
+        u_site = np.arctan2(p @ f_me_t, p @ e_me_t)
+        northbound = np.cos(u_site) * f_me_t[2] > 0                      # d(position)/du has a positive z component
+        out.append(dict(node_ref_deg=float(np.degrees(np.arctan2(node[1], node[0])) % 360), inclination_ref_deg=float(incl_ref),
+                        pass_type='northbound' if northbound else 'southbound'))
+    return out

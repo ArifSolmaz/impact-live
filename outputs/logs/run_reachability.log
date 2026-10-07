@@ -1,0 +1,90 @@
+grid 96481 steps (1s)
+main node   0.0 done (30s)
+main node   5.0 done (55s)
+main node  10.0 done (81s)
+main node  15.0 done (108s)
+main node  20.0 done (134s)
+main node  25.0 done (162s)
+main node  30.0 done (190s)
+main node  35.0 done (217s)
+main node  40.0 done (244s)
+main node  45.0 done (273s)
+main node  50.0 done (300s)
+main node  55.0 done (328s)
+main node  60.0 done (357s)
+main node  65.0 done (385s)
+main node  70.0 done (413s)
+main node  75.0 done (441s)
+main node  80.0 done (466s)
+main node  85.0 done (491s)
+main node  90.0 done (518s)
+main node  95.0 done (544s)
+main node 100.0 done (571s)
+main node 105.0 done (597s)
+main node 110.0 done (622s)
+main node 115.0 done (647s)
+main node 120.0 done (673s)
+main node 125.0 done (700s)
+main node 130.0 done (730s)
+main node 135.0 done (757s)
+main node 140.0 done (786s)
+main node 145.0 done (816s)
+main node 150.0 done (844s)
+main node 155.0 done (873s)
+main node 160.0 done (897s)
+main node 165.0 done (925s)
+main node 170.0 done (953s)
+main node 175.0 done (980s)
+quantity                      flash_cov3  flash_tr  plume_tr
+delta region                                                
+0.6   eastern limb region           4.25      1.08      0.00
+      far side                      0.06      0.02      0.00
+      near side central             5.27      1.41      0.18
+      northern high latitude        8.35      2.15      0.34
+      polar                         9.16      2.42      0.78
+      southern high latitude        8.61      2.30      0.38
+      western limb region           4.38      1.12      0.00
+2.5   eastern limb region          17.71      4.52      0.01
+      far side                      0.24      0.07      0.00
+      near side central            21.99      5.87      0.73
+      northern high latitude       34.87      8.98      1.43
+      polar                        40.18     10.63      3.35
+      southern high latitude       35.92      9.62      1.59
+      western limb region          18.27      4.68      0.02
+incl88_j2 node   0.0 done (1007s)
+incl88_j2 node  10.0 done (1033s)
+incl88_j2 node  20.0 done (1057s)
+incl88_j2 node  30.0 done (1085s)
+incl88_j2 node  40.0 done (1110s)
+incl88_j2 node  50.0 done (1134s)
+incl88_j2 node  60.0 done (1159s)
+incl88_j2 node  70.0 done (1184s)
+incl88_j2 node  80.0 done (1210s)
+incl88_j2 node  90.0 done (1236s)
+incl88_j2 node 100.0 done (1261s)
+incl88_j2 node 110.0 done (1307s)
+incl88_j2 node 120.0 done (1341s)
+incl88_j2 node 130.0 done (1366s)
+incl88_j2 node 140.0 done (1390s)
+incl88_j2 node 150.0 done (1416s)
+incl88_j2 node 160.0 done (1441s)
+incl88_j2 node 170.0 done (1465s)
+incl88_j2 node 180.0 done (1491s)
+incl88_j2 node 190.0 done (1519s)
+incl88_j2 node 200.0 done (1544s)
+incl88_j2 node 210.0 done (1570s)
+incl88_j2 node 220.0 done (1595s)
+incl88_j2 node 230.0 done (1621s)
+incl88_j2 node 240.0 done (1649s)
+incl88_j2 node 250.0 done (1678s)
+incl88_j2 node 260.0 done (1714s)
+incl88_j2 node 270.0 done (1747s)
+incl88_j2 node 280.0 done (1774s)
+incl88_j2 node 290.0 done (1800s)
+incl88_j2 node 300.0 done (1827s)
+incl88_j2 node 310.0 done (1853s)
+incl88_j2 node 320.0 done (1879s)
+incl88_j2 node 330.0 done (1905s)
+incl88_j2 node 340.0 done (1930s)
+incl88_j2 node 350.0 done (1954s)
+total 1955s

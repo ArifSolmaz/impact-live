@@ -13,6 +13,10 @@ const METRICS = ['any', 'two', 'live', 'rapid'];
 const st = { id: (location.hash || '#S1').slice(1), net: 'B', prior: 'wide', heat: '', labels: false };
 if (!scen.find((s) => s.id === st.id)) st.id = 'S1';
 const cur = () => scen.find((s) => s.id === st.id);
+// impact point beyond the limb as seen from the Earth's centre (far side or occulted)
+const occulted = (s) => s.geometry.emission >= 90;
+// calendar sessions carry full ISO timestamps (UTC and Istanbul) and the local night
+const iso = (z) => new Date(z.replace('Z', ':00Z'));
 
 // ---------------------------------------------------------------- views
 const moon = new MoonView(document.getElementById('moon'), { grid: true }); await moon.ready();
@@ -51,10 +55,12 @@ async function views() {
   document.getElementById('moon-sub').textContent = t('ex.moon_sub', { date: fmt.date(s.epoch_utc), pct: fmt.pctNum(s.moon.illum), age: fmt.num(s.moon.age_days, 1) });
   document.getElementById('farside').classList.toggle('hidden', moon.disk(s.lat, s.lon).z > 0);
   const hl = document.getElementById('heat-legend'); hl.classList.toggle('hidden', !st.heat);
-  if (st.heat) hl.textContent = t(st.heat === 'h_tr' ? 'ex.heat_legend_tr' : 'ex.heat_legend_plume', { lo: fmt.num(HEAT[st.heat].lo_hours, 0), max: fmt.num(HEAT[st.heat].max_hours, 0) });
+  if (st.heat) hl.textContent = t(st.heat === 'h_tr' ? 'ex.heat_legend_tr' : 'ex.heat_legend_plume', { lo: fmt.num(HEAT[st.heat].lo_hours, 0), max: fmt.num(HEAT[st.heat].max_hours, 0),
+    start: fmt.dateOnly(HEAT.interval[0] + 'T12:00:00Z', 'UTC'), stop: fmt.dateOnly(HEAT.interval[1] + 'T12:00:00Z', 'UTC') });
   document.querySelectorAll('#heat-tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.heat === st.heat)));
   const sp = subPoints(new Date(s.epoch_utc));
   earth.set({ sun: sp.sun, moon: sp.moon, siteStatus: s.site_geom });
+  document.getElementById('earth-occ').classList.toggle('hidden', !occulted(s));
 }
 document.querySelectorAll('#heat-tabs button').forEach((b) => b.addEventListener('click', () => { st.heat = b.dataset.heat; views(); }));
 document.getElementById('labels').addEventListener('change', (e) => { st.labels = e.target.checked; views(); });
@@ -73,7 +79,8 @@ function odds() {
   const s = cur(); netTabs();
   document.getElementById('net-desc').textContent = t(`strat.${st.net}_d`);
   const p = s.p[st.net][st.prior];
-  document.getElementById('odds-stats').replaceChildren(...METRICS.map((k) => el('div', { class: 'stat' }, el('div', { class: 'label' }, t(`metric.${k}`)), el('div', { class: 'value' }, fmt.pct(p[k])), el('div', { class: 'sub' }, t(`metric.${k}_d`)))));
+  document.getElementById('odds-stats').replaceChildren(...METRICS.map((k) => el('div', { class: 'stat' }, el('div', { class: 'label' }, t(`metric.${k}`)), el('div', { class: 'value' }, fmt.pct(p[k])),
+    el('div', { class: 'sub' }, `${t(`metric.${k}_d`)} · ${t('metric.range', { lo: fmt.pct(p.range[k][0]), hi: fmt.pct(p.range[k][1]) })}`))));
   const series = SERIES.map((se) => ({ ...se, label: t(`strat.${se.key}`) }));
   const cats = METRICS.map((k) => ({ key: k, label: t(`metric.${k}`) }));
   barChart = groupedBars(document.getElementById('odds-chart'), { categories: cats, series, emphasis: st.net, value: (c, se) => s.p[se.key][st.prior][c.key] ?? 0, ariaLabel: t('ex.odds_chart_title') });
@@ -86,19 +93,28 @@ function details() {
   const s = cur(); const g = s.site_geom; const dd = [];
   const add = (k, v) => dd.push(el('dt', {}, t(k)), el('dd', {}, v));
   add('ex.d_time', `${fmt.date(s.epoch_utc)} ${t('common.ist')} · ${fmt.time(s.epoch_utc, 'UTC')} UTC`);
+  if (s.moon.light_time_range_s) add('ex.d_light', t('ex.v_light', { a: fmt.num(s.moon.light_time_range_s[0], 3), b: fmt.num(s.moon.light_time_range_s[1], 3) }));
   add('ex.d_region', `${L(s.region)} (${fmt.num(s.lat, 1)}°, ${fmt.num(s.lon, 1)}°)`);
   add('ex.d_moon', t('ex.v_moon', { pct: fmt.pctNum(s.moon.illum), age: fmt.num(s.moon.age_days, 1) }));
   add('ex.d_alt', `${fmt.num(g.TUG.moon_alt, 0)}° / ${fmt.num(g.DAG.moon_alt, 0)}°`);
   add('ex.d_sites', t('ex.v_sites', { n: s.n_sites, tr: s.turkish_sites.length }));
-  add('ex.d_pop', t('ex.v_bn', { n: fmt.num(s.population_bn.public, 2) }));
+  if (s.closed_sites && s.closed_sites.length) add('ex.d_closed', s.closed_sites.join(', '));
+  add('ex.d_pop', t('ex.v_bn', { n: fmt.num(s.settlements_bn.public, 2), lo: fmt.num(s.settlements_bn.public_range[0], 2), hi: fmt.num(s.settlements_bn.public_range[1], 2) }));
   add('ex.d_physics', L(s.physics.label));
   add('ex.d_energy', t('ex.v_energy', { gj: fmt.num(s.energy_GJ, 2), tnt: fmt.num(s.tnt_kg, 0) }));
-  add('ex.d_flash', t('ex.v_flash', { med: fmt.num(s.peakV.median, 1), p10: fmt.num(s.peakV.p10, 1), p90: fmt.num(s.peakV.p90, 1) }));
-  add('ex.d_witness', fmt.pct(s.witness.eyepiece));
-  add('ex.d_plume', L(s.plume.label));
-  add('ex.d_crater', t('ex.v_crater', { min: fmt.num(s.crater_m[0]), med: fmt.num(s.crater_m[1]), max: fmt.num(s.crater_m[2]) }));
-  add('ex.d_lro', t('ex.v_lro', { typ: s.lro.first_image_days[1], p: fmt.pct(s.lro.p_operational) }));
-  if (s.reach.omega_asc !== null) add('ex.d_reach', t('ex.v_reach', { asc: fmt.num(s.reach.omega_asc, 0), desc: fmt.num(s.reach.omega_desc, 0) }));
+  const pk = { med: fmt.num(s.source_equiv_V.median, 1), p10: fmt.num(s.source_equiv_V.p10, 1), p90: fmt.num(s.source_equiv_V.p90, 1) };
+  add('ex.d_flash', occulted(s) ? t('ex.v_flash_occ', pk) : t(s.geometry.sunlit ? 'ex.v_flash_sunlit' : 'ex.v_flash', pk));
+  add('ex.d_witness', occulted(s) || !s.visual.observable ? t('ex.v_witness_occ') : t('ex.v_witness', { p: fmt.pct(s.visual.eyepiece.p, 1), pw: fmt.pct(s.visual.eyepiece.p_weather, 1) }));
+  const pl = s.plume;
+  add('ex.d_plume', pl.code === 'cannot' ? t('ex.v_plume_cannot', { h: fmt.num(pl.h_km, pl.h_km < 10 ? 1 : 0) }) : pl.code === 'weak' ? t('ex.v_plume_weak', { snr: fmt.num(pl.snr_max, 2) })
+    : pl.code === 'possible' ? t('ex.v_plume_possible', { snr: fmt.num(pl.snr_max, 1) }) : t('ex.v_plume_none'));
+  add('ex.d_crater', t('ex.v_crater', { a: fmt.num(s.crater.vc[0]), b: fmt.num(s.crater.vc[1]), c: fmt.num(s.crater.ve[0]), d: fmt.num(s.crater.ve[1]) }));
+  if (!occulted(s)) {
+    const lo = fmt.pct(s.terrain[0]), hi = fmt.pct(s.terrain[1]);
+    add('ex.d_terrain', t('ex.v_terrain', { range: lo === hi ? lo : `${lo}–${hi}` }));
+  }
+  add('ex.d_reach', t('ex.v_reach', { p06: fmt.pct(s.reach.p06, 1), p25: fmt.pct(s.reach.p25, 1), per: fmt.num(s.reach.period_min, 0) }));
+  add('ex.d_lro', t('ex.v_lro', { p: fmt.pct(s.lro.p_operational) }));
   document.getElementById('details').replaceChildren(...dd);
   document.getElementById('stations-title').textContent = t('ex.stations_title');
   const rows = s.top_stations.length ? s.top_stations.map((x) => el('div', { class: 'lrow' },
@@ -111,17 +127,23 @@ function details() {
 // ---------------------------------------------------------------- calendar
 let calTable = null;
 function calendar() {
+  const cr = CAL.criteria;
+  document.getElementById('cal-lead').textContent = t('ex.cal_lead', { site: cr.site, alt: cr.moon_alt_min, sun: fmt.num(cr.sun_alt_max, 0), imin: fmt.num(cr.illum_min * 100, 0), imax: fmt.num(cr.illum_max * 100, 0), el: cr.elongation_min, step: cr.refine_step_min });
   const series = [{ key: 'evening', label: t('ex.cal_evening'), color: C('--series-1') }, { key: 'morning', label: t('ex.cal_morning'), color: C('--series-2') }];
   const groups = {}; scen.forEach((s) => { const d = s.epoch_utc; (groups[d] = groups[d] || []).push(s.id); });
   const marks = Object.entries(groups).filter(([, ids]) => !ids.includes('S9') || ids.length > 1).map(([d, ids]) => ({ date: d, label: ids.sort((a, b) => +a.slice(1) - +b.slice(1))[0] }));
+  const wins = CAL.windows.map((w) => ({ ...w, date: w.night, hours: w.minutes / 60 }));
+  const ist = (z) => fmt.date(iso(z), 'Europe/Istanbul', { dateStyle: 'medium', timeStyle: 'short' });
+  const istT = (z) => fmt.date(iso(z), 'Europe/Istanbul', { timeStyle: 'short' });
   calendarStrip(document.getElementById('calendar'), {
-    windows: CAL.windows, start: '2027-08-01', end: '2029-04-01', series, marks, yLabel: t('ex.cal_y'), ariaLabel: t('ex.cal_title'),
+    windows: wins, start: CAL.domain.start, end: CAL.domain.stop, series, marks, yLabel: t('ex.cal_y'), ariaLabel: t('ex.cal_title'),
     tooltip: (tt, w, se) => {
-      tt.append(el('strong', { text: `${w.hours} h` }), el('div', { class: 'tl-row' }, el('span', { class: 'tl-key', style: `background:${se.color}` }), se.label));
-      tt.append(el('div', {}, `${fmt.dateOnly(w.date + 'T12:00:00Z', 'UTC')} · ${w.best_ist} ${t('common.ist')}`), el('div', {}, `${fmt.pct(w.illum)} · TUG ${fmt.num(w.alt_tug, 0)}° · ${w.n_sites} ${t('ex.cal_sites')}`));
+      tt.append(el('strong', { text: `${ist(w.start_utc)} – ${istT(w.end_utc)}` }), el('div', { class: 'tl-row' }, el('span', { class: 'tl-key', style: `background:${se.color}` }), se.label));
+      tt.append(el('div', {}, `${t('ex.cal_best')}: ${ist(w.best_utc)}`), el('div', {}, `${fmt.pct(w.illum)} · TUG ${fmt.num(w.alt_tug, 0)}° · ${w.n_sites} ${t('ex.cal_sites')}`));
     },
   });
-  if (!calTable) calTable = tableToggle(document.getElementById('calendar-table'), () => ({ head: [t('ex.d_time'), t('ex.cal_session'), t('ex.cal_y'), t('ex.cal_best'), t('ex.d_sites')], rows: CAL.windows.map((w) => [fmt.dateOnly(w.date + 'T12:00:00Z', 'UTC'), t(w.session === 'evening' ? 'ex.cal_evening' : 'ex.cal_morning'), String(w.hours), `${w.best_ist} ${t('common.ist')}`, String(w.n_sites)]) }));
+  if (!calTable) calTable = tableToggle(document.getElementById('calendar-table'), () => ({ head: [t('ex.cal_date'), t('ex.cal_session'), t('ex.cal_window'), t('ex.cal_best'), t('ex.d_sites')],
+    rows: CAL.windows.map((w) => [fmt.dateOnly(w.night + 'T12:00:00Z', 'UTC'), t(w.session === 'evening' ? 'ex.cal_evening' : 'ex.cal_morning'), `${ist(w.start_utc)} – ${istT(w.end_utc)}`, ist(w.best_utc), String(w.n_sites)]) }));
   else calTable.refresh();
 }
 

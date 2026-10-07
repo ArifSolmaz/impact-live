@@ -1,0 +1,44 @@
+== start Wed Oct  7 10:35:19 +03 2026
+== validate_ephemeris 10:35:19
+   ok 2 s
+== run_screening 10:35:21
+   ok 241 s
+== check_convergence 10:39:22
+   ok 43 s
+== run_reachability 10:40:05
+   ok 1957 s
+== run_opportunity_statistics 11:12:42
+   ok 8 s
+== check_reachability_convergence 11:12:50
+   ok 561 s
+== make_windows_calendar 11:22:11
+   ok 9 s
+== run_refinement 11:22:20
+   ok 17 s
+== run_scenarios 11:22:37
+   ok 296 s
+== run_injection_recovery 11:27:33
+   ok 1007 s
+== DONE Wed Oct  7 11:44:20 +03 2026
+== start Wed Oct  7 11:44:49 +03 2026
+== run_scenarios 11:44:49
+   ok 288 s
+== make_surface_maps 11:49:37
+   ok 7 s
+== make_reachability_figure 11:49:44
+   ok 4 s
+== make_physics_figures 11:49:48
+   ok 47 s
+== make_timeline 11:50:35
+   ok 3 s
+== make_matrix_and_orbiters 11:50:38
+   ok 3 s
+== make_pareto 11:50:41
+   ok 5 s
+== make_injection_figure 11:50:46
+   ok 3 s
+== make_tables 11:50:49
+   ok 11 s
+== make_site_data 11:51:00
+   ok 5 s
+== DONE Wed Oct  7 11:51:05 +03 2026

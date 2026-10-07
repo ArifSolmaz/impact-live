@@ -1,12 +1,18 @@
-# Launch-to-impact timeline families (all dates are scenario assumptions anchored on published statements:
-# launch "first half / Q2 2027" (TÜBİTAK UZAY, TUA, Sep 2026), "about two months" transfer (TUA), >= 3 months orbital
-# mission extendable to 18 months (TUA; IRF says ~3 up to 6), controlled de-orbit at end of mission.
+# Launch-to-impact timeline families. All dates are MODELLING CHOICES, not announced dates. Published targets (each with
+# its own date and precision; they differ and cannot be reconciled into one quarter):
+#   TUA, 16 Sep 2026: "2027 yılının ilk aylarında" (in the first months of 2027)
+#   TÜBİTAK UZAY, 14 Sep 2026: "2027 yılının ilk yarısında" (in the first half of 2027)
+#   programme page (TÜBİTAK UZAY): "2027 Q2"
+#   Minister of Industry and Technology (AA, 5 Oct 2026): "Gelecek yılın ilk aylarında" (in the first months of next year)
+# The families therefore span Q1 and Q2 2027 plus slips. Transfer "about two months" (TUA); >= 3 months orbital mission,
+# extendable to 18 months (TUA; IRF says ~3 up to 6); controlled de-orbit at the end of the mission.
 launch_families:
-  - {id: L1, label: "Q2 2027 early (nominal)", date: "2027-04-15", status: "consistent with published target"}
-  - {id: L2, label: "Q2 2027 late", date: "2027-06-15", status: "consistent with published target"}
-  - {id: L3, label: "+3-month slip", date: "2027-09-15", status: "reasonable delay"}
-  - {id: L4, label: "+6-month slip", date: "2027-12-15", status: "reasonable delay"}
-  - {id: L5, label: "+12-month slip", date: "2028-04-15", status: "pessimistic delay"}
+  - {id: L0, label: "Q1 2027 (first months)", date: "2027-02-15", status: "consistent with 'first months' / 'first half'; not with 'Q2'"}
+  - {id: L1, label: "Q2 2027 early", date: "2027-04-15", status: "consistent with 'first half' and 'Q2'"}
+  - {id: L2, label: "Q2 2027 late", date: "2027-06-15", status: "consistent with 'first half' and 'Q2'"}
+  - {id: L3, label: "+3-month slip", date: "2027-09-15", status: "delay case"}
+  - {id: L4, label: "+6-month slip", date: "2027-12-15", status: "delay case"}
+  - {id: L5, label: "+12-month slip", date: "2028-04-15", status: "pessimistic delay case"}
 phases:
   transfer_days: {nominal: 60, min: 45, max: 80, source: "TUA 2026-09-16: 'yaklasik iki ay' (about two months); multi-burn supersynchronous-GTO raising (GLEX 2025)"}
   loi_and_circularisation_days: {nominal: 10, min: 5, max: 20, source: "assumed (several burns to reach 100 km circular polar)"}

@@ -1,0 +1,5 @@
+/home/claude/impact-live/outputs/figures/fig_surface_screening.png
+/home/claude/impact-live/outputs/figures/fig_plume_and_earthview.png
+/usr/local/lib/python3.13/dist-packages/erfa/core.py:133: ErfaWarning: ERFA function "d2dtf" yielded 1440 of "dubious year (Note 5)"
+  warn(f'ERFA function "{func_name}" yielded {wmsg}', ErfaWarning)
+/home/claude/impact-live/outputs/figures/fig_availability_timeseries.png

@@ -1,0 +1,29 @@
+production (10 min, 8 phases) done (136s)
+fine time (5 min, 8 phases) done (357s)
+fine phase (10 min, 16 phases) done (559s)
+                           variant                       cls  delta  mean_p30  d_mean_p30  d_min_p30  d_p_first_3mo  rel_d_opp_hours
+0    production (10 min, 8 phases)  A_turkiye_evening_public    0.6     0.417       0.000        0.0            0.0            0.000
+1    production (10 min, 8 phases)  A_turkiye_evening_public    2.5     0.432       0.000        0.0            0.0            0.000
+2    production (10 min, 8 phases)          B_global_science    0.6     0.987       0.000        0.0            0.0            0.000
+3    production (10 min, 8 phases)          B_global_science    2.5     0.989       0.000        0.0            0.0            0.000
+4    production (10 min, 8 phases)             C_any_turkish    0.6     0.954       0.000        0.0            0.0            0.000
+5    production (10 min, 8 phases)             C_any_turkish    2.5     0.960       0.000        0.0            0.0            0.000
+6    production (10 min, 8 phases)            P_plume_global    0.6     0.177       0.000        0.0            0.0            0.000
+7    production (10 min, 8 phases)            P_plume_global    2.5     0.234       0.000        0.0            0.0            0.000
+8      fine time (5 min, 8 phases)  A_turkiye_evening_public    0.6     0.420       0.003        0.0            0.0            0.004
+9      fine time (5 min, 8 phases)  A_turkiye_evening_public    2.5     0.437       0.005        0.0            0.0            0.005
+10     fine time (5 min, 8 phases)          B_global_science    0.6     0.987       0.000        0.0            0.0            0.005
+11     fine time (5 min, 8 phases)          B_global_science    2.5     0.989       0.000        0.0            0.0            0.005
+12     fine time (5 min, 8 phases)             C_any_turkish    0.6     0.953      -0.001        0.0            0.0            0.003
+13     fine time (5 min, 8 phases)             C_any_turkish    2.5     0.960      -0.001        0.0            0.0            0.002
+14     fine time (5 min, 8 phases)            P_plume_global    0.6     0.178       0.001        0.0            0.0           -0.004
+15     fine time (5 min, 8 phases)            P_plume_global    2.5     0.234       0.000        0.0            0.0            0.002
+16  fine phase (10 min, 16 phases)  A_turkiye_evening_public    0.6     0.417      -0.000        0.0            0.0            0.009
+17  fine phase (10 min, 16 phases)  A_turkiye_evening_public    2.5     0.431      -0.000        0.0            0.0            0.000
+18  fine phase (10 min, 16 phases)          B_global_science    0.6     0.987      -0.000        0.0            0.0            0.001
+19  fine phase (10 min, 16 phases)          B_global_science    2.5     0.989       0.000        0.0            0.0            0.001
+20  fine phase (10 min, 16 phases)             C_any_turkish    0.6     0.954       0.001        0.0            0.0            0.003
+21  fine phase (10 min, 16 phases)             C_any_turkish    2.5     0.960       0.000        0.0            0.0            0.000
+22  fine phase (10 min, 16 phases)            P_plume_global    0.6     0.177       0.001        0.0            0.0            0.012
+23  fine phase (10 min, 16 phases)            P_plume_global    2.5     0.234      -0.000        0.0            0.0            0.010
+max |d mean_p30| 0.005; max |d p_first_3mo| 0.000; max |rel d opp-hours| 0.012

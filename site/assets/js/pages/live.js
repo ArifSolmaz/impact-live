@@ -12,12 +12,14 @@ const DEMO = { status: 'announced', impact_utc: S1.epoch_utc, impact_uncertainty
 const E = () => (demo ? { ...EV, ...DEMO } : EV);
 
 const moon = new MoonView(document.getElementById('moon'), { grid: true }); await moon.ready();
-let loc = null, timer = null;
+let loc = null, timer = null, lastCheck = new Date();
+const STATES = ['planning', 'announced', 'live', 'completed'];
 
 function header() {
   const e = E();
   document.getElementById('status-badge').replaceChildren(el('span', { class: `badge ${demo ? 'demo' : e.status}` }, el('span', { class: 'dot', 'aria-hidden': 'true' }), demo ? 'DEMO' : t(`live.status.${e.status}`)));
-  document.getElementById('updated').textContent = EV.updated_utc ? t('live.updated', { date: fmt.date(EV.updated_utc) }) : '';
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  document.getElementById('updated').textContent = [EV.updated_utc ? t('live.updated', { date: fmt.date(EV.updated_utc) }) : '', t('live.checked', { time: fmt.time(lastCheck, tz) })].filter(Boolean).join(' · ');
   document.getElementById('demo-banner').classList.toggle('hidden', !demo);
   const hasTime = !!e.impact_utc;
   document.getElementById('planning').classList.toggle('hidden', hasTime);
@@ -80,5 +82,9 @@ document.getElementById('demo-btn').addEventListener('click', () => { demo = tru
 document.getElementById('demo-exit').addEventListener('click', () => { demo = false; const u = new URL(location.href); u.searchParams.delete('demo'); history.replaceState(null, '', u); all(); });
 all();
 timer = setInterval(countdown, 1000);
-setInterval(async () => { if (!demo && EV.status === 'live') { try { EV = await reload('event.json'); all(); } catch (err) { /* keep last state */ } } else timeline(); }, 60000);
+// re-read event.json every minute in every state, so that an announcement or the switch to 'live' appears without a manual reload
+setInterval(async () => {
+  try { const ev = await reload('event.json'); if (ev && STATES.includes(ev.status)) { EV = ev; lastCheck = new Date(); } } catch (err) { /* keep the last valid state */ }
+  all();
+}, 60000);
 onLangChange(all);

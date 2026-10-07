@@ -1,0 +1,11 @@
+S1 done 33s | avail 14 (TR 7) | em 19.4 inc 118.1 | P(any) A 0.487 B 0.694 C 0.577 | P(conf) B 0.480 | peakV 12.0 | plume cases 8
+S2 done 29s | avail 14 (TR 7) | em 10.0 inc 93.3 | P(any) A 0.258 B 0.385 C 0.272 | P(conf) B 0.227 | peakV 11.9 | plume cases 8
+S3 done 20s | avail 12 (TR 7) | em 49.7 inc 138.8 | P(any) A 0.644 B 0.743 C 0.679 | P(conf) B 0.523 | peakV 12.1 | plume cases 8
+S4 done 22s | avail 6 (TR 3) | em 31.8 inc 126.2 | P(any) A 0.443 B 0.592 C 0.524 | P(conf) B 0.255 | peakV 11.9 | plume cases 8
+S5 done 34s | avail 14 (TR 7) | em 47.8 inc 56.8 | P(any) A 0.010 B 0.010 C 0.000 | P(conf) B 0.000 | peakV 12.0 | plume cases 8
+S6 done 19s | avail 12 (TR 7) | em 85.1 inc 176.1 | P(any) A 0.513 B 0.592 C 0.551 | P(conf) B 0.424 | peakV 12.1 | plume cases 8
+S7 done 20s | avail 14 (TR 7) | em 79.9 inc 177.0 | P(any) A 0.492 B 0.698 C 0.590 | P(conf) B 0.494 | peakV 12.0 | plume cases 8
+S8 done 28s | avail 14 (TR 7) | em 83.1 inc 93.2 | P(any) A 0.142 B 0.214 C 0.134 | P(conf) B 0.110 | peakV 12.0 | plume cases 8
+S9 done 16s | avail 0 (TR 0) | em 156.2 inc 53.3 | P(any) A 0.000 B 0.000 C 0.000 | P(conf) B 0.000 | peakV 12.0 | plume cases 0
+S10 done 20s | avail 14 (TR 7) | em 19.4 inc 118.1 | P(any) A 0.347 B 0.518 C 0.385 | P(conf) B 0.334 | peakV 13.8 | plume cases 8
+S11 done 31s | avail 12 (TR 7) | em 24.4 inc 125.0 | P(any) A 0.423 B 0.565 C 0.513 | P(conf) B 0.300 | peakV 12.1 | plume cases 8

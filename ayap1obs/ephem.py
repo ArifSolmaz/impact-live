@@ -6,8 +6,15 @@ Sources
   Euler angles (phi, theta, psi), read with jplephem's legacy reader from the PyPI package 'de421' 2008.1.
 * Lunar PA->ME offset for DE421 from NAIF frame kernel moon_080317.tf (angles 67.92", 78.56", 0.30"; axes 3,2,1).
 * IAU 2009/2015 Moon orientation series as given in NAIF pck00011.tpc (cross-check only).
-* Earth orientation: astropy (ERFA) with bundled IERS-B; polar motion/UT1-UTC are ignored for dates beyond the
-  table, an error < 1 arcsec on the sky (negligible for this study, which needs ~0.01 deg).
+* Earth orientation: astropy (ERFA) with the IERS table shipped in the pinned astropy-iers-data package (IERS-A
+  'finals2000A' series: measured values, then IERS predictions; no download at run time). For epochs beyond the
+  table's last entry astropy holds UT1-UTC at the last tabulated value and uses a 50-year mean polar motion
+  (`iers_degraded_accuracy = 'ignore'` turns the error into a warning). The table version, coverage and the values
+  used are recorded by `iers_provenance()` (outputs/validation/iers_provenance.json). No accuracy better than the
+  following is claimed for 2027-2029 epochs: UTC is kept within 0.9 s of UT1, so the held UT1-UTC value can be wrong by
+  up to about 1 s, i.e. up to ~15 arcsec of Earth rotation (0.004 deg in topocentric altitude/azimuth of the Moon);
+  polar motion errors are below 1 arcsec. This is irrelevant to the 20-deg altitude cuts and hour-scale planning
+  here, but sub-arcsecond pointing near an actual event needs current Earth-orientation parameters.
 
 Conventions
 -----------
@@ -136,6 +143,33 @@ def _iau_icrf_to_me(jd):
     return rotz(w * DEG) @ rotx((90.0 - dec) * DEG) @ rotz((90.0 + ra) * DEG)
 
 # --- Earth side ---------------------------------------------------------------------------------------
+def iers_provenance(epochs=('2027-09-01', '2028-04-01', '2029-03-01')):
+    """Version, coverage and the UT1-UTC / polar-motion values actually used for representative epochs."""
+    import importlib.metadata as md, hashlib, glob
+    t = iers.IERS_Auto.open()
+    flag = np.array(t['UT1Flag']); mjd = np.array(t['MJD'].value if hasattr(t['MJD'], 'value') else t['MJD'])
+    meas = mjd[flag == 'I']; pred = mjd[flag == 'P']
+    import astropy_iers_data as aid
+    files = sorted(glob.glob(os.path.join(os.path.dirname(aid.__file__), 'data', 'finals2000A*')))
+    out = dict(package='astropy-iers-data', version=md.version('astropy-iers-data'), astropy=md.version('astropy'),
+               files={os.path.basename(f): hashlib.sha256(open(f, 'rb').read()).hexdigest() for f in files},
+               measured_until=Time(meas.max(), format='mjd').iso[:10] if len(meas) else None,
+               predicted_until=Time(pred.max(), format='mjd').iso[:10] if len(pred) else None,
+               beyond_table='UT1-UTC held at the last tabulated value; polar motion = 50-year mean (astropy behaviour)',
+               ut1_utc_bound_beyond_table_s=1.0, rotation_bound_arcsec=15.0, epochs={})
+    for e in epochs:
+        tt = Time(e, scale='utc')
+        with np.errstate(all='ignore'):
+            import warnings
+            with warnings.catch_warnings():
+                warnings.simplefilter('ignore')
+                dut = float(u.Quantity(t.ut1_utc(tt)).to_value(u.s))
+                from astropy.coordinates.builtin_frames.utils import get_polar_motion
+                xp, yp = (x * u.rad for x in get_polar_motion(tt))   # the values the transformations actually use
+        status = 'measured' if len(meas) and tt.mjd <= meas.max() else ('predicted' if len(pred) and tt.mjd <= pred.max() else 'held beyond table')
+        out['epochs'][e] = dict(ut1_utc_s=dut, pm_x_arcsec=float(xp.to_value(u.arcsec)), pm_y_arcsec=float(yp.to_value(u.arcsec)), status=status)
+    return out
+
 def observer_gcrs(lon_deg, lat_deg, height_m, t):
     """Observer position in GCRS (km) at astropy Time t."""
     loc = EarthLocation.from_geodetic(lon_deg * u.deg, lat_deg * u.deg, height_m * u.m)

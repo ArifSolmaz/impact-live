@@ -19,7 +19,9 @@ görebileceği ve parlamanın kaydedilme olasılıkları), **Ne görebilirim?** 
 mümkün olduğu, bulunduğunuz yerden Ay'ın görünürlüğü ve gözlemci kontrol listesi), **Canlı** (tarih açıklandığında geri
 sayım, izleme etkinlikleri ve yayınlar) ve **Bilim ve veri** (yöntem, şekiller, veriler, yeniden üretme).
 Başlıca sonuç: parlama büyük olasılıkla çıplak gözle görülemeyecek kadar sönük olacak (orta değer ≈12 kadir);
-halka vaat edilmesi gereken şey telemetri, profesyonel teleskopların hızlı tekrarı ve haftalar sonra krater görüntüsüdür.
+halka vaat edilmesi gereken şey telemetri, profesyonel teleskopların hızlı tekrarı ve günler ya da aylar sonra krater
+görüntüsüdür. Sürüm 2.0, sürüm 1.0.1'in bağımsız bir bilimsel incelemesinden sonra düzeltilmiş modellerle tamamen
+yeniden hesaplanmıştır ([docs/AUDIT_RESPONSE.md](docs/AUDIT_RESPONSE.md)).
 
 ## What the website shows
 
@@ -33,7 +35,7 @@ halka vaat edilmesi gereken şey telemetri, profesyonel teleskopların hızlı t
 
 All sky geometry shown for "now" or for a visitor's location is computed in the browser (Astronomy Engine),
 cross-checked against the study's JPL DE421 pipeline (lunar sub-points within 0.01°, Moon altitudes within 0.02°).
-No location data leave the browser.
+No location data leave the browser. Scenario values on the site come from release 2.0 of the analysis.
 
 ## Quick start
 
@@ -44,16 +46,16 @@ make serve                     # then open http://localhost:8000
 # reproduce the analysis (Python 3.12–3.14)
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-make all                       # ~1 h on two cores; regenerates outputs/ and the site data
-make all NMC=400 NTRIAL=2      # quicker, lower-precision run (~30 min)
+make all                       # ~2 h on two cores; regenerates outputs/, the site data and the release manifest
+make all MC_OUTER=40 MC_INNER=50 NTRIAL=20 NSEQ=500   # quicker, lower-precision run
 make site                      # only refresh site/data from existing outputs
 
 # check a reproduction (runs in a clean copy, leaves this folder untouched)
-make check-quick               # reduced Monte Carlo (30–70 min); prints PASS or FAIL
-make check                     # full precision (1–2 h); see docs/REPRODUCING.md
+make check-quick               # reduced sample sizes (~1 h); prints PASS or FAIL
+make check                     # release sample sizes (~2 h); see docs/REPRODUCING.md
 ```
 
-`outputs/screening/classes.npz` (67 MB) is not committed; `make dirs screen` regenerates it in a few minutes.
+`outputs/screening/classes.npz` (78 MB) is not committed; `make dirs screen` regenerates it in a few minutes.
 The manuscript is not part of this repository yet, so the `pdf` step is skipped.
 
 ### Publishing with GitHub Pages
@@ -70,46 +72,53 @@ gh api -X POST "repos/{owner}/{repo}/pages" -f build_type=workflow
 | Path | Content |
 |---|---|
 | `site/` | the website (static HTML/CSS/JS, no build step); `site/data/` holds its data files |
-| `ayap1obs/` | Python package: ephemeris and lunar orientation, topocentric geometry, surface screening, reachability, terrain, impact physics, detectability, weather, population, Monte Carlo, plotting |
-| `scripts/` | pipeline steps (see `Makefile`), `make_site_data.py` (site data), `make_site_moon_assets.py` (Moon texture and feature labels) |
-| `config/` | sites, scenarios, instruments, orbit families, orbiters, timeline |
-| `data/` | JPL DE421 arrays, Natural Earth coastlines, JPL Horizons validation tables, the typeface used in the figures |
-| `outputs/` | validation, screening and reachability maps, scenario cards (JSON), tables (CSV/JSON), figures (PNG/PDF), run logs |
-| `research/` | evidence reports with source logs (mission baseline, impact precedents, facilities, orbiters) |
-| `docs/` | reproduction guide for reviewers, public-event sequence, live-mode guide |
+| `ayap1obs/` | Python package: ephemeris and lunar orientation, topocentric geometry, surface screening, orbit-plane overflights and opportunity classes, terrain, impact physics, ejecta plume, detectability, weather, settlement populations, Monte Carlo, plotting |
+| `scripts/` | pipeline steps (see `Makefile`), `make_site_data.py` (site data), `make_release_manifest.py`, `check_reproduction.py` |
+| `config/` | sites, scenarios, instruments, orbit families, orbiters, timeline, screening domain and criteria |
+| `data/` | JPL DE421 arrays, Natural Earth coastlines, processed JPL Horizons validation tables, the typeface used in the figures; `DATA_MANIFEST.sha256` |
+| `outputs/` | validation, screening and reachability arrays, scenario cards (JSON), tables (CSV/JSON), figures (PNG/PDF), run logs |
+| `research/` | evidence reports with source logs and status labels (mission baseline, impact precedents, facilities, orbiters, sources checked for the release-2 corrections) |
+| `docs/` | reproduction guide, response to the scientific audit, public-event sequence, live-mode guide |
 
 ## Method in brief
 
-1. **Geometry** – JPL DE421 ephemeris and lunar orientation (validated against JPL Horizons to metres in range and
-   thousandths of a degree on the lunar sub-points); full lunar surface screened hourly, August 2027 – March 2029,
-   for 35 candidate observing sites.
-2. **Reachability** – which points a 100-km polar orbit can reach, for an unknown orbit plane, with and without a
-   plane-change budget.
-3. **Impact physics** – kinetic energy, a cooling-blackbody flash with an uncalibrated luminous-efficiency prior
-   (no measurement exists below 2.4 km/s), ejecta-plume and crater scaling checked against LROC-imaged artificial craters.
-4. **Detectability** – photon-limited signal-to-noise per instrument with earthshine, scattered light and extinction;
-   models of the eye and phones; injection–recovery tests on synthetic video.
-5. **Network Monte Carlo** – 6,000 draws per scenario with correlated weather, readiness, field coverage and brightness.
+1. **Geometry** – JPL DE421 ephemeris and lunar orientation, validated against JPL Horizons (range to about 1 m,
+   lunar sub-points to about 10⁻⁵° in Horizons' convention); impact time at the Moon and reception time at each
+   station; the lunar surface screened hourly from May 2027 to March 2029 for 35 candidate observing sites.
+2. **Overflight opportunities** – for 36 hypothetical polar orbit planes and 8 orbital phases, every overflight of
+   every point is evaluated at its own time; the headline statistic is the probability of an opportunity within a
+   terminal window, for an unknown plane and phase. Not a mission plan: burn targeting and operations are not modelled.
+3. **Impact physics** – kinetic energy; a cooling-blackbody flash with an uncalibrated luminous-efficiency prior and a
+   laboratory-trend case reported separately; crater rim diameters from published scaling tables, checked out of sample
+   against LROC-imaged artificial craters; a phase-space ejecta-plume model within the Housen–Holsapple scaling domain.
+4. **Detectability** – exposure-integrated signal-to-noise per camera with Earthshine, scattered light, sky, extinction
+   and saturation; a conditional visual-threshold model; phone limits in their broad band; injection–recovery of a
+   causal detection pipeline on synthetic video with measured false-alarm rates.
+5. **Network Monte Carlo** – 200 epistemic draws × 150 events per scenario with shared impact time and position, correlated
+   weather, readiness, calibration, backgrounds and terrain; three network strategies compared on the same events.
 
-Example (scenario S1, dark mare on a Türkiye spring evening, wide brightness prior): median peak brightness ≈12 mag;
-chance of at least one recording 52 % (Türkiye-only network), 75 % (global network), 62 % (public network);
-naked-eye and binocular witnessing practically impossible; a 7–15 m crater for orbiters to image later.
+Example (scenario S1, dark mare on a Türkiye spring evening, wide brightness prior, conditional on the planned final
+trajectory): median peak brightness ≈12 mag; chance of at least one recording 49 % (Türkiye-only network; 5–95 %
+epistemic range 40–59 %), 69 % (global network; 61–81 %) and 58 % (public network; 48–67 %); detections at two sites
+21 %, 47 % and 39 %; naked-eye and binocular witnessing practically impossible; no detectable ejecta plume; a 5–30 m
+crater for orbiters to image later. These values depend steeply on the unknown luminous efficiency.
 
 ## Reproducibility
 
-`make check` re-runs the complete pipeline in a clean copy and compares the result with the archived outputs,
-printing PASS or FAIL against stated tolerances; see [docs/REPRODUCING.md](docs/REPRODUCING.md). Fixed seeds
-(Monte Carlo and injection-recovery 20261005), pinned package versions (`requirements.txt`), a typeface shipped with
-the code for the figures, and verbatim Horizons validation tables make the runs repeatable:
+`make check` verifies the input data against `data/DATA_MANIFEST.sha256`, re-runs the complete pipeline in a clean copy,
+requires every product to be present and compares the result with the archived outputs, printing PASS or FAIL against
+stated tolerances; see [docs/REPRODUCING.md](docs/REPRODUCING.md). Fixed seeds, pinned package versions (including the
+data-bearing packages), a typeface shipped with the code and the processed Horizons validation tables make the runs
+repeatable; `MANIFEST.sha256` and `outputs/validation/release_manifest.json` identify every file, package and external
+data set of the release.
 
 * **Same computer:** every output repeats bit for bit, including the Monte Carlo.
-* **Different computer** (macOS on Apple silicon vs Linux on x86-64): deterministic products agree to
-  floating-point rounding and Monte Carlo probabilities within sampling error
-  ([`outputs/validation/cross_platform_run.md`](outputs/validation/cross_platform_run.md)).
-* **From scratch:** a clean-room run starting from an empty `outputs/` folder regenerated every product
-  ([`outputs/validation/clean_room_run.md`](outputs/validation/clean_room_run.md)).
+* **Different computer:** deterministic products are expected to agree to floating-point rounding and Monte Carlo
+  probabilities within their Monte Carlo errors (verified for release 1 on macOS/Apple silicon vs Linux/x86-64,
+  [`outputs/validation/cross_platform_run.md`](outputs/validation/cross_platform_run.md)).
 
-Changes between releases are listed in [CHANGELOG.md](CHANGELOG.md).
+Changes between releases are listed in [CHANGELOG.md](CHANGELOG.md); the response to the independent scientific audit of
+release 1.0.1 is [docs/AUDIT_RESPONSE.md](docs/AUDIT_RESPONSE.md).
 
 ## Credits and licences
 

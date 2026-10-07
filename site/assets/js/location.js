@@ -16,6 +16,7 @@ export async function mountLocationWidget(root, { presets = [] } = {}) {
   let place = storageGet('impact-live-place', null);
   if (!place) { const ist = cities.find((c) => c[1] === 'TR'); if (ist) place = { name: `${ist[0]}, ${ist[1]}`, lat: ist[2], lon: ist[3] }; }
   let when = presets.find((p) => p.default)?.date || new Date();
+  let custom = false;   // true once the user picks a time; until then a new default (announced time, demo) replaces it
 
   const status = el('div', { class: 'small muted', 'aria-live': 'polite' });
   const btnGeo = el('button', { class: 'btn small', type: 'button' });
@@ -29,12 +30,12 @@ export async function mountLocationWidget(root, { presets = [] } = {}) {
     el('div', { class: 'grid two' },
       el('label', { class: 'field' }, el('span', { 'data-k': 'see.loc_place' }), el('div', { class: 'row' }, search, btnGeo), datalist),
       el('label', { class: 'field' }, el('span', { 'data-k': 'see.loc_time' }), time)),
-    presetRow, status, out);
+    presetRow, status, out, el('p', { class: 'small muted', style: 'margin:12px 0 0', 'data-k': 'see.loc_note' }));
 
   function labels() {
     root.querySelectorAll('[data-k]').forEach((n) => { n.textContent = t(n.dataset.k); });
     btnGeo.textContent = t('see.loc_use'); search.placeholder = t('see.loc_search');
-    presetRow.replaceChildren(...presets.map((p) => el('button', { class: 'btn small', type: 'button', onclick: () => { when = p.date; time.value = toLocalInput(when); compute(); } }, t(p.key))));
+    presetRow.replaceChildren(...presets.map((p) => el('button', { class: 'btn small', type: 'button', 'aria-pressed': String(Math.abs(when.getTime() - p.date.getTime()) < 60000), onclick: () => { when = p.date; custom = !p.default; time.value = toLocalInput(when); labels(); } }, t(p.key))));
     if (place) search.value = place.name;
     compute();
   }
@@ -51,7 +52,7 @@ export async function mountLocationWidget(root, { presets = [] } = {}) {
     const c = cities.find((x) => `${x[0]}, ${x[1]}`.toLocaleLowerCase(state.lang === 'tr' ? 'tr-TR' : 'en-GB') === v) || cities.find((x) => x[0].toLocaleLowerCase('tr-TR').startsWith(v.split(',')[0]));
     if (c) { place = { name: `${c[0]}, ${c[1]}`, lat: c[2], lon: c[3] }; storageSet('impact-live-place', place); search.value = place.name; compute(); }
   });
-  time.addEventListener('change', () => { const d = fromLocalInput(time.value); if (d) { when = d; compute(); } });
+  time.addEventListener('change', () => { const d = fromLocalInput(time.value); if (d) { when = d; custom = true; labels(); } });
 
   function compute() {
     if (!place) { out.replaceChildren(el('p', { class: 'muted' }, t('see.loc_choose'))); return; }
@@ -81,5 +82,9 @@ export async function mountLocationWidget(root, { presets = [] } = {}) {
   }
   onLangChange(labels);
   labels();
-  return { setPresets(p) { presets = p; labels(); } };
+  return { setPresets(p) {
+    presets = p;
+    if (!custom) { const d = p.find((x) => x.default)?.date; if (d) { when = d; time.value = toLocalInput(when); } }
+    labels();
+  } };
 }

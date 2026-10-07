@@ -1,0 +1,6 @@
+nel: m50 12.95 [12.90,12.98] m90 12.51 | analytic SNR8 11.75 | candidates/frame 0.001 | dual m50 12.91, coincident frames 0/2975 (329s)
+tug: m50 14.04 [13.98,14.11] m90 13.32 | analytic SNR8 12.70 | candidates/frame 0.064 (255s)
+ama: m50 12.23 [12.18,12.28] m90 11.71 | analytic SNR8 11.10 | candidates/frame 0.006 (157s)
+afo: m50 11.54 [11.50,11.59] m90 10.96 | analytic SNR8 10.40 | candidates/frame 0.004 (168s)
+std: m50 3.98 [3.93,4.02] m90 3.42 | analytic SNR8 2.80 | candidates/frame 0.003 (93s)
+/home/claude/impact-live/outputs/figures/fig_injection_recovery.png

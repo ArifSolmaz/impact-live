@@ -1,67 +1,94 @@
-"""Per-lunation opportunity statistics for each orbit-plane family: does a reachable, flash-favourable, Turkish-
-evening (or any-site) opportunity exist in each lunation?  Then P(>=1 opportunity within the first N months of the
-orbital mission, counting only opportunities on or after the assumed start of operations) marginalised over the unknown
-node longitude.  Also the far-side/polar/limb alternatives."""
-import sys, os, numpy as np, yaml, pandas as pd, time
+"""Opportunity statistics from the trajectory-level overflight analysis (outputs/reachability/opportunities_<set>.npz).
+
+All probabilities are fractions of sampled (orbit-plane, orbital-phase) combinations under a uniform prior on both,
+i.e. conditional statements about an unknown plane and phase, not mission forecasts. Products:
+  opportunity_window_probability.csv   P(>= 1 admissible opportunity of a class within [T1, T1 + W]) for every start
+                                       day T1 in the domain and W = 7-90 days (the terminal-window statistic)
+  opportunity_probability_vs_duration.csv   the fixed-start statistic: first opportunity within N months after the
+                                       reference epoch (kept for comparison with release 1)
+  opportunity_statistics.csv           per (plane, phase): lunations with an opportunity, first opportunity, totals
+  timeline_window_probability.csv      for each launch family / science duration: P for terminal windows that open
+                                       at the end of the science phase
+  opportunity_convergence.csv          the same statistics from subsets of planes and phases (convergence check)
+"""
+import sys, os, numpy as np, yaml, pandas as pd, datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from astropy.time import Time
-from ayap1obs import reachability as Rr, ephem as E, grid as Gd
+from ayap1obs import opportunities as OP
 import warnings; warnings.filterwarnings('ignore')
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 for _d in ('validation', 'screening', 'reachability', 'scenarios', 'tables', 'figures', 'logs'):  # OUTPUT_DIRS
     os.makedirs(os.path.join(root, 'outputs', _d), exist_ok=True)
-fam = yaml.safe_load(open(f'{root}/config/orbit_families.yaml')); sites = yaml.safe_load(open(f'{root}/config/sites.yaml'))['sites']
-cl = np.load(f'{root}/outputs/screening/classes.npz'); ob = np.load(f'{root}/outputs/screening/observers.npz')
-flags = cl['flags']; jd = cl['jd_utc']; phase_ok = cl['phase_ok']; lat = cl['lat']; lon = cl['lon']; illum = cl['illum']
-vis = (flags & 1) > 0; dark = (flags & 2) > 0; term = (flags & 4) > 0
-emis = cl['emission']
-central = (np.abs(lat) < 45) & (np.abs(lon) < 60)          # robust region (emission < ~65 deg)
-flash_fav = vis & dark & phase_ok[:, None]
-avail = ob['avail']; ids = list(ob['ids']); tr = [i for i, s in enumerate(sites) if s['group'] == 'turkiye']
-n_avail = avail.sum(axis=0); n_tr = avail[tr].sum(axis=0); tug = avail[ids.index('TUG')]
-ut_hour = (jd + 0.5) % 1 * 24
-evening_tr = tug & (ut_hour >= 15) & (ut_hour <= 21)       # 18-24 h Istanbul
-waxing = np.gradient(illum) > 0
-public_phase = (illum >= 0.12) & (illum <= 0.5)
-# lunation index: count new moons (illum minima)
-newmoon = (illum < 0.01) & (np.gradient(illum) >= 0)
+fam = yaml.safe_load(open(f'{root}/config/orbit_families.yaml')); tl = yaml.safe_load(open(f'{root}/config/timeline.yaml'))
+cl = np.load(f'{root}/outputs/screening/classes.npz'); illum_h = cl['illum']; jd_h = cl['jd_utc']
+newmoon = (illum_h < 0.01) & (np.gradient(illum_h) >= 0)
 lun = np.cumsum(np.r_[0, np.diff(newmoon.astype(int)) == 1])
-t_ref = Time(fam['reference_epoch_utc'], scale='utc').utc.jd
-p = E.latlon_to_vec(lat, lon, 1.0)
-rows = []; curves = {}
-for tol in fam['cross_track_tolerance_deg']:
-    for om in np.arange(0, 360, 15):
-        sc = Rr.OrbitScenario(f'O{om}', om, t_ref, fam['altitude_km'], fam['inclination_deg'], 0.0, 0.0, tol)
-        lam = np.radians(Rr.node_longitude(sc, jd)); i = np.radians(90.0)
-        n = np.stack([np.sin(i) * np.sin(lam), -np.sin(i) * np.cos(lam), np.cos(i) * np.ones_like(lam)], axis=1)
-        reach = np.zeros(flags.shape, dtype=bool)
-        for a in range(0, len(jd), 1500):
-            reach[a:a + 1500] = np.degrees(np.abs(np.arcsin(np.clip(n[a:a + 1500] @ p.T, -1, 1)))) <= tol
-        # opportunity classes (epoch-level: any pixel satisfying)
-        A = (reach & flash_fav & central[None, :]).any(axis=1) & evening_tr & public_phase & waxing & (n_avail >= 3)   # Turkiye evening, central dark, public phase
-        B = (reach & flash_fav & central[None, :]).any(axis=1) & (n_avail >= 3)                                      # global science, any time
-        C = (reach & flash_fav & central[None, :]).any(axis=1) & (n_tr >= 1)                                          # any Turkish site
-        Pm = (reach & vis & term & phase_ok[:, None] & (np.abs(lat) < 60)[None, :]).any(axis=1) & (n_avail >= 3)        # sunlit-plume geometry, global
-        for name, arr in [('A_turkiye_evening_public', A), ('B_global_science', B), ('C_any_turkish', C), ('P_plume_global', Pm)]:
-            per_lun = pd.Series(arr).groupby(lun).any()
-            first = jd[arr][0] if arr.any() else np.nan
-            post = arr & (jd >= t_ref)                      # opportunities on or after the assumed start of operations
-            first_post = jd[post][0] if post.any() else np.nan
-            rows.append(dict(tol=tol, omega0=om, cls=name, n_lunations_with_opp=int(per_lun.sum()), n_lunations=int(per_lun.index.max() + 1),
-                             first_opportunity_days_after_ref=float(first - t_ref) if arr.any() else np.nan,
-                             first_opportunity_days_after_start=float(first_post - t_ref) if post.any() else np.nan,
-                             opp_hours=int(arr.sum()), opp_hours_after_start=int(post.sum())))
-        print(f'tol {tol} om {om}: A lunations {rows[-4]["n_lunations_with_opp"]}, first A after {rows[-4]["first_opportunity_days_after_ref"]:.0f} d; B first {rows[-3]["first_opportunity_days_after_ref"]:.0f} d; plume first {rows[-1]["first_opportunity_days_after_ref"]:.0f} d')
-df = pd.DataFrame(rows); df.to_csv(f'{root}/outputs/tables/opportunity_statistics.csv', index=False)
-# P(>=1 opportunity within N months) marginalised over omega0
-out = []
-for tol in fam['cross_track_tolerance_deg']:
-    for cls in df.cls.unique():
-        d = df[(df.tol == tol) & (df.cls == cls)]
+t_ref_jd = Time(fam['reference_epoch_utc'], scale='utc').utc.jd
+WINDOWS = fam['terminal_windows_days']
+
+def load(set_name):
+    z = np.load(f'{root}/outputs/reachability/opportunities_{set_name}.npz')
+    occ = np.unpackbits(z['occ'], axis=-1, count=int(z['n_hours'])).astype(bool)
+    return occ, z
+
+window_prob, first_after = OP.window_prob, OP.first_after
+
+occ, z = load('main')
+classes = list(z['classes']); deltas = list(z['deltas']); nodes = z['nodes']; nph = occ.shape[1]
+h_ref = int(round((t_ref_jd - jd_h[0]) * 24))
+rows_w, rows_d, rows_s, rows_c = [], [], [], []
+for ci, cls in enumerate(classes):
+    for di, dl in enumerate(deltas):
+        occ_c = occ[:, :, ci, di, :].reshape(-1, occ.shape[-1])
+        for W in WINDOWS:
+            starts, p = window_prob(occ_c, W)
+            for h, pp in zip(starts, p):
+                rows_w.append(dict(cls=cls, delta=dl, start_utc=Time(jd_h[h], format='jd').utc.iso[:10], W_days=W, p=float(pp)))
+        fa = first_after(occ_c, h_ref)
         for N in [3, 4, 6, 9, 12, 18]:
-            # primary quantity: first opportunity on or after the assumed start of operations (reference epoch);
-            # the variant that also admits opportunities in the pre-start part of the screening domain is kept for transparency
-            out.append(dict(tol=tol, cls=cls, months=N, p_at_least_one=float((d.first_opportunity_days_after_start <= 30.44 * N).mean()),
-                            p_at_least_one_incl_prestart=float((d.first_opportunity_days_after_ref <= 30.44 * N).mean())))
-po = pd.DataFrame(out); po.to_csv(f'{root}/outputs/tables/opportunity_probability_vs_duration.csv', index=False)
-print(po.pivot_table(index=['tol', 'cls'], columns='months', values='p_at_least_one').round(2))
+            rows_d.append(dict(cls=cls, delta=dl, months=N, p_at_least_one=float(np.mean(fa <= 30.44 * N)), n_combinations=int(occ_c.shape[0])))
+        for comb in range(occ_c.shape[0]):
+            per_lun = pd.Series(occ_c[comb]).groupby(lun).any()
+            rows_s.append(dict(cls=cls, delta=dl, node=float(nodes[comb // nph]), phase_deg=float(z['phases_deg'][comb % nph]), n_lunations_with_opp=int(per_lun.sum()),
+                               n_lunations=int(per_lun.index.max() + 1), first_after_ref_days=float(fa[comb]), opportunity_hours=int(occ_c[comb].sum())))
+        # convergence: subsets of planes (every 2nd node) and phases (every 2nd phase)
+        for lab, nsel, psel in [('all', slice(None), slice(None)), ('nodes/2', slice(None, None, 2), slice(None)), ('phases/2', slice(None), slice(None, None, 2)), ('both/2', slice(None, None, 2), slice(None, None, 2))]:
+            oc = occ[nsel, psel, ci, di, :].reshape(-1, occ.shape[-1])
+            _, p30 = window_prob(oc, 30); fa_s = first_after(oc, h_ref)
+            rows_c.append(dict(cls=cls, delta=dl, subset=lab, n_combinations=int(oc.shape[0]), mean_p30=float(p30.mean()), min_p30=float(p30.min()),
+                               p_first_3mo=float(np.mean(fa_s <= 91.3)), p_first_6mo=float(np.mean(fa_s <= 182.6))))
+pd.DataFrame(rows_w).to_csv(f'{root}/outputs/tables/opportunity_window_probability.csv', index=False)
+pd.DataFrame(rows_d).to_csv(f'{root}/outputs/tables/opportunity_probability_vs_duration.csv', index=False)
+pd.DataFrame(rows_s).to_csv(f'{root}/outputs/tables/opportunity_statistics.csv', index=False)
+conv = pd.DataFrame(rows_c)
+# differences of each subset from the full set
+full = conv[conv.subset == 'all'].set_index(['cls', 'delta'])
+conv['d_mean_p30'] = [r.mean_p30 - full.loc[(r.cls, r.delta)].mean_p30 for r in conv.itertuples()]
+conv['d_p_first_3mo'] = [r.p_first_3mo - full.loc[(r.cls, r.delta)].p_first_3mo for r in conv.itertuples()]
+conv.to_csv(f'{root}/outputs/tables/opportunity_convergence.csv', index=False)
+# ---- launch families: terminal windows opening at the end of the science phase (nominal phase durations)
+rows_t = []
+sets = {'main': occ}
+if os.path.exists(f'{root}/outputs/reachability/opportunities_incl88_j2.npz'):
+    sets['incl88_j2'] = load('incl88_j2')[0]
+for L in tl['launch_families']:
+    d0 = dt.datetime.strptime(L['date'], '%Y-%m-%d'); ph = tl['phases']
+    t_sci = d0 + dt.timedelta(days=ph['transfer_days']['nominal'] + ph['loi_and_circularisation_days']['nominal'] + ph['commissioning_days']['nominal'])
+    for S_m in ph['science_months']:
+        t_open = t_sci + dt.timedelta(days=30.44 * S_m)
+        h0 = int(round((Time(t_open).utc.jd - jd_h[0]) * 24))
+        for set_name, oc_all in sets.items():
+            for ci, cls in enumerate(classes):
+                for di, dl in enumerate(deltas):
+                    oc = oc_all[:, :, ci, di, :].reshape(-1, oc_all.shape[-1])
+                    row = dict(launch=L['id'], science_months=S_m, window_opens=str(t_open.date()), family_set=set_name, cls=cls, delta=dl)
+                    for W in [14, 30, 60]:
+                        W_h = W * 24
+                        row[f'p_{W}d'] = float(oc[:, h0:h0 + W_h].any(axis=1).mean()) if (h0 >= 0 and h0 + W_h <= oc.shape[1]) else None
+                    rows_t.append(row)
+pd.DataFrame(rows_t).to_csv(f'{root}/outputs/tables/timeline_window_probability.csv', index=False)
+po = pd.DataFrame(rows_d)
+print(po.pivot_table(index=['delta', 'cls'], columns='months', values='p_at_least_one').round(2))
+wp = pd.DataFrame(rows_w)
+print(wp[wp.W_days == 30].groupby(['delta', 'cls']).p.describe()[['mean', 'min', '50%', 'max']].round(2))
+print(conv[['cls', 'delta', 'subset', 'mean_p30', 'd_mean_p30', 'd_p_first_3mo']].round(3).to_string())

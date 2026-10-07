@@ -125,6 +125,7 @@ a.card:hover { border-color: var(--border-strong); transform: translateY(-2px); 
 .btn.primary:hover { background: #ffd88a; color: var(--accent-ink); }
 .btn.small { padding: 6px 12px; font-size: .85rem; }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
+.btn[aria-pressed="true"] { border-color: var(--accent); color: var(--text-1); background: rgba(245, 199, 106, 0.10); }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-2); font: inherit; font-size: .9rem; cursor: pointer; }
 .chip:hover { border-color: var(--border-strong); color: var(--text-1); }
@@ -220,12 +221,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); }
 .result-pill { display: inline-flex; gap: 8px; align-items: center; padding: 6px 12px; border-radius: 999px; font-weight: 600; font-size: .9rem; border: 1px solid var(--border-strong); }
 .result-pill.yes { border-color: rgba(12, 163, 12, .6); background: rgba(12, 163, 12, .12); }
 .result-pill.no { border-color: rgba(236, 131, 90, .6); background: rgba(236, 131, 90, .10); }
+.result-pill.maybe { border-color: rgba(237, 161, 0, .6); background: rgba(237, 161, 0, .10); }
+.result-pill { white-space: normal; text-align: left; max-width: 100%; }
 
 /* ------------------------------------------------------------------ location check */
 .loc-result { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 18px; align-items: center; margin-top: 14px; }
 @media (max-width: 560px) { .loc-result { grid-template-columns: 1fr; } }
 .verdict { font-size: 1.15rem; font-weight: 650; margin-bottom: 4px; }
-.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: .92rem; }
+.kv { display: grid; grid-template-columns: fit-content(40%) minmax(0, 1fr); gap: 4px 14px; font-size: .92rem; }
 .kv dt { color: var(--text-3); }
 .kv dd { margin: 0; color: var(--text-1); font-variant-numeric: tabular-nums; }
 @media (max-width: 560px) { .kv { grid-template-columns: 1fr; gap: 0; } .kv dt { font-size: .82rem; margin-top: 8px; } }

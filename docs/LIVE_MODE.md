@@ -2,8 +2,9 @@
 
 The Live page (`site/live.html`) is driven by one file: **`site/data/event.json`**. Edit it on GitHub
 (open the file, click the pencil icon, edit, "Commit changes"); the Pages workflow republishes the site in about a
-minute. Browsers may keep the previous copy for up to ~10 minutes (GitHub Pages caching), and the page itself
-re-reads `event.json` every 60 seconds while `status` is `"live"`.
+minute. Browsers may keep the previous copy for up to ~10 minutes (GitHub Pages caching). The Live page re-reads
+`event.json` every 60 seconds in every state (so an announcement or the switch to `"live"` appears without a manual
+reload) and shows the time of the last check; the home page re-reads it every 5 minutes.
 
 Only publish what the mission team has announced. Do not put a date or target into this file before it is official.
 

@@ -1,7 +1,7 @@
 # Impact-epoch search domain and screening resolution
 domain:
-  start_utc: "2027-08-01 00:00:00"   # earliest conceivable impact: launch Apr 2027 + 2-month transfer + ~1 month in orbit
-  stop_utc:  "2029-03-01 00:00:00"   # latest: 18-month extension after an Aug-Sep 2027 orbit insertion
+  start_utc: "2027-05-01 00:00:00"   # earliest conceivable impact: launch Jan 2027 + ~1.5-month transfer + commissioning + 3 months in orbit
+  stop_utc:  "2029-03-01 00:00:00"   # exclusive end: [start, stop) = May 2027 .. Feb 2029 (18-month extension after an Aug-Sep 2027 insertion)
   coarse_step_hours: 1.0
   coarse_nside: 32                   # 1.83 deg, ~55 km pixels (12288 pixels)
   fine_nside: 128                    # 0.46 deg, ~14 km pixels for refinement
@@ -9,17 +9,26 @@ domain:
 criteria:
   flash:
     max_emission_deg: 85            # geocentric; 1 deg parallax margin applied at coarse stage
-    min_incidence_deg: 92           # night side with 2 deg margin (no terrain shadows needed)
+    min_incidence_deg: 92           # instantaneous spherical night side with a 2-deg margin (screening assumption; not
+                                    # permanent shadow, and isolated peaks > R(sec 2 deg - 1) = 1.06 km above the sphere can be sunlit)
     illum_min: 0.03
     illum_max: 0.65
     min_elongation_deg: 30
   plume_sunlit:
-    max_emission_deg: 80
+    max_emission_deg: 80            # applied with a 1-deg geocentric margin (release 1 reused the flash criterion, 85+1)
     incidence_min_deg: 90.5         # just beyond the terminator (night side) ...
-    incidence_max_deg: 96           # ... so that ejecta above ~1-27 km are in sunlight (shadow height)
+    incidence_max_deg: 96           # ... so that ejecta above 0.066-9.57 km are in sunlight (point Sun, spherical Moon)
   observer:
     min_moon_alt_deg: 20
     max_sun_alt_deg: -12            # at least nautical darkness for professional flash work
   public:
     min_moon_alt_deg: 15
     max_sun_alt_deg: -6
+  calendar:                         # the observing calendar shown on the website (one named criterion, used everywhere)
+    site: TUG
+    min_moon_alt_deg: 20
+    max_sun_alt_deg: -12
+    illum_min: 0.05
+    illum_max: 0.60
+    min_elongation_deg: 30
+    refine_step_minutes: 5

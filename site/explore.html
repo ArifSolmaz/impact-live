@@ -63,6 +63,7 @@
           <span class="key"><span class="sw round" style="background:#fab219"></span><span data-i18n="ex.earth_legend_sun"></span></span>
         </div>
         <p class="small muted" style="margin:8px 0 0" data-i18n="ex.earth_caption"></p>
+        <p class="note hidden" id="earth-occ" style="margin-top:10px" data-i18n="ex.earth_occulted"></p>
       </div>
     </div>
   </section>
@@ -71,6 +72,7 @@
     <div class="container">
       <h2 data-i18n="ex.odds_title"></h2>
       <p class="secondary" data-i18n="ex.odds_lead"></p>
+      <p class="note" data-i18n="common.revision"></p>
       <div class="row" style="margin:14px 0">
         <span class="small secondary" data-i18n="ex.network_label"></span>
         <div class="tabs" id="net-tabs" role="tablist"></div>
@@ -78,7 +80,7 @@
         <span class="small secondary" data-i18n="prior.label"></span>
         <div class="tabs" id="prior-tabs" role="tablist">
           <button role="tab" data-prior="wide" aria-selected="true" data-i18n="prior.wide"></button>
-          <button role="tab" data-prior="v3" aria-selected="false" data-i18n="prior.v3"></button>
+          <button role="tab" data-prior="vs" aria-selected="false" data-i18n="prior.vs"></button>
         </div>
       </div>
       <p class="small muted" id="net-desc"></p>
@@ -108,7 +110,7 @@
   <section class="section">
     <div class="container">
       <h2 data-i18n="ex.cal_title"></h2>
-      <p class="secondary" data-i18n="ex.cal_lead"></p>
+      <p class="secondary" id="cal-lead"></p>
       <div class="viz">
         <div class="viz-head" style="justify-content:flex-end;margin:0"><span class="evid" data-i18n="common.geometry"></span></div>
         <div id="calendar"></div>

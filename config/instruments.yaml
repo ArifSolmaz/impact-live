@@ -9,7 +9,7 @@ templates:
     frame_time_s: 0.0333
     pixel_scale_arcsec: 0.8
     fov_arcmin: [17.0, 14.4]
-    read_noise_e: 1.5
+    read_noise_e: 5.1       # Xilouris et al. (2018): 5.1 e- rms (2x2 binned Andor Zyla 5.5)
     saturation_e: 3.0e+04   # declared full-well/saturation level (e-/pixel)
     throughput: 0.5
     seeing_arcsec: 2.5

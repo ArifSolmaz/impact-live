@@ -1,0 +1,83 @@
+{
+ "release": "2.0.0",
+ "release_tag": "v2.0.0",
+ "git_commit": null,
+ "working_tree_dirty": null,
+ "git_note": "git commit not recorded (manifest written outside the release repository); the release is identified by its tag",
+ "python": "3.13.16",
+ "platform": "Linux-6.18.44-fc-v77-x86_64-with-glibc2.39",
+ "machine": "x86_64",
+ "packages": {
+  "numpy": "2.5.3",
+  "scipy": "1.18.1",
+  "matplotlib": "3.11.2",
+  "pandas": "3.0.5",
+  "astropy": "8.0.1",
+  "astropy-iers-data": "0.2026.10.5.1.0.7",
+  "pyerfa": "2.0.1.5",
+  "jplephem": "2.24",
+  "healpy": "1.20.1",
+  "scikit-image": "0.26.0",
+  "geonamescache": "3.0.2",
+  "pyshp": "3.1.6",
+  "PyYAML": "6.0.3",
+  "pillow": "12.3.0"
+ },
+ "packages_differing_from_requirements": {},
+ "external_data": {
+  "geonames_cities15000": {
+   "package": "geonamescache 3.0.2",
+   "sha256": "24e87d89c775305650301618fa434d26e47e1b64ba5e27a5611e0f351908fd11"
+  },
+  "lunar_texture_skimage_moon": {
+   "package": "scikit-image 0.26.0",
+   "sha256": "78739619d11f7eb9c165bb5d2efd4772cee557812ec847532dbb1d92ef71f577"
+  },
+  "iers_finals2000A.all": {
+   "package": "astropy-iers-data 0.2026.10.5.1.0.7",
+   "sha256": "cc80680ec05c91b65e7d02c6068fe0d44dd0998dc880551975092d2d14aa8e18"
+  }
+ },
+ "config_sha256": {
+  "config/domain.yaml": "502030284a71ad3308f34144d9c8f022323cce2cd4f66cd03bd28fe3f0aeb597",
+  "config/instruments.yaml": "11f73ca5f277772ccda55da31e17f3674c2e721193316b9723fa9a1d4f6012dc",
+  "config/orbit_families.yaml": "1e3c88c64df181402a1855b67f9cfbd41498220a50a2da7a854c5aeaa4390cb8",
+  "config/orbiters.yaml": "4106a1f5b416843cad0b9bea8a28b7bb03652e3481c68dc1100c5aae72958229",
+  "config/scenarios.yaml": "6507c58d4483b53ce46dadbe28557749faea48a2aed428807def165ba45c62dd",
+  "config/sites.yaml": "92dcb0ba1383435ac41487ed25d3f3bcbce513cf5e3a3d9bc485c08d31ac08ab",
+  "config/timeline.yaml": "f65acc72f4b8b07c0be928c324f04f87e05a2b7a5dc935eb3c04ac38a0e3bf86"
+ },
+ "monte_carlo": {
+  "n_outer": 200,
+  "n_inner": 150,
+  "seed": 20261005,
+  "detection_snr": 8.0,
+  "obvious_snr": 30.0,
+  "dual_camera_snr": 15.0,
+  "cluster_km": 100.0
+ },
+ "injection": {
+  "nel": {
+   "ntrial": 100,
+   "n_seq": 3000
+  },
+  "tug": {
+   "ntrial": 100,
+   "n_seq": 3000
+  },
+  "ama": {
+   "ntrial": 100,
+   "n_seq": 3000
+  },
+  "afo": {
+   "ntrial": 100,
+   "n_seq": 3000
+  },
+  "std": {
+   "ntrial": 100,
+   "n_seq": 3000
+  }
+ },
+ "n_released_files": 258,
+ "note": "MANIFEST.sha256 lists every released file; data/DATA_MANIFEST.sha256 the input data; regenerate with `make manifest` after `make pdf`."
+}

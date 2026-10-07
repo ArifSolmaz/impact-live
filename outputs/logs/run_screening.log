@@ -1,0 +1,6 @@
+epochs 16080
+surface classes done 39.1s
+observers done 223.1s
+saved; total 238.4s
+domain hours 16080 fraction of epochs phase_ok 0.433
+max frac_visible 1.000  max frac_flash 0.331  max frac_plume 0.1124

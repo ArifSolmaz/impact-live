@@ -1,0 +1,9 @@
+                   region  vis_n32_6h  vis_n64_6h  vis_n32_1h  flash_n32_6h  flash_n64_6h  flash_n32_1h  d_vis_grid  d_flash_grid  d_vis_time  d_flash_time
+0     eastern limb region      0.8745      0.8787      0.8745        0.1887        0.1893        0.1881      0.0042        0.0006         0.0       -0.0005
+1                far side      0.0059      0.0065      0.0059        0.0012        0.0013        0.0011      0.0006        0.0001        -0.0       -0.0000
+2       near side central      1.0000      1.0000      1.0000        0.3075        0.3071        0.3073      0.0000       -0.0004         0.0       -0.0002
+3  northern high latitude      0.8720      0.8740      0.8720        0.2296        0.2303        0.2293      0.0020        0.0006        -0.0       -0.0003
+4                   polar      0.2732      0.2768      0.2732        0.0602        0.0614        0.0602      0.0035        0.0012         0.0       -0.0000
+5  southern high latitude      0.8822      0.8838      0.8822        0.2309        0.2315        0.2306      0.0016        0.0006        -0.0       -0.0002
+6     western limb region      0.8765      0.8805      0.8764        0.1946        0.1953        0.1944      0.0040        0.0006        -0.0       -0.0003
+max |grid difference| (absolute fraction): vis 0.0042 flash 0.0012; max |time-step difference|: vis 0.0000 flash 0.0005

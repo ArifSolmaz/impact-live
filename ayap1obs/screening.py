@@ -74,3 +74,11 @@ def lunar_phase_arrays(moon, sun):
     illum = 0.5 * (1 + cos_phase)
     elong = np.degrees(np.arccos(np.clip(np.einsum('ij,ij->i', moon, sun) / (d * np.linalg.norm(sun, axis=1)), -1, 1)))
     return illum, elong, d
+
+def observer_availability(moon_alt, sun_alt, months, site, criteria):
+    """Shared observer availability (used by the screening, the refinement, the scenarios and the reachability
+    statistics): returns (sky_ok, operational). sky_ok: Moon altitude >= min_moon_alt and Sun altitude <= max_sun_alt
+    (geometry only); operational: sky_ok and the facility not in a configured closed month (e.g. monsoon closures)."""
+    sky_ok = (np.asarray(moon_alt) >= criteria['min_moon_alt_deg']) & (np.asarray(sun_alt) <= criteria['max_sun_alt_deg'])
+    closed = np.isin(np.asarray(months), site.get('closed_months', []))
+    return sky_ok, sky_ok & ~closed

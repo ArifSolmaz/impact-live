@@ -1,66 +1,68 @@
-"""Conditional reachability: for each orbit-plane family, which (pixel, epoch) pairs that are flash/plume-favourable
-and observable are also on the ground track (within the cross-track tolerance).  Produces per-family maps and the
-family-averaged map, plus a catalogue of reachable favourable opportunities with Turkish coverage."""
+"""Trajectory-level impact opportunities and orbit-plane compatibility (see ayap1obs/reachability.py and
+ayap1obs/opportunities.py).
+
+For every orbit-plane family and orbital phase, enumerate the overflights of every HEALPix pixel over the screening
+domain, evaluate the observing conditions at each overflight time and record:
+  * hourly occupancy of the four opportunity classes for every (plane, phase, allowance) -> opportunities_<set>.npz
+  * per-pixel counts of admissible flash-favourable overflights (>= 3 sites; >= 1 Turkish site) and of plume-favourable
+    overflights with a Turkish site, averaged over phases -> reachability_maps_<set>.npz
+  * the orbit-plane compatibility envelope (fraction of time within delta of the plane), for comparison
+  * a thinned catalogue of class-B opportunities with TUG available -> catalogue_<set>.csv
+These are geometric overflight opportunities of hypothetical planes, not a mission plan: burn targeting, navigation
+errors and operations are not modelled (the burn-to-impact arc itself is 27-47 min, reachability.deorbit_trajectory).
+"""
 import sys, os, numpy as np, yaml, pandas as pd, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from astropy.time import Time
-from ayap1obs import reachability as Rr, grid as Gd, ephem as E
+from ayap1obs import reachability as R, grid as Gd, ephem as E, opportunities as OP
 import warnings; warnings.filterwarnings('ignore')
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 for _d in ('validation', 'screening', 'reachability', 'scenarios', 'tables', 'figures', 'logs'):  # OUTPUT_DIRS
     os.makedirs(os.path.join(root, 'outputs', _d), exist_ok=True)
-fam = yaml.safe_load(open(f'{root}/config/orbit_families.yaml'))
-sites = yaml.safe_load(open(f'{root}/config/sites.yaml'))['sites']
+fam = yaml.safe_load(open(f'{root}/config/orbit_families.yaml')); dom = yaml.safe_load(open(f'{root}/config/domain.yaml'))
+sites = yaml.safe_load(open(f'{root}/config/sites.yaml'))['sites']; cr = dom['criteria']
+only_sets = sys.argv[1:] or list(fam['family_sets'])
+out = f'{root}/outputs/reachability'
 cl = np.load(f'{root}/outputs/screening/classes.npz'); ob = np.load(f'{root}/outputs/screening/observers.npz')
-flags = cl['flags']; jd = cl['jd_utc']; phase_ok = cl['phase_ok']; lat = cl['lat']; lon = cl['lon']; nside = int(cl['nside'])
-vis = (flags & 1) > 0; dark = (flags & 2) > 0; term = (flags & 4) > 0
-flash_fav = vis & dark & phase_ok[:, None]; plume_fav = vis & term & phase_ok[:, None]
-avail = ob['avail']; tr = [i for i, s in enumerate(sites) if s['group'] == 'turkiye']
-n_avail = avail.sum(axis=0); n_tr = avail[tr].sum(axis=0)
-tug = list(ob['ids']).index('TUG'); tug_avail = avail[tug]
-t_ref = Time(fam['reference_epoch_utc'], scale='utc').utc.jd
-p = E.latlon_to_vec(lat, lon, 1.0)                              # unit vectors P x 3
-out = f'{root}/outputs/reachability'; os.makedirs(out, exist_ok=True)
-results = {}
+lat, lon = cl['lat'], cl['lon']; npix = len(lat); pix = E.latlon_to_vec(lat, lon, 1.0)
+jd_h = cl['jd_utc']; n_hours = len(jd_h)
 tic = time.time()
-for tol in fam['cross_track_tolerance_deg']:
-    for drift in fam['node_drift_deg_day']:
-        maps_flash_cov3 = []; maps_flash_tr = []; maps_plume_tr = []; maps_reach = []
-        catalogue = []
-        for om in fam['node_longitudes_deg']:
-            sc = Rr.OrbitScenario(f'O{om}', om, t_ref, fam['altitude_km'], fam['inclination_deg'], drift, 0.0, tol)
-            lam = np.radians(Rr.node_longitude(sc, jd))
-            i = np.radians(sc.inclination_deg)
-            n = np.stack([np.sin(i) * np.sin(lam), -np.sin(i) * np.cos(lam), np.cos(i) * np.ones_like(lam)], axis=1)   # N x 3
-            reach = np.zeros(flags.shape, dtype=bool)
-            for a in range(0, len(jd), 1500):
-                ct = np.degrees(np.abs(np.arcsin(np.clip(n[a:a + 1500] @ p.T, -1, 1))))
-                reach[a:a + 1500] = ct <= tol
-            r_flash3 = reach & flash_fav & (n_avail >= 3)[:, None]
-            r_flash_tr = reach & flash_fav & (n_tr >= 1)[:, None]
-            r_plume_tr = reach & plume_fav & (n_tr >= 1)[:, None]
-            maps_reach.append(reach.mean(axis=0)); maps_flash_cov3.append(r_flash3.sum(axis=0)); maps_flash_tr.append(r_flash_tr.sum(axis=0)); maps_plume_tr.append(r_plume_tr.sum(axis=0))
-            # catalogue: epochs x pixels with flash geometry, reachable, TUG available and >= 3 sites
-            ii, pp = np.where(reach & flash_fav & tug_avail[:, None] & (n_avail >= 3)[:, None])
-            for k in range(0, len(ii), max(1, len(ii) // 4000)):   # thin to keep the table manageable
-                e, px = ii[k], pp[k]
-                catalogue.append(dict(family=f'tol{tol}_drift{drift}_om{om}', jd=jd[e], pixel=px, lat=lat[px], lon=lon[px], n_sites=n_avail[e], n_tr=n_tr[e],
-                                      illum=cl['illum'][e], plume=bool(plume_fav[e, px])))
-        key = f'tol{tol}_drift{drift}'
-        results[key] = dict(reach=np.array(maps_reach), flash_cov3=np.array(maps_flash_cov3), flash_tr=np.array(maps_flash_tr), plume_tr=np.array(maps_plume_tr))
-        pd.DataFrame(catalogue).to_csv(f'{out}/catalogue_{key}.csv', index=False)
-        print(key, 'done %.0fs' % (time.time() - tic), 'catalogue rows', len(catalogue))
-np.savez_compressed(f'{out}/reachability_maps.npz', lat=lat, lon=lon, nside=nside, families=np.array(fam['node_longitudes_deg']),
-                    **{f'{k}_{q}': v[q] for k, v in results.items() for q in v})
-# summary table per region
-import healpy as hp
-reg = Gd.region_label(lat, lon)
-rows = []
-for key, v in results.items():
-    for q in ['flash_cov3', 'flash_tr', 'plume_tr']:
-        fm = v[q].mean(axis=0)   # family-averaged opportunity-hours per pixel
-        for r in np.unique(reg):
-            m = reg == r
-            rows.append(dict(family_set=key, quantity=q, region=r, mean_hours=fm[m].mean(), max_hours=fm[m].max(), frac_pixels_nonzero=(fm[m] > 0).mean()))
-pd.DataFrame(rows).to_csv(f'{root}/outputs/tables/reachability_region_summary.csv', index=False)
-print(pd.DataFrame(rows).pivot_table(index=['family_set', 'region'], columns='quantity', values='mean_hours').round(2))
+grid = R.time_grid(jd_h[0], jd_h[-1] + 1 / 24.0, fam['time_step_min'])
+print(f"grid {len(grid['jd_utc'])} steps ({time.time() - tic:.0f}s)")
+ctx = OP.context(grid, jd_h, cl, ob, sites, cr)
+t_ref_tdb = Time(fam['reference_epoch_utc'], scale='utc').tdb.jd
+phases = np.radians(np.arange(fam['phases']) * 360.0 / fam['phases'])
+deltas = list(fam['cross_track_tolerance_deg'])
+env_grid = {k: v[::6] for k, v in grid.items() if k != 'step_min'}; env_grid['step_min'] = grid['step_min'] * 6
+for set_name in only_sets:
+    fs = fam['family_sets'][set_name]
+    nodes = np.arange(fs['node_start'], fs['node_stop'], fs['node_step'], dtype=float)
+    drift = R.j2_nodal_rate_deg_day(fs['inclination_deg'], fam['altitude_km']) if fs['drift'] == 'j2' else float(fs['drift'])
+    occ = np.zeros((len(nodes), len(phases), len(OP.CLASSES), len(deltas), n_hours), bool)
+    maps = np.zeros((len(nodes), len(deltas), len(OP.MAPS), npix), np.float32)
+    env = np.zeros((len(nodes), len(deltas), npix), np.float32)
+    catalogue = []
+    for ni, node in enumerate(nodes):
+        plane = R.Plane(node, t_ref_tdb, fs['inclination_deg'], fam['altitude_km'], drift)
+        occ[ni], maps[ni], cat = OP.node_occupancy(plane, grid, ctx, pix, lat, lon, phases, deltas, cr, jd_h[0], n_hours, catalogue_tag=f'{set_name}_node{node:g}')
+        catalogue += cat
+        for di, dl in enumerate(deltas):
+            env[ni, di] = R.compatibility_fraction(plane, env_grid, pix, dl)
+        print(f'{set_name} node {node:5.1f} done ({time.time() - tic:.0f}s)', flush=True)
+    np.savez_compressed(f'{out}/opportunities_{set_name}.npz', occ=np.packbits(occ, axis=-1), n_hours=n_hours, jd0=jd_h[0], nodes=nodes, phases_deg=np.degrees(phases),
+                        deltas=np.array(deltas), classes=np.array(OP.CLASSES), inclination=fs['inclination_deg'], drift_deg_day=drift)
+    np.savez_compressed(f'{out}/reachability_maps_{set_name}.npz', lat=lat, lon=lon, nside=int(cl['nside']), nodes=nodes, deltas=np.array(deltas), map_names=np.array(OP.MAPS),
+                        maps=maps, envelope=env)
+    pd.DataFrame(catalogue).to_csv(f'{out}/catalogue_{set_name}.csv', index=False)
+    if set_name == 'main':
+        reg = Gd.region_label(lat, lon); rows = []
+        for di, dl in enumerate(deltas):
+            for mi, q in enumerate(OP.MAPS):
+                fm = maps[:, di, mi].mean(axis=0)
+                for r in np.unique(reg):
+                    m = reg == r
+                    rows.append(dict(delta=dl, quantity=q, region=r, mean_opportunities=float(fm[m].mean()), max_opportunities=float(fm[m].max()), frac_pixels_nonzero=float((fm[m] > 0).mean()),
+                                     mean_envelope_hours=float(env[:, di].mean(axis=0)[m].mean() * n_hours)))
+        pd.DataFrame(rows).to_csv(f'{root}/outputs/tables/reachability_region_summary.csv', index=False)
+        print(pd.DataFrame(rows).pivot_table(index=['delta', 'region'], columns='quantity', values='mean_opportunities').round(2))
+print(f'total {time.time() - tic:.0f}s')

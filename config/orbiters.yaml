@@ -1,22 +1,37 @@
-# Orbiter follow-up parameters (from research/orbiters.md, evidence cutoff 2026-10-05). [V] verified, [D] derived, [U] unverified.
+# Orbiter follow-up parameters (from research/orbiters.md and research/orbiter_latency.csv, evidence cutoff 2026-10-05).
+# [V] verified, [D] derived, [U] unverified. Nothing here is a prediction that a given crater will be imaged.
 lro:
   status_2026_10: "operating; imaged Falcon 9 crater 11-12 Aug 2026; LROC/ShadowCam operated by Intuitive Machines since May 2026 [V]"
   approved_end: "no approved end date found; fuel 'until 2027' (NASA, Jun 2024) [V]; FY2027 budget risk [V], LRO-specific outcome [U]"
-  p_operational_2028: 0.7      # DECLARED PRIOR used in the paper (fuel statement + budget risk); not a NASA figure
+  p_operational_2028: 0.7      # DECLARED SCENARIO INPUT: assumed probability that LRO is still operating in 2028 (from the fuel
+                               # statement and budget risk; not a NASA figure, not measured, and NOT a probability of imaging a crater)
+  p_operational_sensitivity: [0.4, 0.9]
   orbit: "near-circular ~57-123 km, i ~82.5-84 deg, period ~117 min [D from Horizons]"
   nac_resolution_m: 0.8
   nac_swath_km: 5.0
   slew_deg_max: 68
-  low_sun_windows: [["2027-05-12", "2027-07-13"], ["2027-10-23", "2027-12-21"], ["2028-03-29", "2028-05-28"], ["2028-09-08", "2028-11-06"]]   # [D], +-3 weeks
-  near_noon_windows: [["2027-03-09", "2027-04-04"], ["2027-08-20", "2027-09-16"], ["2028-01-26", "2028-02-21"], ["2028-07-06", "2028-08-01"]]  # [D]
-  latency_first_image_days: {well_located_min: 0.4, well_located_typ: 6, well_located_max: 27, poorly_located: [66, 123]}   # [V precedents]
-  latency_release_days: {typ_min: 12, typ_max: 34, poorly_located: [92, 193]}
-  precedent_csv: research/orbiter_latency.csv
+  illumination_seasons_approx:
+    # Approximate orbit-plane illumination seasons from an extrapolated node longitude (research/orbiters.md). The raw node
+    # history and the fit are NOT archived in this package (JPL Horizons could not be re-queried from the analysis environment),
+    # the +-3 weeks is the spread between extrapolation models (not a confidence interval), and a season does not guarantee a
+    # sunlit pass over a given target within pointing limits, operations or a matched before/after image pair.
+    low_sun: [["2027-05-12", "2027-07-13"], ["2027-10-23", "2027-12-21"], ["2028-03-29", "2028-05-28"], ["2028-09-08", "2028-11-06"]]
+    near_noon: [["2027-03-09", "2027-04-04"], ["2027-08-20", "2027-09-16"], ["2028-01-26", "2028-02-21"], ["2028-07-06", "2028-08-01"]]
+    spread_days: 21
+  latency_precedents:
+    # Days from the EVENT (not from imaging) in research/orbiter_latency.csv, impacts only (soft landings and the natural crater
+    # are context). 'first image' is the first DOCUMENTED post-event NAC image, which is not necessarily the first acquired
+    # (LADEE is an upper bound). Small, selected sample with censoring; a heuristic, not a calibrated predictive distribution.
+    impacts_first_image_days: {HAKUTO-R M1: 0.6, Luna 25: 5.3, ispace M2: 6.2, Falcon 9 stage: 6.3, Beresheet: 10.7, Vikram: 10.7, Longjiang-2: 65.9, GRAIL: 72.6, CE5-T1 stage: 78.0, LADEE: "<=123.1"}
+    impacts_first_release_days: {Luna 25: 12, Falcon 9 stage: 13, ispace M2: 15, HAKUTO-R M1: 28, Beresheet: 34, GRAIL: 92, Longjiang-2: 106, CE5-T1 stage: 111, LADEE: 193}
+    vikram_note: "first release (day 20) was an unsuccessful mosaic; debris identification was released on day 87"
+    summary: "well-located near-side or mid-latitude impacts: first documented image after 0.6-11 days; far-side, high-latitude or poorly located impacts: about 2-4 months; public release 12-193 days after the event"
 danuri:
   status: "operating; extended 'to 2027' (KARI) [V]; orbit ~50-65 x 200-215 km [D]; LUTI imaged Falcon 9 crater within hours [V]"
-  p_operational_2028: 0.4      # DECLARED PRIOR
+  p_operational_2028: 0.4      # DECLARED SCENARIO INPUT (assumed availability, not an imaging probability)
   luti_gsd_m: "several metres (altitude dependent) [D]"
-  low_sun_windows: [["2027-03-23", "2027-06-02"], ["2027-09-25", "2027-12-02"], ["2028-03-23", "2028-06-02"], ["2028-09-25", "2028-12-02"]]  # [D]
+  illumination_seasons_approx:
+    low_sun: [["2027-03-23", "2027-06-02"], ["2027-09-25", "2027-12-02"], ["2028-03-23", "2028-06-02"], ["2028-09-25", "2028-12-02"]]
 chandrayaan2:
   status: "operating; ISRO orbit solutions to Nov 2026 [V]; ~7-yr design life ending ~2026 [V]; OHRC 0.25 m, no public tasking route [U]"
   p_operational_2028: 0.3

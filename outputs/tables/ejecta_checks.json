@@ -1,0 +1,162 @@
+{
+ "lcross": [
+  {
+   "model": "hollow Centaur",
+   "params": "sand",
+   "M_illuminated_kg": 0.0,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    23.233618091565305
+   ]
+  },
+  {
+   "model": "hollow Centaur",
+   "params": "sand/fly ash",
+   "M_illuminated_kg": 0.0,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    19.723258718102457
+   ]
+  },
+  {
+   "model": "hollow Centaur",
+   "params": "perlite/sand",
+   "M_illuminated_kg": 0.0,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    13.309182699805241
+   ]
+  },
+  {
+   "model": "Centaur as 400 kg/m3",
+   "params": "sand",
+   "M_illuminated_kg": 2659.7436181739076,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    233.97559130535916
+   ]
+  },
+  {
+   "model": "Centaur as 400 kg/m3",
+   "params": "sand/fly ash",
+   "M_illuminated_kg": 2255.9114257578326,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    220.01051964704723
+   ]
+  },
+  {
+   "model": "Centaur as 400 kg/m3",
+   "params": "perlite/sand",
+   "M_illuminated_kg": 1590.5843497478534,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    192.38758744519495
+   ]
+  },
+  {
+   "model": "dense parts + hollow",
+   "params": "sand",
+   "M_illuminated_kg": 1591.2989290795133,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    1539.6201373316314,
+    23.28880050687473
+   ]
+  },
+  {
+   "model": "dense parts + hollow",
+   "params": "sand/fly ash",
+   "M_illuminated_kg": 1408.0357774419497,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    1531.4155151556047,
+    19.723258718102457
+   ]
+  },
+  {
+   "model": "dense parts + hollow",
+   "params": "perlite/sand",
+   "M_illuminated_kg": 1143.3762804032542,
+   "observed_kg": 2240.0,
+   "observed_sigma_kg": 400.0,
+   "vmax_domain": [
+    1726.986362168415,
+    13.309182699805241
+   ]
+  }
+ ],
+ "crater_consistency": [
+  {
+   "case": "GRAIL (each ~130 kg, 1.6 km/s, ~2 deg)",
+   "observed_m": 5.0,
+   "observed_is_upper_limit": false,
+   "vertical-component": [
+    1.412507804997352,
+    4.094068364275834
+   ],
+   "vertical-component_consistent": false,
+   "vertical-equivalent": [
+    6.181873481329764,
+    12.253700007841038
+   ],
+   "vertical-equivalent_consistent": false
+  },
+  {
+   "case": "LADEE (248 kg, 1.699 km/s, low angle: 1-10 deg assumed)",
+   "observed_m": 3.0,
+   "observed_is_upper_limit": true,
+   "vertical-component": [
+    1.5199257940985487,
+    8.233133558602296
+   ],
+   "vertical-component_consistent": true,
+   "vertical-equivalent": [
+    7.813634274550128,
+    15.194295912112862
+   ],
+   "vertical-equivalent_consistent": false
+  },
+  {
+   "case": "Falcon 9 stage (3.9-4.9 t, 2.43 km/s, ~31 deg)",
+   "observed_m": 18.0,
+   "observed_is_upper_limit": false,
+   "vertical-component": [
+    16.180960616266614,
+    37.98712894581687
+   ],
+   "vertical-component_consistent": true,
+   "vertical-equivalent": [
+    21.70309528035289,
+    46.557525844118764
+   ],
+   "vertical-equivalent_consistent": false
+  }
+ ],
+ "ballistic_envelope_m": {
+  "vertical-component": [
+   4.704222508339394,
+   6.946285125939912,
+   10.807966130049444
+  ],
+  "vertical-equivalent": [
+   15.224026079864124,
+   19.49648476699287,
+   30.350364956554184
+  ],
+  "all": [
+   4.704222508339394,
+   13.221384946466392,
+   30.350364956554184
+  ]
+ },
+ "note": "LCROSS: like-for-like illuminated ejecta mass at 20 s (Strycker et al. 2013 observed 2240 +/- 400 kg); crater: out-of-sample consistency of the rim-diameter envelopes with LROC-observed craters (no parameter fitted)"
+}

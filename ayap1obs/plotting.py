@@ -61,41 +61,68 @@ def lunar_map(ax, values, nside, title='', cmap=SEQ_BLUE, vmin=None, vmax=None, 
     cb = plt.colorbar(im, ax=ax, fraction=0.025, pad=0.02); cb.set_label(cbar_label)
     return im
 
-def earth_view(ax, values, nside, subearth_lon=0.0, subearth_lat=0.0, title='', cmap=SEQ_BLUE, vmin=None, vmax=None, cbar_label='', n=600, features=True, mask=None, terminator_lon=None):
-    """Orthographic view of the near side as seen from Earth (celestial north up, IAU east to the right? no:
-    lunar east (+lon) appears on the sky's west side, i.e. to the RIGHT when north is up for a northern observer)."""
-    x = np.linspace(-1, 1, n); X, Y = np.meshgrid(x, -x)
-    rho = np.hypot(X, Y); inside = rho <= 1
-    c = np.arcsin(np.clip(rho, 0, 1))
+def disk_basis(es=None, obs_gcrs=None, subearth_lon=0.0, subearth_lat=0.0):
+    """Sky-plane basis expressed in the lunar ME frame: (c, ex, ey, label, pa_deg) with c the unit vector from the
+    observer towards the Moon's centre, ex celestial east and ey celestial north. With an epoch state `es` the basis is
+    exact (observer = geocentre unless obs_gcrs is given); without it, a lunar-north-up basis at the given sub-Earth
+    point is returned (then ex is the direction of decreasing lunar longitude, so that lunar east appears on the right)."""
+    if es is not None:
+        o = np.zeros(3) if obs_gcrs is None else np.asarray(obs_gcrs, float)
+        c = es.r_moon - o; c /= np.linalg.norm(c)
+        ex = np.cross([0, 0, 1.0], c); ex /= np.linalg.norm(ex); ey = np.cross(c, ex)
+        z_icrf = es.M.T @ np.array([0, 0, 1.0])
+        pa = float(np.degrees(np.arctan2(z_icrf @ ex, z_icrf @ ey)))
+        return es.M @ c, es.M @ ex, es.M @ ey, 'celestial north up, celestial east left (naked-eye view)', pa
     la0, lo0 = np.radians(subearth_lat), np.radians(subearth_lon)
-    with np.errstate(invalid='ignore', divide='ignore'):
-        lat = np.arcsin(np.cos(c) * np.sin(la0) + Y * np.sin(c) * np.cos(la0) / np.where(rho == 0, 1, rho))
-        lon = lo0 + np.arctan2(X * np.sin(c), rho * np.cos(c) * np.cos(la0) - Y * np.sin(c) * np.sin(la0))
-    pix = hp.ang2pix(nside, np.radians(90 - np.degrees(lat)), lon % (2 * np.pi))
+    s = np.array([np.cos(la0) * np.cos(lo0), np.cos(la0) * np.sin(lo0), np.sin(la0)]); c = -s
+    ey = np.array([0, 0, 1.0]) - c[2] * c; ey /= np.linalg.norm(ey)
+    ex = np.cross(ey, c)                      # = minus lunar east at the sub-Earth point, so X = -(P.ex) grows eastwards
+    return c, ex, ey, 'lunar north up, lunar east (+lon) right (not celestial orientation)', 0.0
+
+def disk_xy(lat_deg, lon_deg, basis):
+    """Image coordinates (X right, Y up; units of lunar radius) and visibility of ME lat/lon points."""
+    c, ex, ey = basis[:3]
+    la, lo = np.radians(np.asarray(lat_deg, float)), np.radians(np.asarray(lon_deg, float))
+    P = np.stack([np.cos(la) * np.cos(lo), np.cos(la) * np.sin(lo), np.sin(la)], axis=-1)
+    return -(P @ ex), P @ ey, (P @ c) < 0
+
+def earth_view(ax, values, nside, subearth_lon=0.0, subearth_lat=0.0, title='', cmap=SEQ_BLUE, vmin=None, vmax=None, cbar_label='', n=600, features=True, mask=None,
+               terminator_lon=None, es=None, obs_gcrs=None, orientation_note=True):
+    """Orthographic view of the Earth-facing hemisphere. With `es` (an EpochState) the view is computed from the
+    actual sky-plane basis: celestial north up, celestial east LEFT, as the naked eye sees the Moon (telescopes may
+    invert or mirror the image). Without `es` the view is lunar-north-up at the given sub-Earth point and is labelled so."""
+    basis = disk_basis(es, obs_gcrs, subearth_lon, subearth_lat); c, ex, ey, lab, pa = basis
+    x = np.linspace(-1, 1, n); X, Y = np.meshgrid(x, -x)
+    inside = X ** 2 + Y ** 2 <= 1
+    w = np.sqrt(np.clip(1 - X ** 2 - Y ** 2, 0, None))
+    P = (-X)[..., None] * ex + Y[..., None] * ey - w[..., None] * c
+    lat = np.degrees(np.arcsin(np.clip(P[..., 2], -1, 1))); lon = np.degrees(np.arctan2(P[..., 1], P[..., 0]))
+    pix = hp.ang2pix(nside, np.radians(90 - lat), np.radians(lon) % (2 * np.pi))
     img = np.where(inside, values[pix], np.nan)
     if mask is not None:
         img = np.where(inside & (mask[pix] > 0.5), img, np.nan)
     im = ax.imshow(img, extent=(-1, 1, -1, 1), cmap=cmap, vmin=vmin, vmax=vmax, interpolation='nearest')
     ax.add_patch(plt.Circle((0, 0), 1, fill=False, color=TEXT2, lw=0.8))
     ax.set_xticks([]); ax.set_yticks([]); ax.set_aspect('equal'); ax.set_title(title, loc='left')
-    # graticule
-    for lo in range(-90, 91, 30):
-        la = np.radians(np.linspace(-90, 90, 181)); lor = np.radians(lo)
-        xg = np.cos(la) * np.sin(lor - lo0); yg = np.cos(la0) * np.sin(la) - np.sin(la0) * np.cos(la) * np.cos(lor - lo0)
-        vis = np.sin(la0) * np.sin(la) + np.cos(la0) * np.cos(la) * np.cos(lor - lo0) > 0
+    for lo in range(-180, 180, 30):
+        la_ = np.linspace(-90, 90, 181); xg, yg, vis = disk_xy(la_, np.full_like(la_, lo), basis)
         ax.plot(np.where(vis, xg, np.nan), np.where(vis, yg, np.nan), color='white', lw=0.3, alpha=0.6)
     for la_ in range(-60, 61, 30):
-        lo_ = np.radians(np.linspace(-180, 180, 361)); lar = np.radians(la_)
-        xg = np.cos(lar) * np.sin(lo_ - lo0); yg = np.cos(la0) * np.sin(lar) - np.sin(la0) * np.cos(lar) * np.cos(lo_ - lo0)
-        vis = np.sin(la0) * np.sin(lar) + np.cos(la0) * np.cos(lar) * np.cos(lo_ - lo0) > 0
+        lo_ = np.linspace(-180, 180, 361); xg, yg, vis = disk_xy(np.full_like(lo_, la_), lo_, basis)
         ax.plot(np.where(vis, xg, np.nan), np.where(vis, yg, np.nan), color='white', lw=0.3, alpha=0.6)
     if features:
         for name, (la, lo) in FEATURES.items():
-            lar, lor = np.radians(la), np.radians(lo)
-            if np.sin(la0) * np.sin(lar) + np.cos(la0) * np.cos(lar) * np.cos(lor - lo0) > 0.05:
-                xg = np.cos(lar) * np.sin(lor - lo0); yg = np.cos(la0) * np.sin(lar) - np.sin(la0) * np.cos(lar) * np.cos(lor - lo0)
+            xg, yg, vis = disk_xy(la, lo, basis)
+            if vis and xg ** 2 + yg ** 2 < 0.95:
                 ax.plot(xg, yg, 'k.', ms=3); ax.text(xg + 0.03, yg + 0.03, name, fontsize=6)
-    ax.text(0, -1.08, 'view from Earth, celestial north up; lunar east (+lon) on the right', ha='center', fontsize=6, color=TEXT2)
+    if orientation_note:
+        note = lab + (f'; lunar north at PA {pa:+.1f} deg' if es is not None else '')
+        ax.text(0, -1.08, note, ha='center', fontsize=6, color=TEXT2)
+        if es is not None:      # N/E indicator
+            # compass in the lower-left corner, outside the disk and inside the axes (celestial east is to the LEFT)
+            ax.annotate('', xy=(-0.76, -0.74), xytext=(-0.76, -0.95), arrowprops=dict(arrowstyle='->', color=TEXT2, lw=0.8))
+            ax.annotate('', xy=(-0.97, -0.95), xytext=(-0.76, -0.95), arrowprops=dict(arrowstyle='->', color=TEXT2, lw=0.8))
+            ax.text(-0.76, -0.71, 'N', ha='center', va='bottom', fontsize=6, color=TEXT2); ax.text(-0.97, -0.90, 'E', va='bottom', ha='center', fontsize=6, color=TEXT2)
     if cbar_label:
         cb = plt.colorbar(im, ax=ax, fraction=0.04, pad=0.02); cb.set_label(cbar_label)
     return im

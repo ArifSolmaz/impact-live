@@ -7,6 +7,9 @@
  "lat": 0.0,
  "lon": -86.0,
  "epoch_utc": "2028-04-01 18:00:00",
+ "epoch_definition": "epoch_utc is the impact (emission) time at the lunar surface; photons reach each station 1.2-1.4 s later (per-site reception times below)",
+ "impact_utc": "2028-04-01T18:00:00.000",
+ "impact_tdb": "2028-04-01T18:01:09.186",
  "epoch_istanbul": "2028-04-01 21:00 (UTC+3)",
  "physics": {
   "label": "ballistic de-orbit, 1.68 km/s, 3 deg, 1.6-2.4 t",
@@ -32,681 +35,1588 @@
   "illum_frac": 0.3868700347031858,
   "elongation": 76.78125067512113,
   "distance_km": 379819.6738275379,
-  "light_time_s": 1.2669420583873992,
-  "moon_age_days": 6.298195367878686
+  "light_time_geocentric_s": 1.2669420583873992,
+  "waxing": true
+ },
+ "geometry": {
+  "observer": "geocentre (zero vector)",
+  "emission_geocentric": 79.93538858168907,
+  "incidence": 176.95285132944082,
+  "sunlit": false,
+  "earth_elev_local": 10.064611418310932,
+  "sun_elev_local": -86.95285132944082,
+  "shadow_height_km": 30946.47582911332,
+  "limb_clearance_km": 0.0,
+  "plume_emission_ok": true
  },
  "reachability": {
   "status": "conditional",
-  "condition": "orbit node longitude at 2027-09-01 00:00:00 must be 210.4 deg (ascending pass) or 30.4 deg (descending) within +-0.6 deg (no plane change) or +-2.5 deg (~70 m/s plane change); otherwise the nearest passes over this site occur ~13.7 days earlier/later with different phase and local time",
-  "omega0_ascending": 210.4465545625003,
-  "omega0_descending": 30.446554562500296,
-  "polar_note": ""
+  "planes": [
+   {
+    "node_ref_deg": 210.49836943668078,
+    "inclination_ref_deg": 89.77017008705906,
+    "pass_type": "northbound"
+   },
+   {
+    "node_ref_deg": 30.498369436680775,
+    "inclination_ref_deg": 90.22982991294094,
+    "pass_type": "southbound"
+   }
+  ],
+  "required_node_mod180_deg": 30.498369436680775,
+  "nearest_family_node_deg": 30.0,
+  "offset_from_family_grid_deg": 0.4983694366807754,
+  "p_random_polar_plane_within": {
+   "0.6": 0.006666666666666666,
+   "2.5": 0.027777777777777776
+  },
+  "plane_change_dv_m_s": {
+   "0.6": 17.105937038009387,
+   "2.5": 71.26940939762815
+  },
+  "orbital_period_min": 117.79099609631831,
+  "note": "the impact is possible at this epoch only if the orbit plane is within the cross-track tolerance of the required node AND the orbital phase puts the spacecraft over the point; given the plane, passes over the latitude recur every orbital period. "
  },
  "sites": {
   "TUG": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.249",
+   "light_time_s": 1.2489308384216822,
    "visible": true,
-   "emission": 79.40815561402646,
+   "emission": 79.40810187435419,
+   "d_emission": -0.0023250938560693156,
+   "J_em": [
+    0.001786773983340595,
+    -0.03295775164478698
+   ],
+   "J_sky": [
+    [
+     -0.018543205564859545,
+     -0.10246543451537907
+    ],
+    [
+     0.5497982984555503,
+     0.025371877087897954
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 52.4966132642394,
-   "moon_az": 265.0499781831172,
-   "sun_alt": -19.87915375208675,
-   "alt_point": 52.732496455051646,
-   "airmass": 1.2595016711806912,
+   "moon_alt": 52.49239555615189,
+   "d_moon_alt": -0.19456933638305784,
+   "sun_alt": -19.883007946077036,
+   "d_sun_alt": -0.18450015680907902,
+   "alt_point": 52.72827971807408,
+   "az_point": 264.8691848432614,
+   "moon_az": 265.0535852484862,
+   "range_km": 374420.0459224369,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.397440783318476,
-   "disk_x": 0.9810938382629149,
-   "disk_y": 0.04474466440633679,
-   "range_km": 374419.7650266367,
-   "twilight": 4,
+   "disk_x": 0.9819402939859805,
+   "disk_y": 0.044783642014422344,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.259572651400278,
+   "twilight": 4,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "DAG": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.251",
+   "light_time_s": 1.2510778484015435,
    "visible": true,
-   "emission": 79.32902500618717,
+   "emission": 79.32898288237446,
+   "d_emission": -0.0017809520658573774,
+   "J_em": [
+    0.0017353703301949963,
+    -0.0329606556059332
+   ],
+   "J_sky": [
+    [
+     -0.01881946933355241,
+     -0.10301379522354887
+    ],
+    [
+     0.5488889283012769,
+     0.024404319658607558
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 43.697394950083385,
-   "moon_az": 268.96664384453845,
-   "sun_alt": -26.112507718892125,
-   "alt_point": 43.92492614648616,
-   "airmass": 1.445724747889945,
+   "moon_alt": 43.693331225191805,
+   "d_moon_alt": -0.18719627141360248,
+   "sun_alt": -26.1159061064543,
+   "d_sun_alt": -0.16235018312016258,
+   "alt_point": 43.92086242850164,
+   "az_point": 268.79402302334825,
+   "moon_az": 268.9700590591765,
+   "range_km": 375063.70332165004,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.38027771383047,
-   "disk_x": 0.9808200554429147,
-   "disk_y": 0.0450558046158849,
-   "range_km": 375063.3806942483,
-   "twilight": 4,
+   "disk_x": 0.9816710033713667,
+   "disk_y": 0.045095157428746924,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "21:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.4458317026018266,
+   "twilight": 4,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "AUKR": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.249",
+   "light_time_s": 1.249449412153083,
    "visible": true,
-   "emission": 79.40398411019606,
+   "emission": 79.40393453051983,
+   "d_emission": -0.0021285021771006996,
+   "J_em": [
+    0.0017541129341225314,
+    -0.032959503791616385
+   ],
+   "J_sky": [
+    [
+     -0.018542677434541233,
+     -0.10243975796284573
+    ],
+    [
+     0.5495981855483414,
+     0.024832161139472647
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 50.24438904223112,
-   "moon_az": 262.9813775920356,
-   "sun_alt": -20.397975037281505,
-   "alt_point": 50.47051418158938,
-   "airmass": 1.2995965671128866,
+   "moon_alt": 50.24035882602652,
+   "d_moon_alt": -0.18590196333606812,
+   "sun_alt": -20.401593094790083,
+   "d_sun_alt": -0.17309873452443866,
+   "alt_point": 50.46648554384364,
+   "az_point": 262.7810495680895,
+   "moon_az": 262.98532378607126,
+   "range_km": 374575.5104160278,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.389739502086677,
-   "disk_x": 0.9810882745200122,
-   "disk_y": 0.04457345506498613,
-   "range_km": 374575.22822895483,
-   "twilight": 4,
+   "disk_x": 0.9819347100512367,
+   "disk_y": 0.04461224819623035,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.2996724136285382,
+   "twilight": 4,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "ULUP": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.248",
+   "light_time_s": 1.2483936722799998,
    "visible": true,
-   "emission": 79.46853457428863,
+   "emission": 79.46848030164672,
+   "d_emission": -0.002347422046980796,
+   "J_em": [
+    0.0017640912607248538,
+    -0.032958825239774114
+   ],
+   "J_sky": [
+    [
+     -0.018296645134847744,
+     -0.10191109547382644
+    ],
+    [
+     0.5500628128669491,
+     0.025095115159335386
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 55.02504460688062,
-   "moon_az": 257.49597390030283,
-   "sun_alt": -15.857348974074007,
-   "alt_point": 55.247186885999106,
-   "airmass": 1.2195019729622798,
+   "moon_alt": 55.02109503915224,
+   "d_moon_alt": -0.1823557519738273,
+   "sun_alt": -15.861076462158486,
+   "d_sun_alt": -0.17849952384640186,
+   "alt_point": 55.24324083656714,
+   "az_point": 257.2600089063657,
+   "moon_az": 257.5005937359546,
+   "range_km": 374259.00756446755,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.392388147588637,
-   "disk_x": 0.9813197747550859,
-   "disk_y": 0.04411755085153075,
-   "range_km": 374258.76025382034,
-   "twilight": 3,
+   "disk_x": 0.9821620816358347,
+   "disk_y": 0.044155805568956055,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.2195606477227734,
+   "twilight": 3,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "EGE": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.248",
+   "light_time_s": 1.248451872629889,
    "visible": true,
-   "emission": 79.44980179668141,
+   "emission": 79.44974679613016,
+   "d_emission": -0.002382762756468537,
+   "J_em": [
+    0.0017783121725045703,
+    -0.03295810982127989
+   ],
+   "J_sky": [
+    [
+     -0.018376913313171386,
+     -0.1020970717085928
+    ],
+    [
+     0.5500222211863106,
+     0.02529865034120398
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 54.736818203073234,
-   "moon_az": 260.5978307510324,
-   "sun_alt": -17.043490650779656,
-   "alt_point": 54.96619503598583,
-   "airmass": 1.2238139969996955,
+   "moon_alt": 54.73272899060129,
+   "d_moon_alt": -0.18875258003080617,
+   "sun_alt": -17.047307308416,
+   "d_sun_alt": -0.1827705447452601,
+   "alt_point": 54.96210821231338,
+   "az_point": 260.3848524784238,
+   "moon_az": 260.6020345031625,
+   "range_km": 374276.4555904173,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.395764452454312,
-   "disk_x": 0.9812477432831389,
-   "disk_y": 0.04435682214145653,
-   "range_km": 374276.19764643675,
-   "twilight": 3,
+   "disk_x": 0.982091407350324,
+   "disk_y": 0.044395349854263695,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.2238756155332284,
+   "twilight": 3,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "IST": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.249",
+   "light_time_s": 1.2488507918040033,
    "visible": true,
-   "emission": 79.44870850165096,
+   "emission": 79.44865686535785,
+   "d_emission": -0.002223557934763676,
+   "J_em": [
+    0.0017507127765270525,
+    -0.032959579962593466
+   ],
+   "J_sky": [
+    [
+     -0.018367209460262008,
+     -0.10205544532141447
+    ],
+    [
+     0.5498705109763448,
+     0.024846122784489524
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 52.90081747120862,
-   "moon_az": 258.42168468026694,
-   "sun_alt": -17.301477216794115,
-   "alt_point": 53.12067088843171,
-   "airmass": 1.2527674559448714,
+   "moon_alt": 52.89691017063468,
+   "d_moon_alt": -0.18035241784770903,
+   "sun_alt": -17.305098548799357,
+   "d_sun_alt": -0.1733403631139563,
+   "alt_point": 53.116766696301106,
+   "az_point": 258.19191495595396,
+   "moon_az": 258.42617761490476,
+   "range_km": 374396.0485501684,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.389341819628697,
-   "disk_x": 0.9812518122634498,
-   "disk_y": 0.04419335786446378,
-   "range_km": 374395.79084877996,
-   "twilight": 3,
+   "disk_x": 0.9820953044894056,
+   "disk_y": 0.044231708272655317,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.2528319118253104,
+   "twilight": 3,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "ERC": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.250",
+   "light_time_s": 1.249935698977919,
    "visible": true,
-   "emission": 79.37016239047774,
+   "emission": 79.37011437640767,
+   "d_emission": -0.002056361330465961,
+   "J_em": [
+    0.0017584298585546776,
+    -0.032959352118595575
+   ],
+   "J_sky": [
+    [
+     -0.0186752878421939,
+     -0.10272859714125815
+    ],
+    [
+     0.5493760915233499,
+     0.024848693982123138
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 48.204647951811396,
-   "moon_az": 266.30833215783844,
-   "sun_alt": -22.813629937121704,
-   "alt_point": 48.43524992757978,
-   "airmass": 1.340009486034271,
+   "moon_alt": 48.20052909576371,
+   "d_moon_alt": -0.18989011825219534,
+   "sun_alt": -22.817254988838307,
+   "d_sun_alt": -0.17336528261005277,
+   "alt_point": 48.43113171266855,
+   "az_point": 266.1285002073698,
+   "moon_az": 266.3118974563448,
+   "range_km": 374721.2955385383,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.389538209726787,
-   "disk_x": 0.9809636323428798,
-   "disk_y": 0.04487177364471591,
-   "range_km": 374720.9947533332,
-   "twilight": 4,
+   "disk_x": 0.9818122668570884,
+   "disk_y": 0.044910911306826305,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.3400953618286429,
+   "twilight": 4,
+   "local_time": "21:00 Istanbul (UTC+3)"
   },
   "KRY": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.248",
+   "light_time_s": 1.247704475273149,
    "visible": true,
-   "emission": 79.4981728754311,
+   "emission": 79.49811420562737,
+   "d_emission": -0.002554595193366538,
+   "J_em": [
+    0.0017905304048468906,
+    -0.03295733799083678
+   ],
+   "J_sky": [
+    [
+     -0.018193028343668555,
+     -0.10169999458102169
+    ],
+    [
+     0.550347232230701,
+     0.025571314271719298
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 58.46248344462588,
-   "moon_az": 257.2781099938792,
-   "sun_alt": -13.730774358641286,
-   "alt_point": 58.690855814558944,
-   "airmass": 1.1725387366952207,
+   "moon_alt": 58.45841652699911,
+   "d_moon_alt": -0.18783858904104705,
+   "sun_alt": -13.734690002770032,
+   "d_sun_alt": -0.18763556773423407,
+   "alt_point": 58.6867926529185,
+   "az_point": 257.0387274680721,
+   "moon_az": 257.2828211675419,
+   "range_km": 374052.3914997375,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.397143629823418,
-   "disk_x": 0.9814193780851129,
-   "disk_y": 0.044043498590449426,
-   "range_km": 374052.1594931227,
-   "twilight": 3,
+   "disk_x": 0.9822599114756021,
+   "disk_y": 0.04408164832879195,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.172589707688901,
+   "twilight": 3,
+   "local_time": "19:30 local mean solar time"
   },
   "SEV": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.245",
+   "light_time_s": 1.24514050169386,
    "visible": true,
-   "emission": 79.85890027337307,
+   "emission": 79.85882975675142,
+   "d_emission": -0.003108463541262552,
+   "J_em": [
+    0.0018211469541711267,
+    -0.03295476420228738
+   ],
+   "J_sky": [
+    [
+     -0.01675431106172647,
+     -0.09843698843651859
+    ],
+    [
+     0.5514982396496296,
+     0.02656420471786116
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 77.51414787094548,
-   "moon_az": 203.48788462401814,
-   "sun_alt": 8.47708301262165,
-   "alt_point": 77.61359262607087,
-   "airmass": 1.023844083067204,
+   "moon_alt": 77.51247134020974,
+   "d_moon_alt": -0.07788663516697056,
+   "sun_alt": 8.472947274048073,
+   "d_sun_alt": -0.19861996769653087,
+   "alt_point": 77.61199222615149,
+   "az_point": 202.38168920817128,
+   "moon_az": 203.5084672653674,
+   "range_km": 373283.7315581554,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.359051572307465,
-   "disk_x": 0.9826928189400697,
-   "disk_y": 0.041311417195732156,
-   "range_km": 373283.69392226025,
-   "twilight": 0,
+   "disk_x": 0.983507878659689,
+   "disk_y": 0.041346264665765714,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "18:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.0238507025630277,
+   "twilight": 0,
+   "local_time": "17:36 local mean solar time"
   },
   "CAHA": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.245",
+   "light_time_s": 1.245235326826524,
    "visible": true,
-   "emission": 79.81232082727954,
+   "emission": 79.8122506244081,
+   "d_emission": -0.003094179897445315,
+   "J_em": [
+    0.0018218845879260925,
+    -0.03295484481131439
+   ],
+   "J_sky": [
+    [
+     -0.016945106694063027,
+     -0.09888146401113836
+    ],
+    [
+     0.5514499568033492,
+     0.026517515524843296
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 76.23399935324693,
-   "moon_az": 216.19589085462025,
-   "sun_alt": 5.742898650300617,
-   "alt_point": 76.37789870808442,
-   "airmass": 1.0291806658762865,
+   "moon_alt": 76.23151169033925,
+   "d_moon_alt": -0.11529038868086587,
+   "sun_alt": 5.7387580292261395,
+   "d_sun_alt": -0.1988397228583274,
+   "alt_point": 76.37546622756835,
+   "az_point": 215.28719174000963,
+   "moon_az": 216.2129217251369,
+   "range_km": 373312.159417757,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.367782814624704,
-   "disk_x": 0.9825295805197579,
-   "disk_y": 0.04169417351218498,
-   "range_km": 373312.0965832698,
-   "twilight": 0,
+   "disk_x": 0.983348095246271,
+   "disk_y": 0.041729481433016656,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "18:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.029191590889553,
+   "twilight": 0,
+   "local_time": "17:49 local mean solar time"
   },
   "ORM": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.245",
+   "light_time_s": 1.2447919740774545,
    "visible": true,
-   "emission": 80.03503586618433,
+   "emission": 80.0349586121995,
+   "d_emission": -0.0034293041296393767,
+   "J_em": [
+    0.001901288672456758,
+    -0.03294978184310082
+   ],
+   "J_sky": [
+    [
+     -0.016054919613800307,
+     -0.09680733222399285
+    ],
+    [
+     0.551599112345569,
+     0.02807912646097811
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 83.48021800061686,
-   "moon_az": 114.40392816796492,
-   "sun_alt": 18.838974131387054,
-   "alt_point": 83.25075018286195,
-   "airmass": 1.0061820729316093,
+   "moon_alt": 83.48444011829484,
+   "d_moon_alt": 0.19425011057114858,
+   "sun_alt": 18.83443060709275,
+   "d_sun_alt": -0.21831554597570638,
+   "alt_point": 83.25500847957339,
+   "az_point": 113.3181644396553,
+   "moon_az": 114.42320865553619,
+   "range_km": 373179.24560735235,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.32721730590506,
-   "disk_x": 0.983283012375683,
-   "disk_y": 0.04035015674859146,
-   "range_km": 373179.30043199117,
-   "twilight": 0,
+   "disk_x": 0.984084938994575,
+   "disk_y": 0.040383733047079345,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "17:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.0061736299943707,
+   "twilight": 0,
+   "local_time": "16:48 local mean solar time"
   },
   "TEI": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.245",
+   "light_time_s": 1.2447409334539394,
    "visible": true,
-   "emission": 80.0152498370703,
+   "emission": 80.01517201130613,
+   "d_emission": -0.0034567231860293647,
+   "J_em": [
+    0.001906851735796522,
+    -0.03294951420454595
+   ],
+   "J_sky": [
+    [
+     -0.016138771740325897,
+     -0.09700715094522383
+    ],
+    [
+     0.5516141898941151,
+     0.02814662129641837
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 84.7898697943623,
-   "moon_az": 116.01820195927915,
-   "sun_alt": 17.671154046964592,
-   "alt_point": 84.56222961633215,
-   "airmass": 1.003830648112029,
+   "moon_alt": 84.79405440749262,
+   "d_moon_alt": 0.19212532743237318,
+   "sun_alt": 17.666585715723407,
+   "d_sun_alt": -0.21951983336370126,
+   "alt_point": 84.56646329365073,
+   "az_point": 114.63179127737116,
+   "moon_az": 116.04309276561246,
+   "range_km": 373163.9440133709,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.332465933414344,
-   "disk_x": 0.9832135836559612,
-   "disk_y": 0.04054510718584102,
-   "range_km": 373163.9879594737,
-   "twilight": 0,
+   "disk_x": 0.9840170389495488,
+   "disk_y": 0.040578910146414494,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "17:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.0038239916530798,
+   "twilight": 0,
+   "local_time": "16:53 local mean solar time"
   },
   "OUK": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.245",
+   "light_time_s": 1.2447623561756023,
    "visible": true,
-   "emission": 79.88488556320692,
+   "emission": 79.88480954091541,
+   "d_emission": -0.0033711872471243963,
+   "J_em": [
+    0.0018814509859055306,
+    -0.03295131847637833
+   ],
+   "J_sky": [
+    [
+     -0.016669271703500854,
+     -0.09825478948014973
+    ],
+    [
+     0.5516133626906364,
+     0.027578234266147465
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 83.80431923687969,
-   "moon_az": 211.37521989756198,
-   "sun_alt": 10.065167253917572,
-   "alt_point": 83.93890687039777,
-   "airmass": 1.005550238804771,
+   "moon_alt": 83.80196265208434,
+   "d_moon_alt": -0.10834740887659677,
+   "sun_alt": 10.060719067730831,
+   "d_sun_alt": -0.21372813921201406,
+   "alt_point": 83.93669397514302,
+   "az_point": 209.3049076428905,
+   "moon_az": 211.41348580308838,
+   "range_km": 373170.3663837553,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.36030453935172,
-   "disk_x": 0.9827680810465955,
-   "disk_y": 0.041460709373656715,
-   "range_km": 373170.3407696336,
-   "twilight": 0,
+   "disk_x": 0.9835813958553404,
+   "disk_y": 0.04149565690423062,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "17:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.0055547140964436,
+   "twilight": 0,
+   "local_time": "17:28 local mean solar time"
   },
   "KOT": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.249",
+   "light_time_s": 1.2492171407755923,
    "visible": true,
-   "emission": 79.35328930746503,
+   "emission": 79.35323254412555,
+   "d_emission": -0.002471814957603158,
+   "J_em": [
+    0.0018479738485410735,
+    -0.03295451797251303
+   ],
+   "J_sky": [
+    [
+     -0.018782796170310482,
+     -0.10301514662002693
+    ],
+    [
+     0.5496098771349271,
+     0.02627732952640368
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 51.23304865179245,
-   "moon_az": 274.8598040048407,
-   "sun_alt": -23.609985668747637,
-   "alt_point": 51.48627706497161,
-   "airmass": 1.2814430275417328,
+   "moon_alt": 51.22848198597206,
+   "d_moon_alt": -0.2104755315381091,
+   "sun_alt": -23.61420467476236,
+   "d_sun_alt": -0.20195929128961296,
+   "alt_point": 51.48170945589827,
+   "az_point": 274.7606584207181,
+   "moon_az": 274.8619207739186,
+   "range_km": 374505.87720884685,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.40583639656599,
-   "disk_x": 0.9808752025609413,
-   "disk_y": 0.045571134145656236,
-   "range_km": 374505.5644562475,
-   "twilight": 4,
+   "disk_x": 0.9817255371950929,
+   "disk_y": 0.04561103167902756,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.2815248445766707,
+   "twilight": 4,
+   "local_time": "20:07 local mean solar time"
   },
   "SAAO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.257",
+   "light_time_s": 1.2572982875799104,
    "visible": true,
-   "emission": 79.53149231405465,
+   "emission": 79.53142813469537,
+   "d_emission": -0.0028603711681583375,
+   "J_em": [
+    0.0023898592882147796,
+    -0.032919032574014295
+   ],
+   "J_sky": [
+    [
+     -0.018104106621185737,
+     -0.10104130328521206
+    ],
+    [
+     0.5455359054353063,
+     0.03497761979851554
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 23.207073998095503,
-   "moon_az": 328.34027148008397,
-   "sun_alt": -19.428186263244125,
-   "alt_point": 23.325323407540402,
-   "airmass": 2.5248165319677764,
+   "moon_alt": 23.204729822796445,
+   "d_moon_alt": -0.10667112559516596,
+   "sun_alt": -19.432592953731916,
+   "d_sun_alt": -0.20989961372059723,
+   "alt_point": 23.32299584683322,
+   "az_point": 328.5871733838974,
+   "moon_az": 328.3357698758533,
+   "range_km": 376928.54407277214,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.253214236482616,
-   "disk_x": 0.9813739104866006,
-   "disk_y": 0.047483534031817785,
-   "range_km": 376928.30743665865,
-   "twilight": 4,
+   "disk_x": 0.9822053114009086,
+   "disk_y": 0.047524257214210525,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "19:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 2.525054584153145,
+   "twilight": 4,
+   "local_time": "19:23 local mean solar time"
   },
   "WISE": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.250",
+   "light_time_s": 1.2498029608734533,
    "visible": true,
-   "emission": 79.32577777537165,
+   "emission": 79.32572413765703,
+   "d_emission": -0.0023252871534054976,
+   "J_em": [
+    0.0018347128032161208,
+    -0.03295531750001146
+   ],
+   "J_sky": [
+    [
+     -0.018882668870289054,
+     -0.1032223014291357
+    ],
+    [
+     0.5493606288616332,
+     0.026016995576123168
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 48.733968685466174,
-   "moon_az": 275.26399949358984,
-   "sun_alt": -25.706372636614592,
-   "alt_point": 48.985440661076005,
-   "airmass": 1.3291208222170183,
+   "moon_alt": 48.72943558220046,
+   "d_moon_alt": -0.20884782200832105,
+   "sun_alt": -25.71049992672032,
+   "d_sun_alt": -0.19746445024625495,
+   "alt_point": 48.980906526937424,
+   "az_point": 275.1607792072588,
+   "moon_az": 275.2661765869865,
+   "range_km": 374681.50165593036,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.40241648451531,
-   "disk_x": 0.9807781851628905,
-   "disk_y": 0.04570931879093619,
-   "range_km": 374681.1742824473,
-   "twilight": 4,
+   "disk_x": 0.9816301858348024,
+   "disk_y": 0.045749386715744834,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "20:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.329212843779084,
+   "twilight": 4,
+   "local_time": "20:19 local mean solar time"
   },
   "SAO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.251",
+   "light_time_s": 1.2511779749060938,
    "visible": true,
-   "emission": 79.36010580481451,
+   "emission": 79.36006630891686,
+   "d_emission": -0.001655523496077649,
+   "J_em": [
+    0.001701584385571664,
+    -0.032962331327496486
+   ],
+   "J_sky": [
+    [
+     -0.01868059380865336,
+     -0.10268265821138503
+    ],
+    [
+     0.5488779046779455,
+     0.02390096983154144
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 43.34213696146274,
-   "moon_az": 265.3553496120916,
-   "sun_alt": -24.134681315797927,
-   "alt_point": 43.55670736442221,
-   "airmass": 1.4551626230833985,
+   "moon_alt": 43.33832264969911,
+   "d_moon_alt": -0.17576510514311253,
+   "sun_alt": -24.137819974502168,
+   "d_sun_alt": -0.1499032744134638,
+   "alt_point": 43.552893965331805,
+   "az_point": 265.15555232226274,
+   "moon_az": 265.359253788185,
+   "range_km": 375093.7204925602,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.37150623223629,
-   "disk_x": 0.9809439520168688,
-   "disk_y": 0.0445944289443642,
-   "range_km": 375093.41583156213,
-   "twilight": 4,
+   "disk_x": 0.9817925301847648,
+   "disk_y": 0.04463325151973689,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "21:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.45526492543143,
+   "twilight": 4,
+   "local_time": "20:45 local mean solar time"
   },
   "BYU": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.252",
+   "light_time_s": 1.251723381417387,
    "visible": true,
-   "emission": 79.31003973794908,
+   "emission": 79.31000089674338,
+   "d_emission": -0.0016276983690403312,
+   "J_em": [
+    0.0017229883800098378,
+    -0.032961339874233886
+   ],
+   "J_sky": [
+    [
+     -0.018883566791588858,
+     -0.10313413614351166
+    ],
+    [
+     0.5486138672835617,
+     0.024169379670592753
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 41.323194231071945,
-   "moon_az": 270.43161398133856,
-   "sun_alt": -27.758780430632886,
-   "alt_point": 41.54893512642071,
-   "airmass": 1.5123533061330776,
+   "moon_alt": 41.31916274066974,
+   "d_moon_alt": -0.18562623460059696,
+   "sun_alt": -27.762042706649165,
+   "d_sun_alt": -0.1557510373259099,
+   "alt_point": 41.544903322833875,
+   "az_point": 270.26172030300586,
+   "moon_az": 270.4349714474736,
+   "range_km": 375257.2292511899,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.374144087991652,
-   "disk_x": 0.9807542253592051,
-   "disk_y": 0.04512918283718291,
-   "range_km": 375256.896555433,
-   "twilight": 4,
+   "disk_x": 0.9816061600085502,
+   "disk_y": 0.04516861681549184,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "21:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.512473889473537,
+   "twilight": 4,
+   "local_time": "20:57 local mean solar time"
   },
   "MAID": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.257",
+   "light_time_s": 1.2571641739580315,
    "visible": true,
-   "emission": 79.17707285903928,
+   "emission": 79.17705817778675,
+   "d_emission": -0.0005089481969051235,
+   "J_em": [
+    0.001670624211257632,
+    -0.032964257952087905
+   ],
+   "J_sky": [
+    [
+     -0.019326468165596317,
+     -0.10392066536160899
+    ],
+    [
+     0.5462650406605444,
+     0.023061058149928898
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 23.701984171975422,
-   "moon_az": 284.49851515645634,
-   "sun_alt": -41.03580413168582,
-   "alt_point": 23.924921961612107,
-   "airmass": 2.475627255682992,
+   "moon_alt": 23.697986997774958,
+   "d_moon_alt": -0.18326216723393535,
+   "sun_alt": -41.03800828640885,
+   "d_sun_alt": -0.10465566712874405,
+   "alt_point": 23.920921929044233,
+   "az_point": 284.35679573064067,
+   "moon_az": 284.5013276410122,
+   "range_km": 376888.33782041783,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.317699349661034,
-   "disk_x": 0.9802808992482241,
-   "disk_y": 0.045852126554246427,
-   "range_km": 376887.9328773462,
-   "twilight": 4,
+   "disk_x": 0.9811390677784807,
+   "disk_y": 0.04589227687123056,
+   "sky_ok": true,
+   "operational": true,
+   "closed": false,
    "available": true,
-   "local_time": "22:00 (approx. local solar zone)"
+   "candidate": true,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 2.4760161842596653,
+   "twilight": 4,
+   "local_time": "22:27 local mean solar time"
   },
   "HAN": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.261",
+   "light_time_s": 1.2610885329838195,
    "visible": true,
-   "emission": 79.10494283335626,
+   "emission": 79.10494274390413,
+   "d_emission": 0.0001577093584103295,
+   "J_em": [
+    0.0016747282778766248,
+    -0.03296414898197497
+   ],
+   "J_sky": [
+    [
+     -0.01955982878835953,
+     -0.10428685063160395
+    ],
+    [
+     0.5445516739090664,
+     0.02296158493190938
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 12.492186983408995,
-   "moon_az": 292.42306741753146,
-   "sun_alt": -50.600229152681656,
-   "alt_point": 12.720167125415895,
-   "airmass": 4.5341557105673465,
+   "moon_alt": 12.488077092617974,
+   "d_moon_alt": -0.18780749627232804,
+   "sun_alt": -50.60166843189452,
+   "d_sun_alt": -0.0680057846930147,
+   "alt_point": 12.7160532770419,
+   "az_point": 292.3010190119957,
+   "moon_az": 292.4255164893261,
+   "range_km": 378064.8310588334,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.272834376268655,
-   "disk_x": 0.9800127981001535,
-   "disk_y": 0.046447068583082826,
-   "range_km": 378064.3852476515,
-   "twilight": 4,
+   "disk_x": 0.9808736446266078,
+   "disk_y": 0.0464877446547928,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "23:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 4.535564348230115,
+   "twilight": 4,
+   "local_time": "23:15 local mean solar time"
   },
   "TNO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.269",
+   "light_time_s": 1.2692254659972302,
    "visible": true,
-   "emission": 79.06286292916161,
+   "emission": 79.06289103055322,
+   "d_emission": 0.0014305652859832208,
+   "J_em": [
+    0.0017116405792876321,
+    -0.032962179642993306
+   ],
+   "J_sky": [
+    [
+     -0.01961531914990659,
+     -0.10404320424513153
+    ],
+    [
+     0.541024206018559,
+     0.023341623251434514
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -9.593443657319948,
-   "moon_az": 301.20624583126045,
-   "sun_alt": -65.31940633814432,
-   "alt_point": -9.357997897199091,
-   "airmass": Infinity,
+   "moon_alt": -9.597730988506562,
+   "d_moon_alt": -0.1945963543359591,
+   "sun_alt": -65.31782630721624,
+   "d_sun_alt": 0.07469792866293404,
+   "alt_point": -9.362290197079624,
+   "az_point": 301.104783013507,
+   "moon_az": 301.2083309768541,
+   "range_km": 380504.222207505,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9798493529664877,
-   "disk_y": 0.04700684187511559,
-   "range_km": 380503.74912026536,
-   "twilight": 4,
+   "disk_x": 0.9807078027675186,
+   "disk_y": 0.04704765872095521,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "01:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 4,
+   "local_time": "00:33 local mean solar time"
   },
   "LIJ": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.268",
+   "light_time_s": 1.268101738156084,
    "visible": true,
-   "emission": 79.11512588861336,
+   "emission": 79.11515435191176,
+   "d_emission": 0.0014570200814389977,
+   "J_em": [
+    0.0016432820015239713,
+    -0.032965544616089915
+   ],
+   "J_sky": [
+    [
+     -0.019400764391175798,
+     -0.10359053856037985
+    ],
+    [
+     0.5415669193381972,
+     0.02235197853353157
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -6.507636088475062,
-   "moon_az": 302.7576922773828,
-   "sun_alt": -57.14554295580011,
-   "alt_point": -6.287824385675102,
-   "airmass": Infinity,
+   "moon_alt": -6.5116091638782105,
+   "d_moon_alt": -0.18058983431440626,
+   "sun_alt": -57.144165441095595,
+   "d_sun_alt": 0.06524625920019603,
+   "alt_point": -6.2918036702704825,
+   "az_point": 302.6264844328158,
+   "moon_az": 302.76032144774246,
+   "range_km": 380167.33707588474,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9800658674392134,
-   "disk_y": 0.04615331362051348,
-   "range_km": 380166.89543908456,
-   "twilight": 4,
+   "disk_x": 0.9809212713247433,
+   "disk_y": 0.04619323862691489,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "01:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 4,
+   "local_time": "00:40 local mean solar time"
   },
   "OKA": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.274",
+   "light_time_s": 1.2736827807845963,
    "visible": true,
-   "emission": 79.45247397061736,
+   "emission": 79.45253341714438,
+   "d_emission": 0.002872094226043487,
+   "J_em": [
+    0.0014923770808508152,
+    -0.032971716636325255
+   ],
+   "J_sky": [
+    [
+     -0.017919118469579276,
+     -0.09985414117090076
+    ],
+    [
+     0.5393541935873752,
+     0.020299724994984995
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -21.864764793614782,
-   "moon_az": 326.4596525083191,
-   "sun_alt": -33.645837491674044,
-   "alt_point": -21.727063687742742,
-   "airmass": Infinity,
+   "moon_alt": -21.867170512255136,
+   "d_moon_alt": -0.10920845809629114,
+   "sun_alt": -33.642282874753725,
+   "d_sun_alt": 0.1672105219574199,
+   "alt_point": -21.729484194556044,
+   "az_point": 326.23152963604707,
+   "moon_az": 326.4640724243812,
+   "range_km": 381840.49156368925,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9813546260098174,
-   "disk_y": 0.04252257301940821,
-   "range_km": 381840.239412681,
-   "twilight": 4,
+   "disk_x": 0.9821816751028469,
+   "disk_y": 0.04255785618417054,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "03:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 4,
+   "local_time": "02:54 local mean solar time"
   },
   "KISO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.274",
+   "light_time_s": 1.2739293968674248,
    "visible": true,
-   "emission": 79.50412012219421,
+   "emission": 79.50418148245758,
+   "d_emission": 0.002960249801621728,
+   "J_em": [
+    0.0014773715826947864,
+    -0.03297225285895422
+   ],
+   "J_sky": [
+    [
+     -0.0177046277934443,
+     -0.09933862405136619
+    ],
+    [
+     0.5392672645168677,
+     0.02012148570721815
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -22.554732927074426,
-   "moon_az": 330.12794871300514,
-   "sun_alt": -30.23771343842758,
-   "alt_point": -22.431246627502762,
-   "airmass": Infinity,
+   "moon_alt": -22.55686919694371,
+   "d_moon_alt": -0.09704073441709511,
+   "sun_alt": -30.234089735623687,
+   "d_sun_alt": 0.17042260639081022,
+   "alt_point": -22.433398701770056,
+   "az_point": 329.8897323701287,
+   "moon_az": 330.1325491733056,
+   "range_km": 381914.42520534276,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9815449157867918,
-   "disk_y": 0.04202215287514183,
-   "range_km": 381914.20204656577,
-   "twilight": 4,
+   "disk_x": 0.9823680177430253,
+   "disk_y": 0.04205683133177284,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "03:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 4,
+   "local_time": "03:10 local mean solar time"
   },
   "SSO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.286",
+   "light_time_s": 1.2861377743929487,
    "visible": true,
-   "emission": 79.66437891297888,
+   "emission": 79.66445009790611,
+   "d_emission": 0.003309765686022104,
+   "J_em": [
+    0.0019990920227002107,
+    -0.0329440911005463
+   ],
+   "J_sky": [
+    [
+     -0.017046371969267553,
+     -0.0972428124189424
+    ],
+    [
+     0.5337318482619237,
+     0.0282656907735031
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -72.35654357848946,
-   "moon_az": 257.63924088745944,
-   "sun_alt": -29.61402747644246,
-   "alt_point": -72.12451016763667,
-   "airmass": Infinity,
+   "moon_alt": -72.36095894811467,
+   "d_moon_alt": -0.1972086002891416,
+   "sun_alt": -29.609557004378225,
+   "d_sun_alt": 0.20787246915965304,
+   "alt_point": -72.12893118807261,
+   "az_point": 257.9705115813491,
+   "moon_az": 257.63341252334544,
+   "range_km": 385574.4047119115,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9819881453517549,
-   "disk_y": 0.04390959250001394,
-   "range_km": 385574.25108072866,
-   "twilight": 4,
+   "disk_x": 0.9827915952694127,
+   "disk_y": 0.04394487068314385,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "04:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 4,
+   "local_time": "03:56 local mean solar time"
   },
   "MTJ": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.286",
+   "light_time_s": 1.2861515934869552,
    "visible": true,
-   "emission": 79.9648387446371,
+   "emission": 79.96490277391153,
+   "d_emission": 0.002979449666847245,
+   "J_em": [
+    0.002099973713185932,
+    -0.032937047272156406
+   ],
+   "J_sky": [
+    [
+     -0.01587286576779814,
+     -0.0944810030647231
+    ],
+    [
+     0.5336617652602833,
+     0.030204724797080067
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -72.19497393185156,
-   "moon_az": 174.6258688484994,
-   "sun_alt": -10.953273952385704,
-   "alt_point": -72.22235085762425,
-   "airmass": Infinity,
+   "moon_alt": -72.19461700845268,
+   "d_moon_alt": 0.01661090572619912,
+   "sun_alt": -10.94941574290759,
+   "d_sun_alt": 0.17934189335791562,
+   "alt_point": -72.22204862472248,
+   "az_point": 175.43684451558588,
+   "moon_az": 174.61036003581899,
+   "range_km": 385578.5475720711,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9830204398008965,
-   "disk_y": 0.0420354224951062,
-   "range_km": 385578.55802786397,
-   "twilight": 2,
+   "disk_x": 0.9838018659284515,
+   "disk_y": 0.042068289818708964,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "05:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 2,
+   "local_time": "05:21 local mean solar time"
   },
   "MKO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.278",
+   "light_time_s": 1.2775400095358722,
    "visible": true,
-   "emission": 80.43678338774232,
+   "emission": 80.43685250510362,
+   "d_emission": 0.0032979134232718364,
+   "J_em": [
+    0.0015648558550935832,
+    -0.03296573580809081
+   ],
+   "J_sky": [
+    [
+     -0.01394680825099839,
+     -0.09032984715575873
+    ],
+    [
+     0.5377849431388178,
+     0.02249457474594642
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -33.254091230655874,
-   "moon_az": 38.68779768479071,
-   "sun_alt": 23.873844916972836,
-   "alt_point": -33.4140779269595,
-   "airmass": Infinity,
+   "moon_alt": -33.250981065826046,
+   "d_moon_alt": 0.13952699881739078,
+   "sun_alt": 23.878857488274097,
+   "d_sun_alt": 0.23490798201072954,
+   "alt_point": -33.410984155978475,
+   "az_point": 38.45275717212526,
+   "moon_az": 38.69209978015269,
+   "range_km": 382996.8596521025,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.984724761147447,
-   "disk_y": 0.03510893969861019,
-   "range_km": 382997.1500975522,
-   "twilight": 0,
+   "disk_x": 0.9854766783251037,
+   "disk_y": 0.03513524728369884,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "08:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 0,
+   "local_time": "07:38 local mean solar time"
   },
   "HAL": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.277",
+   "light_time_s": 1.2774645155033932,
    "visible": true,
-   "emission": 80.4232625109886,
+   "emission": 80.42333185445266,
+   "d_emission": 0.003309123399127145,
+   "J_em": [
+    0.001557223999583357,
+    -0.032966133286649324
+   ],
+   "J_sky": [
+    [
+     -0.014000029707662386,
+     -0.09045865507514672
+    ],
+    [
+     0.5378211477468418,
+     0.022360838025153446
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": -33.020622517014445,
-   "moon_az": 37.70152630875318,
-   "sun_alt": 23.08247853254265,
-   "alt_point": -33.17592191834903,
-   "airmass": Infinity,
+   "moon_alt": -33.01759689884964,
+   "d_moon_alt": 0.13571855145950665,
+   "sun_alt": 23.087461938181278,
+   "d_sun_alt": 0.23355926561136578,
+   "alt_point": -33.17291307003167,
+   "az_point": 37.46282559486284,
+   "moon_az": 37.70590212427871,
+   "range_km": 382974.22711054137,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 999.0,
-   "disk_x": 0.9846820994794433,
-   "disk_y": 0.03517477642766793,
-   "range_km": 382974.5102953137,
-   "twilight": 0,
+   "disk_x": 0.9854350680920665,
+   "disk_y": 0.03520116981587666,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "08:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": null,
+   "twilight": 0,
+   "local_time": "07:34 local mean solar time"
   },
   "APO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.262",
+   "light_time_s": 1.2623968672191619,
    "visible": true,
-   "emission": 80.7272832615575,
+   "emission": 80.7272914867089,
+   "d_emission": 0.0005553674678552056,
+   "J_em": [
+    0.0016243323726286008,
+    -0.03296240012225837
+   ],
+   "J_sky": [
+    [
+     -0.012949453194980835,
+     -0.08866806019134116
+    ],
+    [
+     0.5442176103317194,
+     0.024023542756523034
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 9.336120181815241,
-   "moon_az": 65.65459188196603,
-   "sun_alt": 58.089832196043716,
-   "alt_point": 9.120321578408491,
-   "airmass": 5.953120638414904,
+   "moon_alt": 9.34017139434565,
+   "d_moon_alt": 0.18424435051280827,
+   "sun_alt": 58.092238608834364,
+   "d_sun_alt": 0.11424935084198466,
+   "alt_point": 9.124367867784942,
+   "az_point": 65.51129276469425,
+   "moon_az": 65.6571157281757,
+   "range_km": 378457.05979513214,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 18.900739334583275,
-   "disk_x": 0.985636544050265,
-   "disk_y": 0.03312254854088373,
-   "range_km": 378457.5039721091,
-   "twilight": 0,
+   "disk_x": 0.986375504148118,
+   "disk_y": 0.033147417299621,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "11:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 5.950736619675643,
+   "twilight": 0,
+   "local_time": "10:56 local mean solar time"
   },
   "PAL": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.265",
+   "light_time_s": 1.2653450650696072,
    "visible": true,
-   "emission": 80.68995075367124,
+   "emission": 80.68997287270535,
+   "d_emission": 0.0011909986402997674,
+   "J_em": [
+    0.0015827508845234206,
+    -0.0329644615812299
+   ],
+   "J_sky": [
+    [
+     -0.013061262314736805,
+     -0.08879624230662637
+    ],
+    [
+     0.5429788135959663,
+     0.023263790103902657
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 1.3460585071395876,
-   "moon_az": 60.13899664510091,
-   "sun_alt": 51.60441795335269,
-   "alt_point": 1.1434011487569027,
-   "airmass": 23.528285766301416,
+   "moon_alt": 1.3498897198373807,
+   "d_moon_alt": 0.17376729081522288,
+   "sun_alt": 51.60771902761914,
+   "d_sun_alt": 0.15629432506968682,
+   "alt_point": 1.1472259417652204,
+   "az_point": 59.98087915480794,
+   "moon_az": 60.14181461220954,
+   "range_km": 379340.90727538744,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 18.864197413684334,
-   "disk_x": 0.9855278404472626,
-   "disk_y": 0.033192919469727536,
-   "range_km": 379341.3333655307,
-   "twilight": 0,
+   "disk_x": 0.9862679161808414,
+   "disk_y": 0.03321776235227433,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "10:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 23.500192141042834,
+   "twilight": 0,
+   "local_time": "10:12 local mean solar time"
   },
   "SPM": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.265",
+   "light_time_s": 1.265386074118437,
    "visible": true,
-   "emission": 80.71638071680216,
+   "emission": 80.71640165631925,
+   "d_emission": 0.0011350508991768038,
+   "J_em": [
+    0.001602878803808494,
+    -0.032963420042506186
+   ],
+   "J_sky": [
+    [
+     -0.01295826936157028,
+     -0.08855151904220578
+    ],
+    [
+     0.5429479682267805,
+     0.02361235054357849
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 1.2367969121586166,
-   "moon_az": 60.78258232494515,
-   "sun_alt": 54.01976284607099,
-   "alt_point": 1.0270687151573306,
-   "airmass": 24.353232441230823,
+   "moon_alt": 1.2407517558657903,
+   "d_moon_alt": 0.17940655569695232,
+   "sun_alt": 54.023175513797725,
+   "d_sun_alt": 0.1615562760080415,
+   "alt_point": 1.0310174500274194,
+   "az_point": 60.633608631154566,
+   "moon_az": 60.78522373149884,
+   "range_km": 379353.2014789364,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 18.858061441265466,
-   "disk_x": 0.9856079124947105,
-   "disk_y": 0.033089240546000036,
-   "range_km": 379353.6414329318,
-   "twilight": 0,
+   "disk_x": 0.9863459682539515,
+   "disk_y": 0.03311394833469383,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "10:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 24.32255378318674,
+   "twilight": 0,
+   "local_time": "10:18 local mean solar time"
   },
   "CTIO": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.262",
+   "light_time_s": 1.2623887344327385,
    "visible": true,
-   "emission": 80.6789037284528,
+   "emission": 80.67886677312943,
+   "d_emission": -0.0015847208695078051,
+   "J_em": [
+    0.0022763685720832427,
+    -0.032923951843486066
+   ],
+   "J_sky": [
+    [
+     -0.01329946916120316,
+     -0.08949368825496194
+    ],
+    [
+     0.5435919011106015,
+     0.03442396556197824
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 9.168951303772738,
-   "moon_az": 51.7881721318184,
-   "sun_alt": 50.66327725596944,
-   "alt_point": 8.966344544670005,
-   "airmass": 6.053158532368637,
+   "moon_alt": 9.172541211393945,
+   "d_moon_alt": 0.16399932995594887,
+   "sun_alt": 50.66102185373524,
+   "d_sun_alt": -0.10713927418792864,
+   "alt_point": 8.969942322456435,
+   "az_point": 51.94900076405188,
+   "moon_az": 51.7850128103372,
+   "range_km": 378454.6216470999,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 18.923803935758727,
-   "disk_x": 0.9853548353467797,
-   "disk_y": 0.03709551747860442,
-   "range_km": 378455.0167182879,
-   "twilight": 0,
+   "disk_x": 0.9860972108231714,
+   "disk_y": 0.03712388658944667,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "13:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 6.050975560011637,
+   "twilight": 0,
+   "local_time": "13:17 local mean solar time"
   },
   "PAR": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.261",
+   "light_time_s": 1.2610580474161235,
    "visible": true,
-   "emission": 80.71209561478452,
+   "emission": 80.71205636467634,
+   "d_emission": -0.0016862592629848904,
+   "J_em": [
+    0.0022388885430473238,
+    -0.03292645904203084
+   ],
+   "J_sky": [
+    [
+     -0.01316814793082561,
+     -0.08924543142557749
+    ],
+    [
+     0.5442101894334642,
+     0.033895972263546834
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 12.8552464787205,
-   "moon_az": 52.53695789458373,
-   "sun_alt": 55.27833756665207,
-   "alt_point": 12.64072676602551,
-   "airmass": 4.4130989769081905,
+   "moon_alt": 12.859062357580413,
+   "d_moon_alt": 0.17444068223122322,
+   "sun_alt": 55.275653723700344,
+   "d_sun_alt": -0.12755749691109486,
+   "alt_point": 12.644550064027067,
+   "az_point": 52.68406683324807,
+   "moon_az": 52.53404695359498,
+   "range_km": 378055.69171556015,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 18.935672187851942,
-   "disk_x": 0.9854684536132815,
-   "disk_y": 0.03660976214281504,
-   "range_km": 378056.1058863622,
-   "twilight": 0,
+   "disk_x": 0.9862091166841049,
+   "disk_y": 0.03663772164144316,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "13:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 4.411861172439773,
+   "twilight": 0,
+   "local_time": "13:18 local mean solar time"
   },
   "OPD": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.255",
+   "light_time_s": 1.255020723947508,
    "visible": true,
-   "emission": 80.46807079576877,
+   "emission": 80.46800428972439,
+   "d_emission": -0.0029540333587831924,
+   "J_em": [
+    0.002302748720950376,
+    -0.03292281947605602
+   ],
+   "J_sky": [
+    [
+     -0.014253268016950555,
+     -0.09208312135851644
+    ],
+    [
+     0.546733070136289,
+     0.034809690136521104
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 30.451329231962593,
-   "moon_az": 36.24703989398841,
-   "sun_alt": 39.37028388051822,
-   "alt_point": 30.28443422539217,
-   "airmass": 1.9676970578359305,
+   "moon_alt": 30.454217331797388,
+   "d_moon_alt": 0.1328757556990471,
+   "sun_alt": 39.36598685845054,
+   "d_sun_alt": -0.20505034418969287,
+   "alt_point": 30.287338161611178,
+   "az_point": 36.474837108644294,
+   "moon_az": 36.24265704915268,
+   "range_km": 376245.7476731629,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 19.0823643126732,
-   "disk_x": 0.9846559557377954,
-   "disk_y": 0.0390433726832429,
-   "range_km": 376246.0246676143,
-   "twilight": 0,
+   "disk_x": 0.9854186012827243,
+   "disk_y": 0.03907426519992148,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "15:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 1.9675295312855798,
+   "twilight": 0,
+   "local_time": "14:57 local mean solar time"
   },
   "CAS": {
+   "t_impact_utc": "2028-04-01 18:00:00.000",
+   "t_reception_utc": "2028-04-01T18:00:01.262",
+   "light_time_s": 1.2623908191564257,
    "visible": true,
-   "emission": 80.65756105245164,
+   "emission": 80.65752302354623,
+   "d_emission": -0.0016356720450446006,
+   "J_em": [
+    0.0022913772646262487,
+    -0.03292296729360089
+   ],
+   "J_sky": [
+    [
+     -0.013390647213826472,
+     -0.08970854136249837
+    ],
+    [
+     0.5435721783576202,
+     0.034640462948425155
+    ]
+   ],
    "incidence": 176.95285132944082,
    "sunlit": false,
-   "moon_alt": 9.152981027780468,
-   "moon_az": 50.692425841056874,
-   "sun_alt": 48.694452617054644,
-   "alt_point": 8.956204967205993,
-   "airmass": 6.062888606737817,
+   "moon_alt": 9.156458781744263,
+   "d_moon_alt": 0.1589055940278648,
+   "sun_alt": 48.692161417313606,
+   "d_sun_alt": -0.10883834091476814,
+   "alt_point": 8.959691015723129,
+   "az_point": 50.86022264098837,
+   "moon_az": 50.68914044798378,
+   "range_km": 378455.2466315383,
    "illum": 0.3868700347031858,
-   "dist_sunlit_arcmin": 18.928806945077774,
-   "disk_x": 0.985282792620044,
-   "disk_y": 0.037359733312421345,
-   "range_km": 378455.62946757575,
-   "twilight": 0,
+   "disk_x": 0.9860267690404145,
+   "disk_y": 0.03738837128168341,
+   "sky_ok": false,
+   "operational": false,
+   "closed": false,
    "available": false,
-   "local_time": "13:00 (approx. local solar zone)"
+   "candidate": false,
+   "dist_sunlit_arcmin": 999.0,
+   "airmass": 6.060767130024912,
+   "twilight": 0,
+   "local_time": "13:22 local mean solar time"
   }
  },
  "n_sites_available": 14,
@@ -735,195 +1645,387 @@
   "IST",
   "ERC"
  ],
- "geometry": {
-  "emission_geocentric": 79.93519822820726,
-  "incidence": 176.95285132944082,
-  "sunlit": false,
-  "earth_elev_local": 10.064801771792744,
-  "sun_elev_local": -86.95285132944082,
-  "shadow_height_km": 30946.47582911332,
-  "limb_clearance_km": 0.0
- },
+ "sites_closed": [],
  "terrain": {
-  "dem": "SYNTHETIC random-field DEM (ppd=4, seed=20261005, rms=1.9 km, beta=2.4)",
-  "local_horizon_elev_deg": -0.8571547304998538,
-  "earth_elev_deg": 10.064801771792744,
-  "visible_with_terrain": true,
-  "plume_clearance_km": 0.0,
-  "roughness_factor": 1.0,
-  "p_visible_statistical": 0.98,
-  "note": "SYNTHETIC DEM horizon statistics scaled by a terrain-class roughness factor (mare 0.6, highland 1.0, polar 1.6); replace with LDEM_16 ray tracing for site-specific results"
+  "dem": "none: no LOLA product could be obtained in the analysis environment, so no site-specific terrain test is made",
+  "synthetic_relief_p_visible": {
+   "low (mare-like)": 1.0,
+   "medium": 0.96,
+   "high (highland/polar)": 0.8466666666666667
+  },
+  "p_terrain_range": [
+   0.8466666666666667,
+   1.0
+  ],
+  "synthetic_relief_levels": {
+   "low (mare-like)": {
+    "rms_km": 0.3,
+    "beta": 3.6
+   },
+   "medium": {
+    "rms_km": 1.0,
+    "beta": 3.6
+   },
+   "high (highland/polar)": {
+    "rms_km": 2.0,
+    "beta": 3.6
+   }
+  },
+  "note": "illustrative sensitivity: Earth above the horizon of 150 synthetic Gaussian-relief patches per declared relief level at the geocentric emission angle; not a validated lunar prior and not a bound (real terrain can raise or lower the horizon)"
  },
  "energy": {
   "E_k_J": 2822400000.0,
   "mass_mean_kg": 2000.0,
   "v_km_s": 1.68,
-  "angle_deg": 3,
+  "angle_deg": 3.0,
   "tnt_equiv_kg": 674.5697896749522
  },
  "flash_magnitudes": [
   {
+   "eta_vis": 1e-06,
+   "T0": 2000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 7.602285274829706e-05,
+   "energy_consistent": true,
+   "V_peak": 17.32,
+   "V_t_peak_s": 0.0,
+   "Rc_peak": 15.53,
+   "Rc_t_peak_s": 0.0,
+   "Ic_peak": 13.77,
+   "Ic_t_peak_s": 0.0,
+   "Ks_peak": 9.36,
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 15.62,
+   "Ic_avg_first_23ms": 13.84,
+   "Ks_avg_first_2s": 10.89
+  },
+  {
+   "eta_vis": 1e-06,
+   "T0": 3000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 1.448187194126541e-05,
+   "energy_consistent": true,
+   "V_peak": 16.2,
+   "V_t_peak_s": 0.0,
+   "Rc_peak": 15.13,
+   "Rc_t_peak_s": 0.0,
+   "Ic_peak": 14.04,
+   "Ic_t_peak_s": 0.0,
+   "Ks_peak": 11.63,
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 15.2,
+   "Ic_avg_first_23ms": 14.1,
+   "Ks_avg_first_2s": 12.8
+  },
+  {
+   "eta_vis": 1e-06,
+   "T0": 4500.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 5.23000164417898e-06,
+   "energy_consistent": true,
+   "V_peak": 15.92,
+   "V_t_peak_s": 0.0,
+   "Rc_peak": 15.31,
+   "Rc_t_peak_s": 0.0,
+   "Ic_peak": 14.68,
+   "Ic_t_peak_s": 0.0,
+   "Ks_peak": 13.39,
+   "Ks_t_peak_s": 0.254,
+   "Rc_avg_first_23ms": 15.35,
+   "Ic_avg_first_23ms": 14.71,
+   "Ks_avg_first_2s": 14.18
+  },
+  {
    "eta_vis": 1e-05,
-   "T0": 2000,
+   "T0": 2000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.0007602285274829708,
+   "energy_consistent": true,
    "V_peak": 14.82,
+   "V_t_peak_s": 0.0,
    "Rc_peak": 13.03,
+   "Rc_t_peak_s": 0.0,
    "Ic_peak": 11.27,
-   "J_peak": 8.74,
-   "H_peak": 7.61,
+   "Ic_t_peak_s": 0.0,
    "Ks_peak": 6.86,
-   "broad_peak": 14.39,
-   "Rc_avg33ms": 13.16,
-   "Ic_avg33ms": 11.37,
-   "Ks_avg2s": 8.39
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 13.12,
+   "Ic_avg_first_23ms": 11.34,
+   "Ks_avg_first_2s": 8.39
   },
   {
    "eta_vis": 1e-05,
-   "T0": 2500,
-   "V_peak": 14.07,
-   "Rc_peak": 12.71,
-   "Ic_peak": 11.35,
-   "J_peak": 9.52,
-   "H_peak": 8.7,
-   "Ks_peak": 8.15,
-   "broad_peak": 13.9,
-   "Rc_avg33ms": 12.84,
-   "Ic_avg33ms": 11.45,
-   "Ks_avg2s": 9.51
-  },
-  {
-   "eta_vis": 1e-05,
-   "T0": 3000,
+   "T0": 3000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.0001448187194126541,
+   "energy_consistent": true,
    "V_peak": 13.7,
+   "V_t_peak_s": 0.0,
    "Rc_peak": 12.63,
+   "Rc_t_peak_s": 0.0,
    "Ic_peak": 11.54,
-   "J_peak": 10.17,
-   "H_peak": 9.55,
+   "Ic_t_peak_s": 0.0,
    "Ks_peak": 9.13,
-   "broad_peak": 13.65,
-   "Rc_avg33ms": 12.74,
-   "Ic_avg33ms": 11.62,
-   "Ks_avg2s": 10.3
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 12.7,
+   "Ic_avg_first_23ms": 11.6,
+   "Ks_avg_first_2s": 10.3
+  },
+  {
+   "eta_vis": 1e-05,
+   "T0": 4500.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 5.230001644178981e-05,
+   "energy_consistent": true,
+   "V_peak": 13.42,
+   "V_t_peak_s": 0.0,
+   "Rc_peak": 12.81,
+   "Rc_t_peak_s": 0.0,
+   "Ic_peak": 12.18,
+   "Ic_t_peak_s": 0.0,
+   "Ks_peak": 10.89,
+   "Ks_t_peak_s": 0.254,
+   "Rc_avg_first_23ms": 12.85,
+   "Ic_avg_first_23ms": 12.21,
+   "Ks_avg_first_2s": 11.68
   },
   {
    "eta_vis": 0.0001,
-   "T0": 2000,
+   "T0": 2000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.007602285274829707,
+   "energy_consistent": true,
    "V_peak": 12.32,
+   "V_t_peak_s": 0.0,
    "Rc_peak": 10.53,
+   "Rc_t_peak_s": 0.0,
    "Ic_peak": 8.77,
-   "J_peak": 6.24,
-   "H_peak": 5.11,
+   "Ic_t_peak_s": 0.0,
    "Ks_peak": 4.36,
-   "broad_peak": 11.89,
-   "Rc_avg33ms": 10.66,
-   "Ic_avg33ms": 8.87,
-   "Ks_avg2s": 5.89
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 10.62,
+   "Ic_avg_first_23ms": 8.84,
+   "Ks_avg_first_2s": 5.89
   },
   {
    "eta_vis": 0.0001,
-   "T0": 2500,
-   "V_peak": 11.57,
-   "Rc_peak": 10.21,
-   "Ic_peak": 8.85,
-   "J_peak": 7.02,
-   "H_peak": 6.2,
-   "Ks_peak": 5.65,
-   "broad_peak": 11.4,
-   "Rc_avg33ms": 10.34,
-   "Ic_avg33ms": 8.95,
-   "Ks_avg2s": 7.01
-  },
-  {
-   "eta_vis": 0.0001,
-   "T0": 3000,
+   "T0": 3000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.0014481871941265409,
+   "energy_consistent": true,
    "V_peak": 11.2,
+   "V_t_peak_s": 0.0,
    "Rc_peak": 10.13,
+   "Rc_t_peak_s": 0.0,
    "Ic_peak": 9.04,
-   "J_peak": 7.67,
-   "H_peak": 7.05,
+   "Ic_t_peak_s": 0.0,
    "Ks_peak": 6.63,
-   "broad_peak": 11.15,
-   "Rc_avg33ms": 10.24,
-   "Ic_avg33ms": 9.12,
-   "Ks_avg2s": 7.8
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 10.2,
+   "Ic_avg_first_23ms": 9.1,
+   "Ks_avg_first_2s": 7.8
+  },
+  {
+   "eta_vis": 0.0001,
+   "T0": 4500.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.0005230001644178979,
+   "energy_consistent": true,
+   "V_peak": 10.92,
+   "V_t_peak_s": 0.0,
+   "Rc_peak": 10.31,
+   "Rc_t_peak_s": 0.0,
+   "Ic_peak": 9.68,
+   "Ic_t_peak_s": 0.0,
+   "Ks_peak": 8.39,
+   "Ks_t_peak_s": 0.254,
+   "Rc_avg_first_23ms": 10.35,
+   "Ic_avg_first_23ms": 9.71,
+   "Ks_avg_first_2s": 9.18
   },
   {
    "eta_vis": 0.001,
-   "T0": 2000,
+   "T0": 2000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.07602285274829707,
+   "energy_consistent": true,
    "V_peak": 9.82,
+   "V_t_peak_s": 0.0,
    "Rc_peak": 8.03,
+   "Rc_t_peak_s": 0.0,
    "Ic_peak": 6.27,
-   "J_peak": 3.74,
-   "H_peak": 2.61,
+   "Ic_t_peak_s": 0.0,
    "Ks_peak": 1.86,
-   "broad_peak": 9.39,
-   "Rc_avg33ms": 8.16,
-   "Ic_avg33ms": 6.37,
-   "Ks_avg2s": 3.39
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 8.12,
+   "Ic_avg_first_23ms": 6.34,
+   "Ks_avg_first_2s": 3.39
   },
   {
    "eta_vis": 0.001,
-   "T0": 2500,
-   "V_peak": 9.07,
-   "Rc_peak": 7.71,
-   "Ic_peak": 6.35,
-   "J_peak": 4.52,
-   "H_peak": 3.7,
-   "Ks_peak": 3.15,
-   "broad_peak": 8.9,
-   "Rc_avg33ms": 7.84,
-   "Ic_avg33ms": 6.45,
-   "Ks_avg2s": 4.51
-  },
-  {
-   "eta_vis": 0.001,
-   "T0": 3000,
+   "T0": 3000.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.01448187194126541,
+   "energy_consistent": true,
    "V_peak": 8.7,
+   "V_t_peak_s": 0.0,
    "Rc_peak": 7.63,
+   "Rc_t_peak_s": 0.0,
    "Ic_peak": 6.54,
-   "J_peak": 5.17,
-   "H_peak": 4.55,
+   "Ic_t_peak_s": 0.0,
    "Ks_peak": 4.13,
-   "broad_peak": 8.65,
-   "Rc_avg33ms": 7.74,
-   "Ic_avg33ms": 6.62,
-   "Ks_avg2s": 5.3
+   "Ks_t_peak_s": 0.0,
+   "Rc_avg_first_23ms": 7.7,
+   "Ic_avg_first_23ms": 6.6,
+   "Ks_avg_first_2s": 5.3
+  },
+  {
+   "eta_vis": 0.001,
+   "T0": 4500.0,
+   "tau_s": 0.5,
+   "radiative_efficiency": 0.00523000164417898,
+   "energy_consistent": true,
+   "V_peak": 8.42,
+   "V_t_peak_s": 0.0,
+   "Rc_peak": 7.81,
+   "Rc_t_peak_s": 0.0,
+   "Ic_peak": 7.18,
+   "Ic_t_peak_s": 0.0,
+   "Ks_peak": 5.89,
+   "Ks_t_peak_s": 0.254,
+   "Rc_avg_first_23ms": 7.85,
+   "Ic_avg_first_23ms": 7.21,
+   "Ks_avg_first_2s": 6.68
   }
  ],
+ "flash_magnitude_note": "unocculted source-equivalent magnitudes at the geocentric distance (not apparent magnitudes if the point is occulted or behind the limb)",
+ "lab_trend": {
+  "eta_vis": 7.370781635564121e-17,
+  "V_peak": 41.53119662408163,
+  "Rc_peak": 40.45863716915279,
+  "note": "Swift et al. (2011) laboratory fit eta = 1.5e-3 exp(-(9.3/v)^2) for Pyrex into regolith simulant at 2.4-5.75 km/s, extrapolated below its tested range; T0 3000 K, tau 0.5 s. Under this case the flash is far below every detection limit."
+ },
  "plume": {
   "shadow_height_km": 30946.47582911332,
   "clearance_height_km": 0.0,
-  "ejecta_speed_needed_m_s": 14161.087647940547,
-  "ejecta_mass_sunlit_kg": 0.0,
-  "ejecta_mass_sunlit_upper_kg": 0.0,
-  "flight_time_s": 12362.223586217056,
-  "plume_V_mag_10um": null,
-  "plume_V_mag_1um": null,
-  "plume_V_mag_10um_upper": null,
-  "plume_sb_10um_mag_arcsec2": null,
-  "plume_sb_10um_upper_mag_arcsec2": null,
-  "background_sb_V": 13.631118645560885,
-  "contrast_10um": null,
-  "contrast_10um_upper": null,
-  "regime": "plume stays in shadow (needs > 30 km)",
-  "earthshine_lit_plume_V_mag": 17.52610645166662
+  "height_needed_km": 30946.47582911332,
+  "emission_criterion_ok": true,
+  "regime": "sunlight only far above the surface",
+  "instrument": "1-m telescope, V band, 1-s exposures, throughput 0.5, seeing 1.5 arcsec; background-subtraction systematic 1e-3 and 1e-2 of the background",
+  "cases": [
+   {
+    "rule": "vertical-component",
+    "impactor": "hollow bus (150 kg/m3)",
+    "params": "sand",
+    "U_eff_m_s": 87.92440648814564,
+    "vmax_domain_m_s": 2.619684248631456,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 3 m/s"
+   },
+   {
+    "rule": "vertical-component",
+    "impactor": "bus 400 kg/m3",
+    "params": "sand",
+    "U_eff_m_s": 87.92440648814564,
+    "vmax_domain_m_s": 7.468022714544735,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 7 m/s"
+   },
+   {
+    "rule": "vertical-component",
+    "impactor": "dense parts + hollow bus",
+    "params": "sand",
+    "U_eff_m_s": 87.92440648814564,
+    "vmax_domain_m_s": 52.200761301683386,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 52 m/s"
+   },
+   {
+    "rule": "vertical-equivalent",
+    "impactor": "hollow bus (150 kg/m3)",
+    "params": "sand",
+    "U_eff_m_s": 1680.0,
+    "vmax_domain_m_s": 58.747216275309675,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 59 m/s"
+   },
+   {
+    "rule": "vertical-equivalent",
+    "impactor": "bus 400 kg/m3",
+    "params": "sand",
+    "U_eff_m_s": 1680.0,
+    "vmax_domain_m_s": 156.34748436199266,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 156 m/s"
+   },
+   {
+    "rule": "vertical-equivalent",
+    "impactor": "dense parts + hollow bus",
+    "params": "sand",
+    "U_eff_m_s": 1680.0,
+    "vmax_domain_m_s": 1032.0955897442655,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 1032 m/s"
+   },
+   {
+    "rule": "vertical-equivalent",
+    "impactor": "dense parts + hollow bus",
+    "params": "sand/fly ash",
+    "U_eff_m_s": 1680.0,
+    "vmax_domain_m_s": 1024.3527736721487,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 1024 m/s"
+   },
+   {
+    "rule": "vertical-equivalent",
+    "impactor": "dense parts + hollow bus",
+    "params": "perlite/sand",
+    "U_eff_m_s": 1680.0,
+    "vmax_domain_m_s": 1158.4854541478376,
+    "v_needed_m_s": 2311.670875847879,
+    "observers": {},
+    "status": "cannot determine: reaching sunlight/visibility needs > 2312 m/s (vertical launch), above the scaling-domain maximum 1158 m/s"
+   }
+  ],
+  "note": "Housen & Holsapple (2011) point-source scaling with its domain [n1 a, n2 R]; two oblique-impact rules bracket a grazing impact by a hollow spacecraft, for which no validated rule exists; impactor bulk density is a calibration choice (the LCROSS like-for-like check favours ~400 kg/m3), not a validation."
  },
  "crater": {
-  "diameter_m": [
-   7.354196935999932,
-   10.82191155911934,
-   14.856048419239306
-  ],
-  "angular_size_arcsec": 0.005876950936341707,
-  "lroc_nac_pixels": 13.527389448899173,
-  "note": "pi-scaling with 15-deg angle floor; elongated/irregular for grazing impacts"
+  "rim_diameter_m": {
+   "vertical-component": [
+    4.704222508339394,
+    6.946285125939912,
+    10.807966130049444
+   ],
+   "vertical-equivalent": [
+    15.224026079864124,
+    19.49648476699287,
+    30.350364956554184
+   ],
+   "all": [
+    4.704222508339394,
+    13.221384946466392,
+    30.350364956554184
+   ]
+  },
+  "angular_size_arcsec": 0.007180009762267264,
+  "lroc_nac_pixels_median": 16.52673118308299,
+  "note": "envelope over the Holsapple (LPI) and Housen & Holsapple (2011) parameter sets, bulk densities 150/400/1000 kg/m3 and the two oblique-impact rules; neither rule is validated for a hollow spacecraft at grazing incidence"
  },
  "latency": {
-  "light_time_s": 1.2669420583873992,
-  "telemetry_note": "direct-to-Earth S/X-band: last frames before loss of signal arrive ~1.3 s after emission + ground processing (assumed 5-60 s); no relay -> no post-impact telemetry",
-  "broadcast_s": [
-   10,
-   60
+  "light_time_geocentric_s": 1.2669420583873992,
+  "light_time_station_range_s": [
+   1.2447409334539394,
+   1.2861515934869552
   ],
+  "telemetry_note": "direct-to-Earth S/X-band: the last frames before loss of signal arrive ~1.3 s after emission, plus ground processing (assumed 5-60 s); no relay, so no post-impact telemetry",
+  "broadcast_note": "broadcast (encoding/streaming) latency is separate from the light time: assumed 10-60 s",
   "rapid_replay_min": [
    5,
    60
@@ -934,620 +2036,2459 @@
   ]
  },
  "population": {
-  "1": 2549171502.0,
-  "2": 959754321.0,
-  "3": 712160642.0,
-  "total_cities": 3932182704.0,
-  "turkiye_total": 77066919.0,
-  "turkiye_public": 77066919.0,
-  "turkiye_facility": 77066919.0
+  "definition": "sum of GeoNames-reported settlement populations whose coordinates meet the criteria; not a census, lower bound or audience estimate",
+  "by_radius": {
+   "0km": {
+    "moon_up": 2547320102.0,
+    "public": 954881958.0,
+    "facility": 709577126.0,
+    "turkiye_total": 77066919.0,
+    "turkiye_public": 77066919.0,
+    "turkiye_facility": 77066919.0,
+    "n_settlements": 34006,
+    "all_settlements": 3932182704.0
+   },
+   "10km": {
+    "moon_up": 2232644028.0,
+    "public": 872344452.0,
+    "facility": 647023933.0,
+    "turkiye_total": 69618982.0,
+    "turkiye_public": 69618982.0,
+    "turkiye_facility": 69618982.0,
+    "n_settlements": 25683,
+    "all_settlements": 3478662862.0
+   },
+   "25km": {
+    "moon_up": 1899687492.0,
+    "public": 782034093.0,
+    "facility": 578051250.0,
+    "turkiye_total": 62608544.0,
+    "turkiye_public": 62608544.0,
+    "turkiye_facility": 62608544.0,
+    "n_settlements": 17474,
+    "all_settlements": 2979204309.0
+   }
+  },
+  "grid_cell_legacy": {
+   "public": 959754321.0,
+   "facility": 712160642.0,
+   "turkiye_public": 77066919.0
+  },
+  "n_reclassified_vs_grid": 175,
+  "pop_reclassified_vs_grid": 15335053.0
  },
  "orbiters": {
-  "lro_low_sun_next": [
-   0,
-   "2028-03-29",
-   "2028-05-28"
-  ],
-  "lro_first_image_days": {
-   "well_located_min": 0.4,
-   "well_located_typ": 6,
-   "well_located_max": 27,
-   "poorly_located": [
-    66,
-    123
-   ]
+  "lro": {
+   "p_operational_assumed": 0.7,
+   "p_operational_sensitivity": [
+    0.4,
+    0.9
+   ],
+   "p_note": "assumed probability that LRO is still operating in 2028 (scenario input, not measured; not a probability of imaging the crater)",
+   "latency_summary": "well-located near-side or mid-latitude impacts: first documented image after 0.6-11 days; far-side, high-latitude or poorly located impacts: about 2-4 months; public release 12-193 days after the event",
+   "latency_note": "heuristic from a small, selected precedent sample (impacts only; first documented image, release counted from the event); not a calibrated forecast for this site",
+   "low_sun_season_approx": {
+    "next_season": [
+     "2028-03-29",
+     "2028-05-28"
+    ],
+    "days_until": 0,
+    "inside": true
+   },
+   "season_note": "approximate orbit-plane illumination season (+-3 weeks model spread); does not guarantee a sunlit pass over this point"
   },
-  "lro_release_days": {
-   "typ_min": 12,
-   "typ_max": 34,
-   "poorly_located": [
-    92,
-    193
-   ]
+  "danuri": {
+   "p_operational_assumed": 0.4,
+   "low_sun_season_approx": {
+    "next_season": [
+     "2028-03-23",
+     "2028-06-02"
+    ],
+    "days_until": 0,
+    "inside": true
+   }
   },
-  "p_lro_operational": 0.7,
-  "danuri_low_sun_next": [
-   0,
-   "2028-03-23",
-   "2028-06-02"
-  ],
-  "p_danuri": 0.4,
   "high_latitude_note": ""
  },
  "mc": {
-  "A_turkiye_priority|slow-impact-wide": {
-   "p_any": 0.5225,
-   "p_confirmed": 0.22733333333333333,
-   "p_two_indep": 0.22733333333333333,
-   "p_obvious_any": 0.4106666666666667,
-   "p_live": 0.13216666666666665,
-   "p_rapid_replay": 0.38616666666666666,
-   "p_turkish": 0.5225,
-   "p_obvious_turkish": 0.4106666666666667,
-   "p_eyepiece_witness": 0.09754084416908373,
-   "p_naked_eye_witness": 2.127641676262946e-06,
-   "p_binocular_witness": 0.007836035403786346,
-   "mean_n_det": 1.059,
-   "station_p_det": {
-    "TUG:tug_t100_qhy": 0.18866666666666668,
-    "TUG:rtt150_fast": 0.19616666666666666,
-    "DAG:dag_dirac": 0.089,
-    "DAG:dag_visitor_fast": 0.1615,
-    "AUKR:amateur_class": 0.087,
-    "ULUP:amateur_class": 0.07966666666666666,
-    "EGE:amateur_class": 0.09633333333333334,
-    "IST:amateur_class": 0.066,
-    "ERC:amateur_class": 0.09466666666666666
+  "wide|broad": {
+   "n_outer": 200,
+   "n_inner": 150,
+   "N": 30000,
+   "eta_prior": "wide",
+   "T0_prior": "broad",
+   "eps_max": 0.1,
+   "rejected_fraction": 0.02053609324496397,
+   "eta_bins": [
+    -6.0,
+    -5.5,
+    -5.0,
+    -4.5,
+    -4.0,
+    -3.5,
+    -3.0,
+    -2.5
+   ],
+   "strategies": {
+    "A_turkiye_priority": {
+     "any": {
+      "p": 0.4916,
+      "k": 14748,
+      "mc_se": 0.004271950246156819,
+      "ci95": [
+       0.48322697751753263,
+       0.49997302248246733
+      ],
+      "wilson95_iid": [
+       0.4859442034669517,
+       0.49725794755360275
+      ],
+      "outer_p05": 0.4,
+      "outer_p50": 0.4866666666666667,
+      "outer_p95": 0.5936666666666666,
+      "by_eta": [
+       0.1546368204659662,
+       0.2704,
+       0.4354652505195105,
+       0.5584888484296768,
+       0.6411173184357541,
+       0.7008426966292135,
+       0.7112582781456953
+      ]
+     },
+     "two_indep": {
+      "p": 0.21886666666666665,
+      "k": 6566,
+      "mc_se": 0.0031702518715537244,
+      "ci95": [
+       0.21265297299842134,
+       0.22508036033491197
+      ],
+      "wilson95_iid": [
+       0.21422387926727354,
+       0.2235814449682736
+      ],
+      "outer_p05": 0.153,
+      "outer_p50": 0.22,
+      "outer_p95": 0.29333333333333333,
+      "by_eta": [
+       0.002740977615349475,
+       0.021942857142857142,
+       0.07388593858231356,
+       0.20050068274920346,
+       0.34480446927374303,
+       0.4538857677902622,
+       0.47019867549668876
+      ]
+     },
+     "dual_validated": {
+      "p": 0.0,
+      "k": 0,
+      "mc_se": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "wilson95_iid": [
+       1.3550791931992606e-20,
+       0.0001280369377766612
+      ],
+      "outer_p05": 0.0,
+      "outer_p50": 0.0,
+      "outer_p95": 0.0,
+      "by_eta": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "confirmed": {
+      "p": 0.21886666666666665,
+      "k": 6566,
+      "mc_se": 0.0031702518715537244,
+      "ci95": [
+       0.21265297299842134,
+       0.22508036033491197
+      ],
+      "wilson95_iid": [
+       0.21422387926727354,
+       0.2235814449682736
+      ],
+      "outer_p05": 0.153,
+      "outer_p50": 0.22,
+      "outer_p95": 0.29333333333333333,
+      "by_eta": [
+       0.002740977615349475,
+       0.021942857142857142,
+       0.07388593858231356,
+       0.20050068274920346,
+       0.34480446927374303,
+       0.4538857677902622,
+       0.47019867549668876
+      ]
+     },
+     "obvious_any": {
+      "p": 0.3753666666666667,
+      "k": 11261,
+      "mc_se": 0.00400172980464312,
+      "ci95": [
+       0.36752327624956616,
+       0.3832100570837672
+      ],
+      "wilson95_iid": [
+       0.36990351570110286,
+       0.38086173297292025
+      ],
+      "outer_p05": 0.28633333333333333,
+      "outer_p50": 0.37,
+      "outer_p95": 0.4666666666666667,
+      "by_eta": [
+       0.05870260392873458,
+       0.14125714285714286,
+       0.2537520203186331,
+       0.3996358670914884,
+       0.49675977653631287,
+       0.6219569288389513,
+       0.702251655629139
+      ]
+     },
+     "live": {
+      "p": 0.1302,
+      "k": 3906,
+      "mc_se": 0.002805796823078127,
+      "ci95": [
+       0.12470063822676689,
+       0.13569936177323313
+      ],
+      "wilson95_iid": [
+       0.12643917739027877,
+       0.1340555187289008
+      ],
+      "outer_p05": 0.07333333333333333,
+      "outer_p50": 0.12666666666666668,
+      "outer_p95": 0.19366666666666654,
+      "by_eta": [
+       0.0,
+       0.0,
+       0.007850380974370815,
+       0.10332271279016841,
+       0.2212290502793296,
+       0.29002808988764045,
+       0.31496688741721857
+      ]
+     },
+     "rapid": {
+      "p": 0.3646333333333333,
+      "k": 10939,
+      "mc_se": 0.004793257291886175,
+      "ci95": [
+       0.3552385490412364,
+       0.3740281176254302
+      ],
+      "wilson95_iid": [
+       0.35920425647032717,
+       0.37009707406329345
+      ],
+      "outer_p05": 0.26,
+      "outer_p50": 0.36,
+      "outer_p95": 0.4803333333333332,
+      "by_eta": [
+       0.09730470534490634,
+       0.21394285714285713,
+       0.3842068806280305,
+       0.46882111970869367,
+       0.4592178770949721,
+       0.46629213483146065,
+       0.47841059602649005
+      ]
+     },
+     "turkish": {
+      "p": 0.4916,
+      "k": 14748,
+      "mc_se": 0.004271950246156819,
+      "ci95": [
+       0.48322697751753263,
+       0.49997302248246733
+      ],
+      "wilson95_iid": [
+       0.4859442034669517,
+       0.49725794755360275
+      ],
+      "outer_p05": 0.4,
+      "outer_p50": 0.4866666666666667,
+      "outer_p95": 0.5936666666666666,
+      "by_eta": [
+       0.1546368204659662,
+       0.2704,
+       0.4354652505195105,
+       0.5584888484296768,
+       0.6411173184357541,
+       0.7008426966292135,
+       0.7112582781456953
+      ]
+     },
+     "obvious_turkish": {
+      "p": 0.3753666666666667,
+      "k": 11261,
+      "mc_se": 0.00400172980464312,
+      "ci95": [
+       0.36752327624956616,
+       0.3832100570837672
+      ],
+      "wilson95_iid": [
+       0.36990351570110286,
+       0.38086173297292025
+      ],
+      "outer_p05": 0.28633333333333333,
+      "outer_p50": 0.37,
+      "outer_p95": 0.4666666666666667,
+      "by_eta": [
+       0.05870260392873458,
+       0.14125714285714286,
+       0.2537520203186331,
+       0.3996358670914884,
+       0.49675977653631287,
+       0.6219569288389513,
+       0.702251655629139
+      ]
+     },
+     "n_stations": 9,
+     "station_p_det": {
+      "TUG:tug_t100_qhy": 0.1883,
+      "TUG:rtt150_fast": 0.20273333333333332,
+      "DAG:dag_dirac": 0.0878,
+      "DAG:dag_visitor_fast": 0.13556666666666667,
+      "AUKR:amateur_class": 0.08123333333333334,
+      "ULUP:amateur_class": 0.07536666666666667,
+      "EGE:amateur_class": 0.0968,
+      "IST:amateur_class": 0.06093333333333333,
+      "ERC:amateur_class": 0.0917
+     },
+     "station_p_fov": {
+      "TUG:tug_t100_qhy": 1.0,
+      "TUG:rtt150_fast": 1.0,
+      "DAG:dag_dirac": 0.497,
+      "DAG:dag_visitor_fast": 1.0,
+      "AUKR:amateur_class": 1.0,
+      "ULUP:amateur_class": 1.0,
+      "EGE:amateur_class": 1.0,
+      "IST:amateur_class": 1.0,
+      "ERC:amateur_class": 1.0
+     },
+     "station_p_saturated": {
+      "TUG:tug_t100_qhy": 0.0008,
+      "TUG:rtt150_fast": 0.004733333333333333,
+      "DAG:dag_dirac": 0.0112,
+      "DAG:dag_visitor_fast": 0.05386666666666667,
+      "AUKR:amateur_class": 0.0,
+      "ULUP:amateur_class": 0.0,
+      "EGE:amateur_class": 0.0,
+      "IST:amateur_class": 0.0,
+      "ERC:amateur_class": 0.0
+     }
+    },
+    "B_global_science": {
+     "any": {
+      "p": 0.6982666666666667,
+      "k": 20948,
+      "mc_se": 0.004328302710660251,
+      "ci95": [
+       0.6897831933537726,
+       0.7067501399795608
+      ],
+      "wilson95_iid": [
+       0.6930473627514995,
+       0.7034351996681075
+      ],
+      "outer_p05": 0.5930000000000001,
+      "outer_p50": 0.7,
+      "outer_p95": 0.7933333333333333,
+      "by_eta": [
+       0.2055733211512106,
+       0.4950857142857143,
+       0.7663357192334334,
+       0.8579881656804734,
+       0.8605586592178771,
+       0.8607209737827716,
+       0.8649006622516556
+      ]
+     },
+     "two_indep": {
+      "p": 0.4804333333333333,
+      "k": 14413,
+      "mc_se": 0.004278437881879443,
+      "ci95": [
+       0.4720475950848496,
+       0.48881907158181703
+      ],
+      "wilson95_iid": [
+       0.4747825014148088,
+       0.4860891757640227
+      ],
+      "outer_p05": 0.38,
+      "outer_p50": 0.48,
+      "outer_p95": 0.58,
+      "by_eta": [
+       0.02466879853814527,
+       0.20365714285714287,
+       0.5047333179404294,
+       0.6543013199817933,
+       0.6686033519553073,
+       0.6631554307116105,
+       0.6696688741721855
+      ]
+     },
+     "dual_validated": {
+      "p": 0.1669,
+      "k": 5007,
+      "mc_se": 0.003925144785317646,
+      "ci95": [
+       0.1592067162207774,
+       0.1745932837792226
+      ],
+      "wilson95_iid": [
+       0.16272309499759038,
+       0.17116220321035638
+      ],
+      "outer_p05": 0.08,
+      "outer_p50": 0.16666666666666666,
+      "outer_p95": 0.2733333333333333,
+      "by_eta": [
+       0.0,
+       0.0018285714285714285,
+       0.05679981528515354,
+       0.19685935366408738,
+       0.3032402234636872,
+       0.31086142322097376,
+       0.31867549668874173
+      ]
+     },
+     "confirmed": {
+      "p": 0.49393333333333334,
+      "k": 14818,
+      "mc_se": 0.0042357100385871874,
+      "ci95": [
+       0.48563134165770244,
+       0.5022353250089642
+      ],
+      "wilson95_iid": [
+       0.4882768560997144,
+       0.4995913640817972
+      ],
+      "outer_p05": 0.38666666666666666,
+      "outer_p50": 0.49333333333333335,
+      "outer_p95": 0.5933333333333334,
+      "by_eta": [
+       0.02466879853814527,
+       0.20388571428571428,
+       0.5086585084276148,
+       0.6686390532544378,
+       0.6916201117318436,
+       0.6900749063670412,
+       0.697748344370861
+      ]
+     },
+     "obvious_any": {
+      "p": 0.5598333333333333,
+      "k": 16795,
+      "mc_se": 0.004296503064330093,
+      "ci95": [
+       0.5514121873272463,
+       0.5682544793394203
+      ],
+      "wilson95_iid": [
+       0.554208652130852,
+       0.5654426927822607
+      ],
+      "outer_p05": 0.45966666666666667,
+      "outer_p50": 0.56,
+      "outer_p95": 0.6533333333333333,
+      "by_eta": [
+       0.05870260392873458,
+       0.17211428571428572,
+       0.4442392057261602,
+       0.7207555757851616,
+       0.8384357541899441,
+       0.8607209737827716,
+       0.8649006622516556
+      ]
+     },
+     "live": {
+      "p": 0.2414,
+      "k": 7242,
+      "mc_se": 0.003625577602763065,
+      "ci95": [
+       0.2342938678985844,
+       0.24850613210141562
+      ],
+      "wilson95_iid": [
+       0.2365907975075911,
+       0.24627542319662696
+      ],
+      "outer_p05": 0.15333333333333332,
+      "outer_p50": 0.24,
+      "outer_p95": 0.32033333333333325,
+      "by_eta": [
+       0.0,
+       0.002285714285714286,
+       0.06164858000461787,
+       0.24783796085571233,
+       0.4210055865921788,
+       0.4866573033707865,
+       0.5067549668874172
+      ]
+     },
+     "rapid": {
+      "p": 0.5914666666666667,
+      "k": 17744,
+      "mc_se": 0.004454161348914786,
+      "ci95": [
+       0.5827365104227937,
+       0.6001968229105397
+      ],
+      "wilson95_iid": [
+       0.5858927441937017,
+       0.5970171669158144
+      ],
+      "outer_p05": 0.49933333333333335,
+      "outer_p50": 0.5933333333333334,
+      "outer_p95": 0.7,
+      "by_eta": [
+       0.10118775696665144,
+       0.29874285714285714,
+       0.6155622258138997,
+       0.7819754210286755,
+       0.7899441340782123,
+       0.7853464419475655,
+       0.7952317880794701
+      ]
+     },
+     "turkish": {
+      "p": 0.4074,
+      "k": 12222,
+      "mc_se": 0.004637812206836859,
+      "ci95": [
+       0.3983098880745997,
+       0.41649011192540025
+      ],
+      "wilson95_iid": [
+       0.40185204606166836,
+       0.41297166637920774
+      ],
+      "outer_p05": 0.313,
+      "outer_p50": 0.4066666666666667,
+      "outer_p95": 0.5136666666666665,
+      "by_eta": [
+       0.1546368204659662,
+       0.2704,
+       0.429923805125837,
+       0.5045516613563951,
+       0.4887150837988827,
+       0.5053838951310862,
+       0.513112582781457
+      ]
+     },
+     "obvious_turkish": {
+      "p": 0.32876666666666665,
+      "k": 9863,
+      "mc_se": 0.004199805238631238,
+      "ci95": [
+       0.3205350483989494,
+       0.3369982849343839
+      ],
+      "wilson95_iid": [
+       0.3234729946830666,
+       0.3341041870335572
+      ],
+      "outer_p05": 0.22666666666666666,
+      "outer_p50": 0.32666666666666666,
+      "outer_p95": 0.42,
+      "by_eta": [
+       0.05870260392873458,
+       0.14125714285714286,
+       0.2537520203186331,
+       0.3975876194811106,
+       0.4601117318435754,
+       0.5025749063670412,
+       0.5128476821192053
+      ]
+     },
+     "n_stations": 31,
+     "station_p_det": {
+      "TUG:tug_t100_qhy": 0.1883,
+      "TUG:rtt150_fast": 0.20273333333333332,
+      "DAG:dag_dirac": 0.0878,
+      "DAG:dag_visitor_fast": 0.13556666666666667,
+      "KRY:lunar_impact_system": 0.21726666666666666,
+      "SEV:midas_video": 0.0,
+      "CAHA:fast_camera_possible": 0.0,
+      "ORM:fast_camera_large": 0.0,
+      "TEI:fast_camera_possible": 0.0,
+      "KOT:fast_camera_possible": 0.1951,
+      "SAAO:fast_camera_large": 0.2873,
+      "SAO:fast_camera_large": 0.16146666666666668,
+      "BYU:fast_camera_possible": 0.1233,
+      "MAID:fast_camera_possible": 0.18076666666666666,
+      "HAN:fast_camera_possible": 0.0,
+      "TNO:fast_camera_large": 0.0,
+      "LIJ:fast_camera_possible": 0.0,
+      "OKA:fast_camera_large": 0.0,
+      "KISO:fast_camera_possible": 0.0,
+      "SSO:fast_camera_large": 0.0,
+      "MTJ:fast_camera_possible": 0.0,
+      "MKO:nir_large": 0.0,
+      "MKO:fast_camera_large": 0.0,
+      "HAL:fast_camera_possible": 0.0,
+      "APO:fast_camera_large": 0.0,
+      "PAL:fast_camera_large": 0.0,
+      "SPM:fast_camera_possible": 0.0,
+      "CTIO:fast_camera_large": 0.0,
+      "PAR:nir_large": 0.0,
+      "OPD:fast_camera_possible": 0.0,
+      "CAS:fast_camera_possible": 0.0
+     },
+     "station_p_fov": {
+      "TUG:tug_t100_qhy": 1.0,
+      "TUG:rtt150_fast": 1.0,
+      "DAG:dag_dirac": 0.497,
+      "DAG:dag_visitor_fast": 1.0,
+      "KRY:lunar_impact_system": 1.0,
+      "SEV:midas_video": null,
+      "CAHA:fast_camera_possible": null,
+      "ORM:fast_camera_large": null,
+      "TEI:fast_camera_possible": null,
+      "KOT:fast_camera_possible": 1.0,
+      "SAAO:fast_camera_large": 1.0,
+      "SAO:fast_camera_large": 1.0,
+      "BYU:fast_camera_possible": 1.0,
+      "MAID:fast_camera_possible": 1.0,
+      "HAN:fast_camera_possible": null,
+      "TNO:fast_camera_large": null,
+      "LIJ:fast_camera_possible": null,
+      "OKA:fast_camera_large": null,
+      "KISO:fast_camera_possible": null,
+      "SSO:fast_camera_large": null,
+      "MTJ:fast_camera_possible": null,
+      "MKO:nir_large": null,
+      "MKO:fast_camera_large": null,
+      "HAL:fast_camera_possible": null,
+      "APO:fast_camera_large": null,
+      "PAL:fast_camera_large": null,
+      "SPM:fast_camera_possible": null,
+      "CTIO:fast_camera_large": null,
+      "PAR:nir_large": null,
+      "OPD:fast_camera_possible": null,
+      "CAS:fast_camera_possible": null
+     },
+     "station_p_saturated": {
+      "TUG:tug_t100_qhy": 0.0008,
+      "TUG:rtt150_fast": 0.004733333333333333,
+      "DAG:dag_dirac": 0.0112,
+      "DAG:dag_visitor_fast": 0.05386666666666667,
+      "KRY:lunar_impact_system": 0.018166666666666668,
+      "SEV:midas_video": 0.0,
+      "CAHA:fast_camera_possible": 0.0,
+      "ORM:fast_camera_large": 0.0,
+      "TEI:fast_camera_possible": 0.0,
+      "KOT:fast_camera_possible": 0.009966666666666667,
+      "SAAO:fast_camera_large": 0.0318,
+      "SAO:fast_camera_large": 0.019266666666666668,
+      "BYU:fast_camera_possible": 0.005533333333333334,
+      "MAID:fast_camera_possible": 0.008133333333333333,
+      "HAN:fast_camera_possible": 0.0,
+      "TNO:fast_camera_large": 0.0,
+      "LIJ:fast_camera_possible": 0.0,
+      "OKA:fast_camera_large": 0.0,
+      "KISO:fast_camera_possible": 0.0,
+      "SSO:fast_camera_large": 0.0,
+      "MTJ:fast_camera_possible": 0.0,
+      "MKO:nir_large": 0.0,
+      "MKO:fast_camera_large": 0.0,
+      "HAL:fast_camera_possible": 0.0,
+      "APO:fast_camera_large": 0.0,
+      "PAL:fast_camera_large": 0.0,
+      "SPM:fast_camera_possible": 0.0,
+      "CTIO:fast_camera_large": 0.0,
+      "PAR:nir_large": 0.0,
+      "OPD:fast_camera_possible": 0.0,
+      "CAS:fast_camera_possible": 0.0
+     }
+    },
+    "C_public_participation": {
+     "any": {
+      "p": 0.5897333333333333,
+      "k": 17692,
+      "mc_se": 0.004321227775980336,
+      "ci95": [
+       0.5812637268924119,
+       0.5982029397742548
+      ],
+      "wilson95_iid": [
+       0.5841560195126206,
+       0.5952876687916131
+      ],
+      "outer_p05": 0.49333333333333335,
+      "outer_p50": 0.5900000000000001,
+      "outer_p95": 0.6866666666666666,
+      "by_eta": [
+       0.10027409776153495,
+       0.2566857142857143,
+       0.4918032786885246,
+       0.6857077833409194,
+       0.8375418994413408,
+       0.8939606741573034,
+       0.9059602649006623
+      ]
+     },
+     "two_indep": {
+      "p": 0.40936666666666666,
+      "k": 12281,
+      "mc_se": 0.0037151800513663337,
+      "ci95": [
+       0.40208491376598865,
+       0.41664841956734466
+      ],
+      "wilson95_iid": [
+       0.4038143136457521,
+       0.4149422285165021
+      ],
+      "outer_p05": 0.32666666666666666,
+      "outer_p50": 0.4066666666666667,
+      "outer_p95": 0.4936666666666666,
+      "by_eta": [
+       0.0022841480127912287,
+       0.04137142857142857,
+       0.15977834218425305,
+       0.39690487027765137,
+       0.6775418994413408,
+       0.8122659176029963,
+       0.8349668874172186
+      ]
+     },
+     "dual_validated": {
+      "p": 0.1669,
+      "k": 5007,
+      "mc_se": 0.003925144785317646,
+      "ci95": [
+       0.1592067162207774,
+       0.1745932837792226
+      ],
+      "wilson95_iid": [
+       0.16272309499759038,
+       0.17116220321035638
+      ],
+      "outer_p05": 0.08,
+      "outer_p50": 0.16666666666666666,
+      "outer_p95": 0.2733333333333333,
+      "by_eta": [
+       0.0,
+       0.0018285714285714285,
+       0.05679981528515354,
+       0.19685935366408738,
+       0.3032402234636872,
+       0.31086142322097376,
+       0.31867549668874173
+      ]
+     },
+     "confirmed": {
+      "p": 0.42456666666666665,
+      "k": 12737,
+      "mc_se": 0.003794137974613943,
+      "ci95": [
+       0.4171301562364233,
+       0.43200317709691
+      ],
+      "wilson95_iid": [
+       0.4189834031870205,
+       0.4301692466523253
+      ],
+      "outer_p05": 0.34,
+      "outer_p50": 0.42,
+      "outer_p95": 0.5066666666666667,
+      "by_eta": [
+       0.0022841480127912287,
+       0.04228571428571429,
+       0.1819441237589471,
+       0.43309057806099227,
+       0.7081564245810056,
+       0.8209269662921348,
+       0.8410596026490066
+      ]
+     },
+     "obvious_any": {
+      "p": 0.43206666666666665,
+      "k": 12962,
+      "mc_se": 0.003973780623031129,
+      "ci95": [
+       0.42427805664552565,
+       0.43985527668780766
+      ],
+      "wilson95_iid": [
+       0.42647015032043434,
+       0.4376805789648448
+      ],
+      "outer_p05": 0.3463333333333333,
+      "outer_p50": 0.43333333333333335,
+      "outer_p95": 0.5266666666666666,
+      "by_eta": [
+       0.017587939698492462,
+       0.08342857142857144,
+       0.2274301546986839,
+       0.44151115157032317,
+       0.6268156424581005,
+       0.7975187265917603,
+       0.896158940397351
+      ]
+     },
+     "live": {
+      "p": 0.2638,
+      "k": 7914,
+      "mc_se": 0.003453288837725797,
+      "ci95": [
+       0.25703155387805743,
+       0.27056844612194253
+      ],
+      "wilson95_iid": [
+       0.2588435688896806,
+       0.268816915759725
+      ],
+      "outer_p05": 0.18666666666666668,
+      "outer_p50": 0.26666666666666666,
+      "outer_p95": 0.3466666666666667,
+      "by_eta": [
+       0.0,
+       0.002285714285714286,
+       0.06164858000461787,
+       0.2485207100591716,
+       0.43374301675977656,
+       0.5493913857677902,
+       0.5978807947019867
+      ]
+     },
+     "rapid": {
+      "p": 0.46026666666666666,
+      "k": 13808,
+      "mc_se": 0.004715902033895512,
+      "ci95": [
+       0.45102349868023145,
+       0.46950983465310187
+      ],
+      "wilson95_iid": [
+       0.45463197354653356,
+       0.46591153445545497
+      ],
+      "outer_p05": 0.36,
+      "outer_p50": 0.46,
+      "outer_p95": 0.5669999999999998,
+      "by_eta": [
+       0.10027409776153495,
+       0.2566857142857143,
+       0.4832602170399446,
+       0.5912608101957214,
+       0.5982122905027933,
+       0.5994850187265918,
+       0.6137748344370861
+      ]
+     },
+     "turkish": {
+      "p": 0.4803,
+      "k": 14409,
+      "mc_se": 0.0043406837543240855,
+      "ci95": [
+       0.4717922598415248,
+       0.4888077401584752
+      ],
+      "wilson95_iid": [
+       0.4746492444332911,
+       0.48595580022205725
+      ],
+      "outer_p05": 0.3863333333333333,
+      "outer_p50": 0.48,
+      "outer_p95": 0.5866666666666667,
+      "by_eta": [
+       0.09730470534490634,
+       0.21394285714285713,
+       0.3911336873701224,
+       0.5502958579881657,
+       0.6656983240223464,
+       0.7343164794007491,
+       0.7467549668874173
+      ]
+     },
+     "obvious_turkish": {
+      "p": 0.3481666666666667,
+      "k": 10445,
+      "mc_se": 0.004021282716315004,
+      "ci95": [
+       0.34028495254268926,
+       0.3560483807906441
+      ],
+      "wilson95_iid": [
+       0.3427955660962813,
+       0.35357664778715686
+      ],
+      "outer_p05": 0.26,
+      "outer_p50": 0.34,
+      "outer_p95": 0.44666666666666666,
+      "by_eta": [
+       0.017587939698492462,
+       0.08182857142857143,
+       0.1918725467559455,
+       0.352753755120619,
+       0.4779888268156425,
+       0.6355337078651685,
+       0.7350993377483444
+      ]
+     },
+     "n_stations": 40,
+     "station_p_det": {
+      "TUG:tug_t100_qhy": 0.1883,
+      "TUG:rtt150_fast": 0.20273333333333332,
+      "TUG:amateur_class": 0.10903333333333333,
+      "DAG:dag_visitor_fast": 0.13556666666666667,
+      "DAG:amateur_class": 0.11816666666666667,
+      "AUKR:amateur_class": 0.08123333333333334,
+      "ULUP:amateur_class": 0.07536666666666667,
+      "EGE:amateur_class": 0.0968,
+      "IST:amateur_class": 0.06093333333333333,
+      "ERC:amateur_class": 0.0917,
+      "KRY:lunar_impact_system": 0.21726666666666666,
+      "KRY:amateur_class": 0.09426666666666667,
+      "SEV:midas_video": 0.0,
+      "SEV:amateur_class": 0.0,
+      "CAHA:amateur_class": 0.0,
+      "ORM:amateur_class": 0.0,
+      "TEI:amateur_class": 0.0,
+      "OUK:amateur_class": 0.0,
+      "KOT:amateur_class": 0.13826666666666668,
+      "SAAO:amateur_class": 0.13716666666666666,
+      "WISE:amateur_class": 0.13443333333333332,
+      "SAO:amateur_class": 0.07876666666666667,
+      "BYU:amateur_class": 0.08766666666666667,
+      "MAID:amateur_class": 0.13476666666666667,
+      "HAN:amateur_class": 0.0,
+      "TNO:amateur_class": 0.0,
+      "LIJ:amateur_class": 0.0,
+      "OKA:amateur_class": 0.0,
+      "KISO:amateur_class": 0.0,
+      "SSO:amateur_class": 0.0,
+      "MTJ:amateur_class": 0.0,
+      "MKO:amateur_class": 0.0,
+      "HAL:amateur_class": 0.0,
+      "APO:amateur_class": 0.0,
+      "PAL:amateur_class": 0.0,
+      "SPM:amateur_class": 0.0,
+      "CTIO:amateur_class": 0.0,
+      "PAR:amateur_class": 0.0,
+      "OPD:amateur_class": 0.0,
+      "CAS:amateur_class": 0.0
+     },
+     "station_p_fov": {
+      "TUG:tug_t100_qhy": 1.0,
+      "TUG:rtt150_fast": 1.0,
+      "TUG:amateur_class": 1.0,
+      "DAG:dag_visitor_fast": 1.0,
+      "DAG:amateur_class": 1.0,
+      "AUKR:amateur_class": 1.0,
+      "ULUP:amateur_class": 1.0,
+      "EGE:amateur_class": 1.0,
+      "IST:amateur_class": 1.0,
+      "ERC:amateur_class": 1.0,
+      "KRY:lunar_impact_system": 1.0,
+      "KRY:amateur_class": 1.0,
+      "SEV:midas_video": null,
+      "SEV:amateur_class": null,
+      "CAHA:amateur_class": null,
+      "ORM:amateur_class": null,
+      "TEI:amateur_class": null,
+      "OUK:amateur_class": null,
+      "KOT:amateur_class": 1.0,
+      "SAAO:amateur_class": 1.0,
+      "WISE:amateur_class": 1.0,
+      "SAO:amateur_class": 1.0,
+      "BYU:amateur_class": 1.0,
+      "MAID:amateur_class": 1.0,
+      "HAN:amateur_class": null,
+      "TNO:amateur_class": null,
+      "LIJ:amateur_class": null,
+      "OKA:amateur_class": null,
+      "KISO:amateur_class": null,
+      "SSO:amateur_class": null,
+      "MTJ:amateur_class": null,
+      "MKO:amateur_class": null,
+      "HAL:amateur_class": null,
+      "APO:amateur_class": null,
+      "PAL:amateur_class": null,
+      "SPM:amateur_class": null,
+      "CTIO:amateur_class": null,
+      "PAR:amateur_class": null,
+      "OPD:amateur_class": null,
+      "CAS:amateur_class": null
+     },
+     "station_p_saturated": {
+      "TUG:tug_t100_qhy": 0.0008,
+      "TUG:rtt150_fast": 0.004733333333333333,
+      "TUG:amateur_class": 0.0,
+      "DAG:dag_visitor_fast": 0.05386666666666667,
+      "DAG:amateur_class": 0.0,
+      "AUKR:amateur_class": 0.0,
+      "ULUP:amateur_class": 0.0,
+      "EGE:amateur_class": 0.0,
+      "IST:amateur_class": 0.0,
+      "ERC:amateur_class": 0.0,
+      "KRY:lunar_impact_system": 0.018166666666666668,
+      "KRY:amateur_class": 0.0,
+      "SEV:midas_video": 0.0,
+      "SEV:amateur_class": 0.0,
+      "CAHA:amateur_class": 0.0,
+      "ORM:amateur_class": 0.0,
+      "TEI:amateur_class": 0.0,
+      "OUK:amateur_class": 0.0,
+      "KOT:amateur_class": 0.0,
+      "SAAO:amateur_class": 0.0,
+      "WISE:amateur_class": 0.0,
+      "SAO:amateur_class": 0.0,
+      "BYU:amateur_class": 0.0,
+      "MAID:amateur_class": 0.0,
+      "HAN:amateur_class": 0.0,
+      "TNO:amateur_class": 0.0,
+      "LIJ:amateur_class": 0.0,
+      "OKA:amateur_class": 0.0,
+      "KISO:amateur_class": 0.0,
+      "SSO:amateur_class": 0.0,
+      "MTJ:amateur_class": 0.0,
+      "MKO:amateur_class": 0.0,
+      "HAL:amateur_class": 0.0,
+      "APO:amateur_class": 0.0,
+      "PAL:amateur_class": 0.0,
+      "SPM:amateur_class": 0.0,
+      "CTIO:amateur_class": 0.0,
+      "PAR:amateur_class": 0.0,
+      "OPD:amateur_class": 0.0,
+      "CAS:amateur_class": 0.0
+     }
+    }
    },
-   "station_fov_cov": {
-    "TUG:tug_t100_qhy": 1.0,
-    "TUG:rtt150_fast": 1.0,
-    "DAG:dag_dirac": 0.498,
-    "DAG:dag_visitor_fast": 1.0,
-    "AUKR:amateur_class": 1.0,
-    "ULUP:amateur_class": 1.0,
-    "EGE:amateur_class": 1.0,
-    "IST:amateur_class": 1.0,
-    "ERC:amateur_class": 1.0
+   "paired": {
+    "any:B_global_science-A_turkiye_priority": {
+     "diff": 0.20666666666666667,
+     "mc_se": 0.003340361100785426,
+     "ci95": [
+      0.20011955890912722,
+      0.2132137744242061
+     ]
+    },
+    "any:C_public_participation-A_turkiye_priority": {
+     "diff": 0.09813333333333334,
+     "mc_se": 0.002778299895096102,
+     "ci95": [
+      0.09268786553894498,
+      0.10357880112772169
+     ]
+    },
+    "any:C_public_participation-B_global_science": {
+     "diff": -0.10853333333333333,
+     "mc_se": 0.0024670514435733396,
+     "ci95": [
+      -0.11336875416273708,
+      -0.10369791250392958
+     ]
+    },
+    "confirmed:B_global_science-A_turkiye_priority": {
+     "diff": 0.2750666666666667,
+     "mc_se": 0.0036026046784252814,
+     "ci95": [
+      0.26800556149695315,
+      0.2821277718363802
+     ]
+    },
+    "confirmed:C_public_participation-A_turkiye_priority": {
+     "diff": 0.2057,
+     "mc_se": 0.0032324421573155554,
+     "ci95": [
+      0.1993644133716615,
+      0.2120355866283385
+     ]
+    },
+    "confirmed:C_public_participation-B_global_science": {
+     "diff": -0.06936666666666666,
+     "mc_se": 0.0033037540192583184,
+     "ci95": [
+      -0.07584202454441297,
+      -0.06289130878892035
+     ]
+    },
+    "two_indep:B_global_science-A_turkiye_priority": {
+     "diff": 0.26156666666666667,
+     "mc_se": 0.0035969394211370844,
+     "ci95": [
+      0.25451666540123796,
+      0.2686166679320954
+     ]
+    },
+    "two_indep:C_public_participation-A_turkiye_priority": {
+     "diff": 0.1905,
+     "mc_se": 0.003035408938844811,
+     "ci95": [
+      0.18455059847986416,
+      0.19644940152013585
+     ]
+    },
+    "two_indep:C_public_participation-B_global_science": {
+     "diff": -0.07106666666666667,
+     "mc_se": 0.0034545594532721636,
+     "ci95": [
+      -0.07783760319508011,
+      -0.06429573013825322
+     ]
+    },
+    "live:B_global_science-A_turkiye_priority": {
+     "diff": 0.1112,
+     "mc_se": 0.0029944150507855024,
+     "ci95": [
+      0.1053309465004604,
+      0.11706905349953958
+     ]
+    },
+    "live:C_public_participation-A_turkiye_priority": {
+     "diff": 0.1336,
+     "mc_se": 0.002870687842292133,
+     "ci95": [
+      0.1279734518291074,
+      0.13922654817089258
+     ]
+    },
+    "live:C_public_participation-B_global_science": {
+     "diff": 0.0224,
+     "mc_se": 0.000990225822904137,
+     "ci95": [
+      0.020459157387107893,
+      0.024340842612892107
+     ]
+    },
+    "turkish:B_global_science-A_turkiye_priority": {
+     "diff": -0.0842,
+     "mc_se": 0.0020779397518953667,
+     "ci95": [
+      -0.08827276191371491,
+      -0.08012723808628508
+     ]
+    },
+    "turkish:C_public_participation-A_turkiye_priority": {
+     "diff": -0.0113,
+     "mc_se": 0.0015416767395207173,
+     "ci95": [
+      -0.014321686409460604,
+      -0.008278313590539394
+     ]
+    },
+    "turkish:C_public_participation-B_global_science": {
+     "diff": 0.0729,
+     "mc_se": 0.0026641854034138205,
+     "ci95": [
+      0.06767819660930892,
+      0.0781218033906911
+     ]
+    }
    },
-   "peakV_median": 12.192800371267811,
-   "peakV_p10": 8.517107903907197,
-   "peakV_p90": 15.818870748615314,
-   "p_any_by_eta_quartile": [
-    0.248,
-    0.428,
-    0.6546666666666666,
-    0.7593333333333333
+   "peakV": {
+    "median": 11.992484275670359,
+    "p10": 8.292051996522515,
+    "p90": 15.622795936619658
+   },
+   "T0_percentiles": [
+    1948.2754189035134,
+    3007.102331203653,
+    4635.77373114524
    ],
-   "p_conf_by_eta_quartile": [
-    0.008,
-    0.06933333333333333,
-    0.332,
-    0.5
-   ],
-   "eta_quartile_edges_log10": [
-    -5.999449153184008,
-    -5.122146353666158,
-    -4.260984364703223,
-    -3.384376082411542,
-    -2.5005513618467377
-   ],
-   "n_stations": 9
+   "visual": {
+    "site": "IST",
+    "observable": true,
+    "moon_alt": 52.89691017063468,
+    "sun_alt": -17.305098548799357,
+    "none": {
+     "p_conditional": 1.1134407041237163e-13,
+     "p_with_weather": 4.543238269438258e-16,
+     "threshold_median": 3.2083255764070184
+    },
+    "binoculars": {
+     "p_conditional": 0.0071898269257684765,
+     "p_with_weather": 0.0016708515873775562,
+     "threshold_median": 7.3377729269455365
+    },
+    "telescope20cm": {
+     "p_conditional": 0.12901361466615127,
+     "p_with_weather": 0.03340011369077619,
+     "threshold_median": 10.717808404858387
+    }
+   }
   },
-  "A_turkiye_priority|v3-scaled": {
-   "p_any": 0.5066666666666667,
-   "p_confirmed": 0.17783333333333334,
-   "p_two_indep": 0.17783333333333334,
-   "p_obvious_any": 0.359,
-   "p_live": 0.084,
-   "p_rapid_replay": 0.4063333333333333,
-   "p_turkish": 0.5066666666666667,
-   "p_obvious_turkish": 0.359,
-   "p_eyepiece_witness": 0.040760297878061985,
-   "p_naked_eye_witness": 2.3695044346503007e-07,
-   "p_binocular_witness": 0.0012890945561434806,
-   "mean_n_det": 0.9101666666666667,
-   "station_p_det": {
-    "TUG:tug_t100_qhy": 0.17883333333333334,
-    "TUG:rtt150_fast": 0.22683333333333333,
-    "DAG:dag_dirac": 0.079,
-    "DAG:dag_visitor_fast": 0.15383333333333332,
-    "AUKR:amateur_class": 0.05383333333333333,
-    "ULUP:amateur_class": 0.050833333333333335,
-    "EGE:amateur_class": 0.06516666666666666,
-    "IST:amateur_class": 0.042166666666666665,
-    "ERC:amateur_class": 0.059666666666666666
+  "v-scaled|broad": {
+   "n_outer": 200,
+   "n_inner": 150,
+   "N": 30000,
+   "eta_prior": "v-scaled",
+   "T0_prior": "broad",
+   "eps_max": 0.1,
+   "rejected_fraction": 0.06170831639195573,
+   "eta_bins": [
+    -6.0,
+    -5.5,
+    -5.0,
+    -4.5,
+    -4.0,
+    -3.5,
+    -3.0,
+    -2.5
+   ],
+   "strategies": {
+    "A_turkiye_priority": {
+     "any": {
+      "p": 0.6459666666666667,
+      "k": 19379,
+      "mc_se": 0.004459232168821786,
+      "ci95": [
+       0.637226571615776,
+       0.6547067617175574
+      ],
+      "wilson95_iid": [
+       0.640536730509232,
+       0.6513592245740664
+      ],
+      "outer_p05": 0.553,
+      "outer_p50": 0.64,
+      "outer_p95": 0.7533333333333333,
+      "by_eta": [
+       0.15384615384615385,
+       0.28211586901763225,
+       0.44048943270300334,
+       0.5521149564865412,
+       0.6545520405699107,
+       0.7046186895810956,
+       0.717738545607398
+      ]
+     },
+     "two_indep": {
+      "p": 0.3645333333333333,
+      "k": 10936,
+      "mc_se": 0.0041707711776886956,
+      "ci95": [
+       0.3563586218250635,
+       0.37270804484160314
+      ],
+      "wilson95_iid": [
+       0.35910458758692476,
+       0.3699967685540834
+      ],
+      "outer_p05": 0.26666666666666666,
+      "outer_p50": 0.36,
+      "outer_p95": 0.46033333333333326,
+      "by_eta": [
+       0.0,
+       0.027707808564231738,
+       0.07730812013348165,
+       0.19894758146124267,
+       0.36802704660709973,
+       0.4578111946532999,
+       0.47435897435897434
+      ]
+     },
+     "dual_validated": {
+      "p": 0.0,
+      "k": 0,
+      "mc_se": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "wilson95_iid": [
+       1.3550791931992606e-20,
+       0.0001280369377766612
+      ],
+      "outer_p05": 0.0,
+      "outer_p50": 0.0,
+      "outer_p95": 0.0,
+      "by_eta": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ]
+     },
+     "confirmed": {
+      "p": 0.3645333333333333,
+      "k": 10936,
+      "mc_se": 0.0041707711776886956,
+      "ci95": [
+       0.3563586218250635,
+       0.37270804484160314
+      ],
+      "wilson95_iid": [
+       0.35910458758692476,
+       0.3699967685540834
+      ],
+      "outer_p05": 0.26666666666666666,
+      "outer_p50": 0.36,
+      "outer_p95": 0.46033333333333326,
+      "by_eta": [
+       0.0,
+       0.027707808564231738,
+       0.07730812013348165,
+       0.19894758146124267,
+       0.36802704660709973,
+       0.4578111946532999,
+       0.47435897435897434
+      ]
+     },
+     "obvious_any": {
+      "p": 0.5466,
+      "k": 16398,
+      "mc_se": 0.0044801167528856125,
+      "ci95": [
+       0.5378189711643442,
+       0.5553810288356558
+      ],
+      "wilson95_iid": [
+       0.5409609854449132,
+       0.5522270815124859
+      ],
+      "outer_p05": 0.4533333333333333,
+      "outer_p50": 0.54,
+      "outer_p95": 0.6533333333333333,
+      "by_eta": [
+       0.038461538461538464,
+       0.15365239294710328,
+       0.26529477196885426,
+       0.4037644201578628,
+       0.5165418980922483,
+       0.6242988423439552,
+       0.7051282051282052
+      ]
+     },
+     "live": {
+      "p": 0.23286666666666667,
+      "k": 6986,
+      "mc_se": 0.0038949092746759137,
+      "ci95": [
+       0.22523264448830188,
+       0.24050068884503145
+      ],
+      "wilson95_iid": [
+       0.22811822801659143,
+       0.237683511184698
+      ],
+      "outer_p05": 0.14666666666666667,
+      "outer_p50": 0.22666666666666666,
+      "outer_p95": 0.3333333333333333,
+      "by_eta": [
+       0.0,
+       0.0025188916876574307,
+       0.014460511679644048,
+       0.10443230115361263,
+       0.23400144892538036,
+       0.302780761427378,
+       0.31862126944094155
+      ]
+     },
+     "rapid": {
+      "p": 0.46086666666666665,
+      "k": 13826,
+      "mc_se": 0.005109479262716023,
+      "ci95": [
+       0.45085208731174325,
+       0.47088124602159004
+      ],
+      "wilson95_iid": [
+       0.4552313596783114,
+       0.4665119946793517
+      ],
+      "outer_p05": 0.35333333333333333,
+      "outer_p50": 0.4533333333333333,
+      "outer_p95": 0.5866666666666667,
+      "by_eta": [
+       0.11538461538461539,
+       0.23425692695214106,
+       0.39043381535038935,
+       0.45334952438777576,
+       0.47198744264670367,
+       0.47237140470223177,
+       0.47309794031105507
+      ]
+     },
+     "turkish": {
+      "p": 0.6459666666666667,
+      "k": 19379,
+      "mc_se": 0.004459232168821786,
+      "ci95": [
+       0.637226571615776,
+       0.6547067617175574
+      ],
+      "wilson95_iid": [
+       0.640536730509232,
+       0.6513592245740664
+      ],
+      "outer_p05": 0.553,
+      "outer_p50": 0.64,
+      "outer_p95": 0.7533333333333333,
+      "by_eta": [
+       0.15384615384615385,
+       0.28211586901763225,
+       0.44048943270300334,
+       0.5521149564865412,
+       0.6545520405699107,
+       0.7046186895810956,
+       0.717738545607398
+      ]
+     },
+     "obvious_turkish": {
+      "p": 0.5466,
+      "k": 16398,
+      "mc_se": 0.0044801167528856125,
+      "ci95": [
+       0.5378189711643442,
+       0.5553810288356558
+      ],
+      "wilson95_iid": [
+       0.5409609854449132,
+       0.5522270815124859
+      ],
+      "outer_p05": 0.4533333333333333,
+      "outer_p50": 0.54,
+      "outer_p95": 0.6533333333333333,
+      "by_eta": [
+       0.038461538461538464,
+       0.15365239294710328,
+       0.26529477196885426,
+       0.4037644201578628,
+       0.5165418980922483,
+       0.6242988423439552,
+       0.7051282051282052
+      ]
+     },
+     "n_stations": 9,
+     "station_p_det": {
+      "TUG:tug_t100_qhy": 0.2895333333333333,
+      "TUG:rtt150_fast": 0.2710666666666667,
+      "DAG:dag_dirac": 0.09093333333333334,
+      "DAG:dag_visitor_fast": 0.14406666666666668,
+      "AUKR:amateur_class": 0.1418,
+      "ULUP:amateur_class": 0.13196666666666668,
+      "EGE:amateur_class": 0.17306666666666667,
+      "IST:amateur_class": 0.111,
+      "ERC:amateur_class": 0.1646
+     },
+     "station_p_fov": {
+      "TUG:tug_t100_qhy": 1.0,
+      "TUG:rtt150_fast": 1.0,
+      "DAG:dag_dirac": 0.49843333333333334,
+      "DAG:dag_visitor_fast": 1.0,
+      "AUKR:amateur_class": 1.0,
+      "ULUP:amateur_class": 1.0,
+      "EGE:amateur_class": 1.0,
+      "IST:amateur_class": 1.0,
+      "ERC:amateur_class": 1.0
+     },
+     "station_p_saturated": {
+      "TUG:tug_t100_qhy": 0.005166666666666667,
+      "TUG:rtt150_fast": 0.012366666666666666,
+      "DAG:dag_dirac": 0.020633333333333333,
+      "DAG:dag_visitor_fast": 0.0982,
+      "AUKR:amateur_class": 0.00036666666666666667,
+      "ULUP:amateur_class": 0.0002666666666666667,
+      "EGE:amateur_class": 0.0006,
+      "IST:amateur_class": 0.0003,
+      "ERC:amateur_class": 0.0005333333333333334
+     }
+    },
+    "B_global_science": {
+     "any": {
+      "p": 0.8495333333333334,
+      "k": 25486,
+      "mc_se": 0.0037876374767051514,
+      "ci95": [
+       0.8421095638789913,
+       0.8569571027876755
+      ],
+      "wilson95_iid": [
+       0.8454427786368844,
+       0.8535343816744805
+      ],
+      "outer_p05": 0.7663333333333334,
+      "outer_p50": 0.8533333333333334,
+      "outer_p95": 0.9333333333333333,
+      "by_eta": [
+       0.21153846153846154,
+       0.5340050377833753,
+       0.7814238042269188,
+       0.8427443837279903,
+       0.8674233276986235,
+       0.8586943549349565,
+       0.8680117696511139
+      ]
+     },
+     "two_indep": {
+      "p": 0.6584666666666666,
+      "k": 19754,
+      "mc_se": 0.004571831311524795,
+      "ci95": [
+       0.649505877296078,
+       0.6674274560372553
+      ],
+      "wilson95_iid": [
+       0.6530803335716413,
+       0.6638124205882127
+      ],
+      "outer_p05": 0.5466666666666666,
+      "outer_p50": 0.66,
+      "outer_p95": 0.7539999999999998,
+      "by_eta": [
+       0.019230769230769232,
+       0.22418136020151133,
+       0.5383759733036707,
+       0.646427848613641,
+       0.6828060854865975,
+       0.6775271512113618,
+       0.6801176965111392
+      ]
+     },
+     "dual_validated": {
+      "p": 0.27573333333333333,
+      "k": 8272,
+      "mc_se": 0.005162688802089955,
+      "ci95": [
+       0.265614463281237,
+       0.28585220338542966
+      ],
+      "wilson95_iid": [
+       0.27070533218402504,
+       0.2808187633171323
+      ],
+      "outer_p05": 0.15933333333333335,
+      "outer_p50": 0.2733333333333333,
+      "outer_p95": 0.4066666666666667,
+      "by_eta": [
+       0.0,
+       0.0025188916876574307,
+       0.06117908787541713,
+       0.20663833232139242,
+       0.30222168558319246,
+       0.31769900942833273,
+       0.3230348886086591
+      ]
+     },
+     "confirmed": {
+      "p": 0.6810666666666667,
+      "k": 20432,
+      "mc_se": 0.004362788693194167,
+      "ci95": [
+       0.6725156008280061,
+       0.6896177325053273
+      ],
+      "wilson95_iid": [
+       0.6757697690747607,
+       0.6863171978155058
+      ],
+      "outer_p05": 0.5733333333333334,
+      "outer_p50": 0.6866666666666666,
+      "outer_p95": 0.7736666666666665,
+      "by_eta": [
+       0.019230769230769232,
+       0.22418136020151133,
+       0.5439377085650723,
+       0.6634284557781825,
+       0.7061096353537792,
+       0.7037832676930421,
+       0.7082807902480034
+      ]
+     },
+     "obvious_any": {
+      "p": 0.801,
+      "k": 24030,
+      "mc_se": 0.004057033376905946,
+      "ci95": [
+       0.7930482145812644,
+       0.8089517854187357
+      ],
+      "wilson95_iid": [
+       0.7964436688205229,
+       0.8054792529429355
+      ],
+      "outer_p05": 0.7133333333333334,
+      "outer_p50": 0.8,
+      "outer_p95": 0.8936666666666665,
+      "by_eta": [
+       0.038461538461538464,
+       0.181360201511335,
+       0.45773081201334814,
+       0.7277878971868043,
+       0.8496739917894228,
+       0.85750089509488,
+       0.8680117696511139
+      ]
+     },
+     "live": {
+      "p": 0.4095666666666667,
+      "k": 12287,
+      "mc_se": 0.004708019104262127,
+      "ci95": [
+       0.40033894922231295,
+       0.41879438411102043
+      ],
+      "wilson95_iid": [
+       0.404013871439465,
+       0.4151426195080142
+      ],
+      "outer_p05": 0.29333333333333333,
+      "outer_p50": 0.4066666666666667,
+      "outer_p95": 0.5133333333333333,
+      "by_eta": [
+       0.0,
+       0.0025188916876574307,
+       0.06674082313681869,
+       0.25197328476017,
+       0.433832407631007,
+       0.49600190953574413,
+       0.5153425809163514
+      ]
+     },
+     "rapid": {
+      "p": 0.7750333333333334,
+      "k": 23251,
+      "mc_se": 0.0039778834412599546,
+      "ci95": [
+       0.7672366817884638,
+       0.7828299848782029
+      ],
+      "wilson95_iid": [
+       0.7702731497442119,
+       0.7797230880708818
+      ],
+      "outer_p05": 0.6796666666666668,
+      "outer_p50": 0.78,
+      "outer_p95": 0.8666666666666667,
+      "by_eta": [
+       0.11538461538461539,
+       0.3123425692695214,
+       0.639599555061179,
+       0.7690750860149768,
+       0.7992030910408114,
+       0.7942475235708318,
+       0.7978142076502732
+      ]
+     },
+     "turkish": {
+      "p": 0.4961333333333333,
+      "k": 14884,
+      "mc_se": 0.004928604732776675,
+      "ci95": [
+       0.486473268057091,
+       0.5057933986095756
+      ],
+      "wilson95_iid": [
+       0.49047632715940154,
+       0.5017913296595838
+      ],
+      "outer_p05": 0.38666666666666666,
+      "outer_p50": 0.4866666666666667,
+      "outer_p95": 0.6136666666666665,
+      "by_eta": [
+       0.15384615384615385,
+       0.28211586901763225,
+       0.43381535038932145,
+       0.4899817850637523,
+       0.5063994204298479,
+       0.506265664160401,
+       0.5073560319461958
+      ]
+     },
+     "obvious_turkish": {
+      "p": 0.46213333333333334,
+      "k": 13864,
+      "mc_se": 0.004835140307982621,
+      "ci95": [
+       0.45265645832968743,
+       0.47161020833697925
+      ],
+      "wilson95_iid": [
+       0.4564967573968881,
+       0.46777960593386614
+      ],
+      "outer_p05": 0.35966666666666663,
+      "outer_p50": 0.4533333333333333,
+      "outer_p95": 0.58,
+      "by_eta": [
+       0.038461538461538464,
+       0.15365239294710328,
+       0.26529477196885426,
+       0.40214531471362075,
+       0.48237140787249455,
+       0.5031626685762024,
+       0.507145859604876
+      ]
+     },
+     "n_stations": 31,
+     "station_p_det": {
+      "TUG:tug_t100_qhy": 0.2895333333333333,
+      "TUG:rtt150_fast": 0.2710666666666667,
+      "DAG:dag_dirac": 0.09093333333333334,
+      "DAG:dag_visitor_fast": 0.14406666666666668,
+      "KRY:lunar_impact_system": 0.30923333333333336,
+      "SEV:midas_video": 0.0,
+      "CAHA:fast_camera_possible": 0.0,
+      "ORM:fast_camera_large": 0.0,
+      "TEI:fast_camera_possible": 0.0,
+      "KOT:fast_camera_possible": 0.28196666666666664,
+      "SAAO:fast_camera_large": 0.3551,
+      "SAO:fast_camera_large": 0.20553333333333335,
+      "BYU:fast_camera_possible": 0.18053333333333332,
+      "MAID:fast_camera_possible": 0.259,
+      "HAN:fast_camera_possible": 0.0,
+      "TNO:fast_camera_large": 0.0,
+      "LIJ:fast_camera_possible": 0.0,
+      "OKA:fast_camera_large": 0.0,
+      "KISO:fast_camera_possible": 0.0,
+      "SSO:fast_camera_large": 0.0,
+      "MTJ:fast_camera_possible": 0.0,
+      "MKO:nir_large": 0.0,
+      "MKO:fast_camera_large": 0.0,
+      "HAL:fast_camera_possible": 0.0,
+      "APO:fast_camera_large": 0.0,
+      "PAL:fast_camera_large": 0.0,
+      "SPM:fast_camera_possible": 0.0,
+      "CTIO:fast_camera_large": 0.0,
+      "PAR:nir_large": 0.0,
+      "OPD:fast_camera_possible": 0.0,
+      "CAS:fast_camera_possible": 0.0
+     },
+     "station_p_fov": {
+      "TUG:tug_t100_qhy": 1.0,
+      "TUG:rtt150_fast": 1.0,
+      "DAG:dag_dirac": 0.49843333333333334,
+      "DAG:dag_visitor_fast": 1.0,
+      "KRY:lunar_impact_system": 1.0,
+      "SEV:midas_video": null,
+      "CAHA:fast_camera_possible": null,
+      "ORM:fast_camera_large": null,
+      "TEI:fast_camera_possible": null,
+      "KOT:fast_camera_possible": 1.0,
+      "SAAO:fast_camera_large": 1.0,
+      "SAO:fast_camera_large": 1.0,
+      "BYU:fast_camera_possible": 1.0,
+      "MAID:fast_camera_possible": 1.0,
+      "HAN:fast_camera_possible": null,
+      "TNO:fast_camera_large": null,
+      "LIJ:fast_camera_possible": null,
+      "OKA:fast_camera_large": null,
+      "KISO:fast_camera_possible": null,
+      "SSO:fast_camera_large": null,
+      "MTJ:fast_camera_possible": null,
+      "MKO:nir_large": null,
+      "MKO:fast_camera_large": null,
+      "HAL:fast_camera_possible": null,
+      "APO:fast_camera_large": null,
+      "PAL:fast_camera_large": null,
+      "SPM:fast_camera_possible": null,
+      "CTIO:fast_camera_large": null,
+      "PAR:nir_large": null,
+      "OPD:fast_camera_possible": null,
+      "CAS:fast_camera_possible": null
+     },
+     "station_p_saturated": {
+      "TUG:tug_t100_qhy": 0.005166666666666667,
+      "TUG:rtt150_fast": 0.012366666666666666,
+      "DAG:dag_dirac": 0.020633333333333333,
+      "DAG:dag_visitor_fast": 0.0982,
+      "KRY:lunar_impact_system": 0.0346,
+      "SEV:midas_video": 0.0,
+      "CAHA:fast_camera_possible": 0.0,
+      "ORM:fast_camera_large": 0.0,
+      "TEI:fast_camera_possible": 0.0,
+      "KOT:fast_camera_possible": 0.0212,
+      "SAAO:fast_camera_large": 0.0547,
+      "SAO:fast_camera_large": 0.0358,
+      "BYU:fast_camera_possible": 0.011866666666666666,
+      "MAID:fast_camera_possible": 0.0177,
+      "HAN:fast_camera_possible": 0.0,
+      "TNO:fast_camera_large": 0.0,
+      "LIJ:fast_camera_possible": 0.0,
+      "OKA:fast_camera_large": 0.0,
+      "KISO:fast_camera_possible": 0.0,
+      "SSO:fast_camera_large": 0.0,
+      "MTJ:fast_camera_possible": 0.0,
+      "MKO:nir_large": 0.0,
+      "MKO:fast_camera_large": 0.0,
+      "HAL:fast_camera_possible": 0.0,
+      "APO:fast_camera_large": 0.0,
+      "PAL:fast_camera_large": 0.0,
+      "SPM:fast_camera_possible": 0.0,
+      "CTIO:fast_camera_large": 0.0,
+      "PAR:nir_large": 0.0,
+      "OPD:fast_camera_possible": 0.0,
+      "CAS:fast_camera_possible": 0.0
+     }
+    },
+    "C_public_participation": {
+     "any": {
+      "p": 0.8181666666666667,
+      "k": 24545,
+      "mc_se": 0.0038223935368617004,
+      "ci95": [
+       0.8106747753344178,
+       0.8256585579989156
+      ],
+      "wilson95_iid": [
+       0.8137613320981939,
+       0.8224905270637342
+      ],
+      "outer_p05": 0.733,
+      "outer_p50": 0.82,
+      "outer_p95": 0.9003333333333332,
+      "by_eta": [
+       0.11538461538461539,
+       0.27204030226700254,
+       0.5066740823136818,
+       0.6947986237603724,
+       0.8397730016904129,
+       0.9005847953216374,
+       0.9102564102564102
+      ]
+     },
+     "two_indep": {
+      "p": 0.6723333333333333,
+      "k": 20170,
+      "mc_se": 0.004110628187791876,
+      "ci95": [
+       0.6642765020852612,
+       0.6803901645814054
+      ],
+      "wilson95_iid": [
+       0.6670002250186647,
+       0.6776223115834482
+      ],
+      "outer_p05": 0.5863333333333334,
+      "outer_p50": 0.6699999999999999,
+      "outer_p95": 0.7669999999999999,
+      "by_eta": [
+       0.0,
+       0.037783375314861464,
+       0.17018909899888765,
+       0.41934831005869255,
+       0.6852209611205023,
+       0.8264709392528942,
+       0.8436317780580076
+      ]
+     },
+     "dual_validated": {
+      "p": 0.27573333333333333,
+      "k": 8272,
+      "mc_se": 0.005162688802089955,
+      "ci95": [
+       0.265614463281237,
+       0.28585220338542966
+      ],
+      "wilson95_iid": [
+       0.27070533218402504,
+       0.2808187633171323
+      ],
+      "outer_p05": 0.15933333333333335,
+      "outer_p50": 0.2733333333333333,
+      "outer_p95": 0.4066666666666667,
+      "by_eta": [
+       0.0,
+       0.0025188916876574307,
+       0.06117908787541713,
+       0.20663833232139242,
+       0.30222168558319246,
+       0.31769900942833273,
+       0.3230348886086591
+      ]
+     },
+     "confirmed": {
+      "p": 0.6899666666666666,
+      "k": 20699,
+      "mc_se": 0.004088905199273176,
+      "ci95": [
+       0.6819524124760912,
+       0.6979809208572421
+      ],
+      "wilson95_iid": [
+       0.6847088637888278,
+       0.6951758240439462
+      ],
+      "outer_p05": 0.5933333333333334,
+      "outer_p50": 0.6933333333333334,
+      "outer_p95": 0.7803333333333332,
+      "by_eta": [
+       0.0,
+       0.04030226700251889,
+       0.19187986651835373,
+       0.4602307225258045,
+       0.7098526925863318,
+       0.8323188924692684,
+       0.8486759142496847
+      ]
+     },
+     "obvious_any": {
+      "p": 0.6742666666666667,
+      "k": 20228,
+      "mc_se": 0.004291978936778058,
+      "ci95": [
+       0.6658543879505817,
+       0.6826789453827516
+      ],
+      "wilson95_iid": [
+       0.6689413931277417,
+       0.6795473150648785
+      ],
+      "outer_p05": 0.5666666666666667,
+      "outer_p50": 0.6733333333333333,
+      "outer_p95": 0.7733333333333333,
+      "by_eta": [
+       0.019230769230769232,
+       0.10075566750629723,
+       0.2447163515016685,
+       0.4488969844161101,
+       0.6422361748369959,
+       0.7977085571070534,
+       0.8976460697772173
+      ]
+     },
+     "live": {
+      "p": 0.4486,
+      "k": 13458,
+      "mc_se": 0.00451477875951279,
+      "ci95": [
+       0.4397510336313549,
+       0.45744896636864507
+      ],
+      "wilson95_iid": [
+       0.44297888092118504,
+       0.45423428127601834
+      ],
+      "outer_p05": 0.3466666666666667,
+      "outer_p50": 0.4533333333333333,
+      "outer_p95": 0.5533333333333333,
+      "by_eta": [
+       0.0,
+       0.0025188916876574307,
+       0.06674082313681869,
+       0.2523780611212305,
+       0.4485631489978266,
+       0.5505430242272348,
+       0.6097099621689785
+      ]
+     },
+     "rapid": {
+      "p": 0.5924333333333334,
+      "k": 17773,
+      "mc_se": 0.004701871872631615,
+      "ci95": [
+       0.5832176644629754,
+       0.6016490022036913
+      ],
+      "wilson95_iid": [
+       0.5868613332558371,
+       0.5979816636489326
+      ],
+      "outer_p05": 0.48,
+      "outer_p50": 0.5933333333333334,
+      "outer_p95": 0.7066666666666667,
+      "by_eta": [
+       0.11538461538461539,
+       0.27204030226700254,
+       0.4944382647385984,
+       0.5865209471766849,
+       0.6050470900748611,
+       0.6056808688387636,
+       0.617696511139134
+      ]
+     },
+     "turkish": {
+      "p": 0.6642666666666667,
+      "k": 19928,
+      "mc_se": 0.0045089500920325095,
+      "ci95": [
+       0.655429124486283,
+       0.6731042088470504
+      ],
+      "wilson95_iid": [
+       0.658901966507235,
+       0.6695893024241407
+      ],
+      "outer_p05": 0.5666666666666667,
+      "outer_p50": 0.66,
+      "outer_p95": 0.7733333333333333,
+      "by_eta": [
+       0.11538461538461539,
+       0.23425692695214106,
+       0.40044493882091214,
+       0.5389597247520744,
+       0.674595508331321,
+       0.7437641723356009,
+       0.7538881883144178
+      ]
+     },
+     "obvious_turkish": {
+      "p": 0.5413333333333333,
+      "k": 16240,
+      "mc_se": 0.004631116083721559,
+      "ci95": [
+       0.5322563458092391,
+       0.5504103208574276
+      ],
+      "wilson95_iid": [
+       0.5356897330198706,
+       0.5469663492599398
+      ],
+      "outer_p05": 0.44666666666666666,
+      "outer_p50": 0.54,
+      "outer_p95": 0.6469999999999998,
+      "by_eta": [
+       0.019230769230769232,
+       0.10075566750629723,
+       0.20800889877641823,
+       0.359846184982797,
+       0.49867181840135233,
+       0.6382623224728488,
+       0.7416981925178646
+      ]
+     },
+     "n_stations": 40,
+     "station_p_det": {
+      "TUG:tug_t100_qhy": 0.2895333333333333,
+      "TUG:rtt150_fast": 0.2710666666666667,
+      "TUG:amateur_class": 0.19476666666666667,
+      "DAG:dag_visitor_fast": 0.14406666666666668,
+      "DAG:amateur_class": 0.2113,
+      "AUKR:amateur_class": 0.1418,
+      "ULUP:amateur_class": 0.13196666666666668,
+      "EGE:amateur_class": 0.17306666666666667,
+      "IST:amateur_class": 0.111,
+      "ERC:amateur_class": 0.1646,
+      "KRY:lunar_impact_system": 0.30923333333333336,
+      "KRY:amateur_class": 0.1677,
+      "SEV:midas_video": 0.0,
+      "SEV:amateur_class": 0.0,
+      "CAHA:amateur_class": 0.0,
+      "ORM:amateur_class": 0.0,
+      "TEI:amateur_class": 0.0,
+      "OUK:amateur_class": 0.0,
+      "KOT:amateur_class": 0.24883333333333332,
+      "SAAO:amateur_class": 0.2435,
+      "WISE:amateur_class": 0.23593333333333333,
+      "SAO:amateur_class": 0.14483333333333334,
+      "BYU:amateur_class": 0.15916666666666668,
+      "MAID:amateur_class": 0.24153333333333332,
+      "HAN:amateur_class": 0.0,
+      "TNO:amateur_class": 0.0,
+      "LIJ:amateur_class": 0.0,
+      "OKA:amateur_class": 0.0,
+      "KISO:amateur_class": 0.0,
+      "SSO:amateur_class": 0.0,
+      "MTJ:amateur_class": 0.0,
+      "MKO:amateur_class": 0.0,
+      "HAL:amateur_class": 0.0,
+      "APO:amateur_class": 0.0,
+      "PAL:amateur_class": 0.0,
+      "SPM:amateur_class": 0.0,
+      "CTIO:amateur_class": 0.0,
+      "PAR:amateur_class": 0.0,
+      "OPD:amateur_class": 0.0,
+      "CAS:amateur_class": 0.0
+     },
+     "station_p_fov": {
+      "TUG:tug_t100_qhy": 1.0,
+      "TUG:rtt150_fast": 1.0,
+      "TUG:amateur_class": 1.0,
+      "DAG:dag_visitor_fast": 1.0,
+      "DAG:amateur_class": 1.0,
+      "AUKR:amateur_class": 1.0,
+      "ULUP:amateur_class": 1.0,
+      "EGE:amateur_class": 1.0,
+      "IST:amateur_class": 1.0,
+      "ERC:amateur_class": 1.0,
+      "KRY:lunar_impact_system": 1.0,
+      "KRY:amateur_class": 1.0,
+      "SEV:midas_video": null,
+      "SEV:amateur_class": null,
+      "CAHA:amateur_class": null,
+      "ORM:amateur_class": null,
+      "TEI:amateur_class": null,
+      "OUK:amateur_class": null,
+      "KOT:amateur_class": 1.0,
+      "SAAO:amateur_class": 1.0,
+      "WISE:amateur_class": 1.0,
+      "SAO:amateur_class": 1.0,
+      "BYU:amateur_class": 1.0,
+      "MAID:amateur_class": 1.0,
+      "HAN:amateur_class": null,
+      "TNO:amateur_class": null,
+      "LIJ:amateur_class": null,
+      "OKA:amateur_class": null,
+      "KISO:amateur_class": null,
+      "SSO:amateur_class": null,
+      "MTJ:amateur_class": null,
+      "MKO:amateur_class": null,
+      "HAL:amateur_class": null,
+      "APO:amateur_class": null,
+      "PAL:amateur_class": null,
+      "SPM:amateur_class": null,
+      "CTIO:amateur_class": null,
+      "PAR:amateur_class": null,
+      "OPD:amateur_class": null,
+      "CAS:amateur_class": null
+     },
+     "station_p_saturated": {
+      "TUG:tug_t100_qhy": 0.005166666666666667,
+      "TUG:rtt150_fast": 0.012366666666666666,
+      "TUG:amateur_class": 0.0005,
+      "DAG:dag_visitor_fast": 0.0982,
+      "DAG:amateur_class": 0.0008333333333333334,
+      "AUKR:amateur_class": 0.00036666666666666667,
+      "ULUP:amateur_class": 0.0002666666666666667,
+      "EGE:amateur_class": 0.0006,
+      "IST:amateur_class": 0.0003,
+      "ERC:amateur_class": 0.0005333333333333334,
+      "KRY:lunar_impact_system": 0.0346,
+      "KRY:amateur_class": 0.0003333333333333333,
+      "SEV:midas_video": 0.0,
+      "SEV:amateur_class": 0.0,
+      "CAHA:amateur_class": 0.0,
+      "ORM:amateur_class": 0.0,
+      "TEI:amateur_class": 0.0,
+      "OUK:amateur_class": 0.0,
+      "KOT:amateur_class": 0.00046666666666666666,
+      "SAAO:amateur_class": 0.00036666666666666667,
+      "WISE:amateur_class": 0.0005666666666666667,
+      "SAO:amateur_class": 0.0005666666666666667,
+      "BYU:amateur_class": 0.00036666666666666667,
+      "MAID:amateur_class": 0.00036666666666666667,
+      "HAN:amateur_class": 0.0,
+      "TNO:amateur_class": 0.0,
+      "LIJ:amateur_class": 0.0,
+      "OKA:amateur_class": 0.0,
+      "KISO:amateur_class": 0.0,
+      "SSO:amateur_class": 0.0,
+      "MTJ:amateur_class": 0.0,
+      "MKO:amateur_class": 0.0,
+      "HAL:amateur_class": 0.0,
+      "APO:amateur_class": 0.0,
+      "PAL:amateur_class": 0.0,
+      "SPM:amateur_class": 0.0,
+      "CTIO:amateur_class": 0.0,
+      "PAR:amateur_class": 0.0,
+      "OPD:amateur_class": 0.0,
+      "CAS:amateur_class": 0.0
+     }
+    }
    },
-   "station_fov_cov": {
-    "TUG:tug_t100_qhy": 1.0,
-    "TUG:rtt150_fast": 1.0,
-    "DAG:dag_dirac": 0.49625,
-    "DAG:dag_visitor_fast": 1.0,
-    "AUKR:amateur_class": 1.0,
-    "ULUP:amateur_class": 1.0,
-    "EGE:amateur_class": 1.0,
-    "IST:amateur_class": 1.0,
-    "ERC:amateur_class": 1.0
+   "paired": {
+    "any:B_global_science-A_turkiye_priority": {
+     "diff": 0.20356666666666667,
+     "mc_se": 0.0034935938821346515,
+     "ci95": [
+      0.19671922265768277,
+      0.21041411067565058
+     ]
+    },
+    "any:C_public_participation-A_turkiye_priority": {
+     "diff": 0.1722,
+     "mc_se": 0.003007940357226156,
+     "ci95": [
+      0.16630443689983673,
+      0.17809556310016325
+     ]
+    },
+    "any:C_public_participation-B_global_science": {
+     "diff": -0.03136666666666667,
+     "mc_se": 0.0021312581510771196,
+     "ci95": [
+      -0.035543932642777824,
+      -0.027189400690555515
+     ]
+    },
+    "confirmed:B_global_science-A_turkiye_priority": {
+     "diff": 0.31653333333333333,
+     "mc_se": 0.004371870899822231,
+     "ci95": [
+      0.3079644663696818,
+      0.3251022002969849
+     ]
+    },
+    "confirmed:C_public_participation-A_turkiye_priority": {
+     "diff": 0.32543333333333335,
+     "mc_se": 0.003935004471387305,
+     "ci95": [
+      0.31772072456941425,
+      0.33314594209725246
+     ]
+    },
+    "confirmed:C_public_participation-B_global_science": {
+     "diff": 0.0089,
+     "mc_se": 0.003416149611568686,
+     "ci95": [
+      0.0022043467613253754,
+      0.015595653238674624
+     ]
+    },
+    "two_indep:B_global_science-A_turkiye_priority": {
+     "diff": 0.2939333333333333,
+     "mc_se": 0.004435074153502811,
+     "ci95": [
+      0.2852405879924678,
+      0.30262607867419883
+     ]
+    },
+    "two_indep:C_public_participation-A_turkiye_priority": {
+     "diff": 0.3078,
+     "mc_se": 0.0037214905486866773,
+     "ci95": [
+      0.3005058785245741,
+      0.3150941214754259
+     ]
+    },
+    "two_indep:C_public_participation-B_global_science": {
+     "diff": 0.013866666666666666,
+     "mc_se": 0.003898591708394975,
+     "ci95": [
+      0.006225426918212516,
+      0.021507906415120816
+     ]
+    },
+    "live:B_global_science-A_turkiye_priority": {
+     "diff": 0.1767,
+     "mc_se": 0.0037703469961324664,
+     "ci95": [
+      0.16931011988758035,
+      0.18408988011241964
+     ]
+    },
+    "live:C_public_participation-A_turkiye_priority": {
+     "diff": 0.21573333333333333,
+     "mc_se": 0.0037863193744532607,
+     "ci95": [
+      0.20831214735940495,
+      0.2231545193072617
+     ]
+    },
+    "live:C_public_participation-B_global_science": {
+     "diff": 0.03903333333333334,
+     "mc_se": 0.0014212218616819954,
+     "ci95": [
+      0.036247738484436624,
+      0.04181892818223005
+     ]
+    },
+    "turkish:B_global_science-A_turkiye_priority": {
+     "diff": -0.14983333333333335,
+     "mc_se": 0.003169486534302091,
+     "ci95": [
+      -0.15604552694056545,
+      -0.14362113972610124
+     ]
+    },
+    "turkish:C_public_participation-A_turkiye_priority": {
+     "diff": 0.0183,
+     "mc_se": 0.0014058960951160023,
+     "ci95": [
+      0.015544443653572635,
+      0.021055556346427366
+     ]
+    },
+    "turkish:C_public_participation-B_global_science": {
+     "diff": 0.16813333333333333,
+     "mc_se": 0.003595443484052119,
+     "ci95": [
+      0.16108626410459118,
+      0.17518040256207548
+     ]
+    }
    },
-   "peakV_median": 12.533296025656597,
-   "peakV_p10": 10.018463733274258,
-   "peakV_p90": 15.169138604042159,
-   "p_any_by_eta_quartile": [
-    0.296,
-    0.46266666666666667,
-    0.572,
-    0.696
-   ],
-   "p_conf_by_eta_quartile": [
-    0.03,
-    0.078,
-    0.202,
-    0.4013333333333333
-   ],
-   "eta_quartile_edges_log10": [
-    -6.899241792609979,
-    -4.8857504138128265,
-    -4.404072649002419,
-    -3.9335689637092432,
-    -1.938199308875387
-   ],
-   "n_stations": 9
-  },
-  "B_global_science|slow-impact-wide": {
-   "p_any": 0.7465,
-   "p_confirmed": 0.5295,
-   "p_two_indep": 0.51,
-   "p_obvious_any": 0.6061666666666666,
-   "p_live": 0.25216666666666665,
-   "p_rapid_replay": 0.6338333333333334,
-   "p_turkish": 0.431,
-   "p_obvious_turkish": 0.3555,
-   "p_eyepiece_witness": 0.09754084416908373,
-   "p_naked_eye_witness": 2.127641676262946e-06,
-   "p_binocular_witness": 0.007836035403786346,
-   "mean_n_det": 1.8763333333333334,
-   "station_p_det": {
-    "TUG:tug_t100_qhy": 0.184,
-    "TUG:rtt150_fast": 0.19933333333333333,
-    "DAG:dag_dirac": 0.089,
-    "DAG:dag_visitor_fast": 0.16166666666666665,
-    "KRY:lunar_impact_system": 0.23733333333333334,
-    "SEV:midas_video": 0.0,
-    "CAHA:fast_camera_possible": 0.0,
-    "ORM:fast_camera_large": 0.0,
-    "TEI:fast_camera_possible": 0.0,
-    "KOT:fast_camera_possible": 0.2035,
-    "SAAO:fast_camera_large": 0.2981666666666667,
-    "SAO:fast_camera_large": 0.17333333333333334,
-    "BYU:fast_camera_possible": 0.13533333333333333,
-    "MAID:fast_camera_possible": 0.19466666666666665,
-    "HAN:fast_camera_possible": 0.0,
-    "TNO:fast_camera_large": 0.0,
-    "LIJ:fast_camera_possible": 0.0,
-    "OKA:fast_camera_large": 0.0,
-    "KISO:fast_camera_possible": 0.0,
-    "SSO:fast_camera_large": 0.0,
-    "MTJ:fast_camera_possible": 0.0,
-    "MKO:nir_large": 0.0,
-    "MKO:fast_camera_large": 0.0,
-    "HAL:fast_camera_possible": 0.0,
-    "APO:fast_camera_large": 0.0,
-    "PAL:fast_camera_large": 0.0,
-    "SPM:fast_camera_possible": 0.0,
-    "CTIO:fast_camera_large": 0.0,
-    "PAR:nir_large": 0.0,
-    "OPD:fast_camera_possible": 0.0,
-    "CAS:fast_camera_possible": 0.0
+   "peakV": {
+    "median": 10.080197108425946,
+    "p10": 7.557533583056462,
+    "p90": 12.694204137280646
    },
-   "station_fov_cov": {
-    "TUG:tug_t100_qhy": 1.0,
-    "TUG:rtt150_fast": 1.0,
-    "DAG:dag_dirac": 0.507,
-    "DAG:dag_visitor_fast": 1.0,
-    "KRY:lunar_impact_system": 1.0,
-    "SEV:midas_video": 0.0,
-    "CAHA:fast_camera_possible": 0.0,
-    "ORM:fast_camera_large": 0.0,
-    "TEI:fast_camera_possible": 0.0,
-    "KOT:fast_camera_possible": 1.0,
-    "SAAO:fast_camera_large": 1.0,
-    "SAO:fast_camera_large": 1.0,
-    "BYU:fast_camera_possible": 1.0,
-    "MAID:fast_camera_possible": 1.0,
-    "HAN:fast_camera_possible": 0.0,
-    "TNO:fast_camera_large": 0.0,
-    "LIJ:fast_camera_possible": 0.0,
-    "OKA:fast_camera_large": 0.0,
-    "KISO:fast_camera_possible": 0.0,
-    "SSO:fast_camera_large": 0.0,
-    "MTJ:fast_camera_possible": 0.0,
-    "MKO:nir_large": 0.0,
-    "MKO:fast_camera_large": 0.0,
-    "HAL:fast_camera_possible": 0.0,
-    "APO:fast_camera_large": 0.0,
-    "PAL:fast_camera_large": 0.0,
-    "SPM:fast_camera_possible": 0.0,
-    "CTIO:fast_camera_large": 0.0,
-    "PAR:nir_large": 0.0,
-    "OPD:fast_camera_possible": 0.0,
-    "CAS:fast_camera_possible": 0.0
-   },
-   "peakV_median": 12.192800371267811,
-   "peakV_p10": 8.517107903907197,
-   "peakV_p90": 15.818870748615314,
-   "p_any_by_eta_quartile": [
-    0.36933333333333335,
-    0.802,
-    0.9093333333333333,
-    0.9053333333333333
+   "T0_percentiles": [
+    1978.4487683091304,
+    3036.8659732086103,
+    4660.376759237164
    ],
-   "p_conf_by_eta_quartile": [
-    0.10066666666666667,
-    0.54,
-    0.7386666666666667,
-    0.7386666666666667
-   ],
-   "eta_quartile_edges_log10": [
-    -5.999449153184008,
-    -5.122146353666158,
-    -4.260984364703223,
-    -3.384376082411542,
-    -2.5005513618467377
-   ],
-   "n_stations": 31
-  },
-  "B_global_science|v3-scaled": {
-   "p_any": 0.7976666666666666,
-   "p_confirmed": 0.5758333333333333,
-   "p_two_indep": 0.5563333333333333,
-   "p_obvious_any": 0.622,
-   "p_live": 0.2155,
-   "p_rapid_replay": 0.6756666666666666,
-   "p_turkish": 0.44516666666666665,
-   "p_obvious_turkish": 0.3441666666666667,
-   "p_eyepiece_witness": 0.040760297878061985,
-   "p_naked_eye_witness": 2.3695044346503007e-07,
-   "p_binocular_witness": 0.0012890945561434806,
-   "mean_n_det": 1.9831666666666667,
-   "station_p_det": {
-    "TUG:tug_t100_qhy": 0.18616666666666667,
-    "TUG:rtt150_fast": 0.221,
-    "DAG:dag_dirac": 0.08516666666666667,
-    "DAG:dag_visitor_fast": 0.1615,
-    "KRY:lunar_impact_system": 0.25716666666666665,
-    "SEV:midas_video": 0.0,
-    "CAHA:fast_camera_possible": 0.0,
-    "ORM:fast_camera_large": 0.0,
-    "TEI:fast_camera_possible": 0.0,
-    "KOT:fast_camera_possible": 0.216,
-    "SAAO:fast_camera_large": 0.331,
-    "SAO:fast_camera_large": 0.18783333333333332,
-    "BYU:fast_camera_possible": 0.13733333333333334,
-    "MAID:fast_camera_possible": 0.2,
-    "HAN:fast_camera_possible": 0.0,
-    "TNO:fast_camera_large": 0.0,
-    "LIJ:fast_camera_possible": 0.0,
-    "OKA:fast_camera_large": 0.0,
-    "KISO:fast_camera_possible": 0.0,
-    "SSO:fast_camera_large": 0.0,
-    "MTJ:fast_camera_possible": 0.0,
-    "MKO:nir_large": 0.0,
-    "MKO:fast_camera_large": 0.0,
-    "HAL:fast_camera_possible": 0.0,
-    "APO:fast_camera_large": 0.0,
-    "PAL:fast_camera_large": 0.0,
-    "SPM:fast_camera_possible": 0.0,
-    "CTIO:fast_camera_large": 0.0,
-    "PAR:nir_large": 0.0,
-    "OPD:fast_camera_possible": 0.0,
-    "CAS:fast_camera_possible": 0.0
-   },
-   "station_fov_cov": {
-    "TUG:tug_t100_qhy": 1.0,
-    "TUG:rtt150_fast": 1.0,
-    "DAG:dag_dirac": 0.50725,
-    "DAG:dag_visitor_fast": 1.0,
-    "KRY:lunar_impact_system": 1.0,
-    "SEV:midas_video": 0.0,
-    "CAHA:fast_camera_possible": 0.0,
-    "ORM:fast_camera_large": 0.0,
-    "TEI:fast_camera_possible": 0.0,
-    "KOT:fast_camera_possible": 1.0,
-    "SAAO:fast_camera_large": 1.0,
-    "SAO:fast_camera_large": 1.0,
-    "BYU:fast_camera_possible": 1.0,
-    "MAID:fast_camera_possible": 1.0,
-    "HAN:fast_camera_possible": 0.0,
-    "TNO:fast_camera_large": 0.0,
-    "LIJ:fast_camera_possible": 0.0,
-    "OKA:fast_camera_large": 0.0,
-    "KISO:fast_camera_possible": 0.0,
-    "SSO:fast_camera_large": 0.0,
-    "MTJ:fast_camera_possible": 0.0,
-    "MKO:nir_large": 0.0,
-    "MKO:fast_camera_large": 0.0,
-    "HAL:fast_camera_possible": 0.0,
-    "APO:fast_camera_large": 0.0,
-    "PAL:fast_camera_large": 0.0,
-    "SPM:fast_camera_possible": 0.0,
-    "CTIO:fast_camera_large": 0.0,
-    "PAR:nir_large": 0.0,
-    "OPD:fast_camera_possible": 0.0,
-    "CAS:fast_camera_possible": 0.0
-   },
-   "peakV_median": 12.533296025656597,
-   "peakV_p10": 10.018463733274258,
-   "peakV_p90": 15.169138604042159,
-   "p_any_by_eta_quartile": [
-    0.5413333333333333,
-    0.8493333333333334,
-    0.906,
-    0.894
-   ],
-   "p_conf_by_eta_quartile": [
-    0.248,
-    0.5986666666666667,
-    0.722,
-    0.7346666666666667
-   ],
-   "eta_quartile_edges_log10": [
-    -6.899241792609979,
-    -4.8857504138128265,
-    -4.404072649002419,
-    -3.9335689637092432,
-    -1.938199308875387
-   ],
-   "n_stations": 31
-  },
-  "C_public_participation|slow-impact-wide": {
-   "p_any": 0.6268333333333334,
-   "p_confirmed": 0.45666666666666667,
-   "p_two_indep": 0.4191666666666667,
-   "p_obvious_any": 0.46216666666666667,
-   "p_live": 0.2805,
-   "p_rapid_replay": 0.49683333333333335,
-   "p_turkish": 0.503,
-   "p_obvious_turkish": 0.36966666666666664,
-   "p_eyepiece_witness": 0.09754084416908373,
-   "p_naked_eye_witness": 2.127641676262946e-06,
-   "p_binocular_witness": 0.007836035403786346,
-   "mean_n_det": 2.261833333333333,
-   "station_p_det": {
-    "TUG:tug_t100_qhy": 0.1905,
-    "TUG:rtt150_fast": 0.20333333333333334,
-    "TUG:amateur_class": 0.11166666666666666,
-    "DAG:dag_visitor_fast": 0.15266666666666667,
-    "DAG:amateur_class": 0.12383333333333334,
-    "AUKR:amateur_class": 0.08766666666666667,
-    "ULUP:amateur_class": 0.0775,
-    "EGE:amateur_class": 0.10016666666666667,
-    "IST:amateur_class": 0.068,
-    "ERC:amateur_class": 0.0965,
-    "KRY:lunar_impact_system": 0.23983333333333334,
-    "KRY:amateur_class": 0.09566666666666666,
-    "SEV:midas_video": 0.0,
-    "SEV:amateur_class": 0.0,
-    "CAHA:amateur_class": 0.0,
-    "ORM:amateur_class": 0.0,
-    "TEI:amateur_class": 0.0,
-    "OUK:amateur_class": 0.0,
-    "KOT:amateur_class": 0.14216666666666666,
-    "SAAO:amateur_class": 0.1375,
-    "WISE:amateur_class": 0.13666666666666666,
-    "SAO:amateur_class": 0.08016666666666666,
-    "BYU:amateur_class": 0.089,
-    "MAID:amateur_class": 0.129,
-    "HAN:amateur_class": 0.0,
-    "TNO:amateur_class": 0.0,
-    "LIJ:amateur_class": 0.0,
-    "OKA:amateur_class": 0.0,
-    "KISO:amateur_class": 0.0,
-    "SSO:amateur_class": 0.0,
-    "MTJ:amateur_class": 0.0,
-    "MKO:amateur_class": 0.0,
-    "HAL:amateur_class": 0.0,
-    "APO:amateur_class": 0.0,
-    "PAL:amateur_class": 0.0,
-    "SPM:amateur_class": 0.0,
-    "CTIO:amateur_class": 0.0,
-    "PAR:amateur_class": 0.0,
-    "OPD:amateur_class": 0.0,
-    "CAS:amateur_class": 0.0
-   },
-   "station_fov_cov": {
-    "TUG:tug_t100_qhy": 1.0,
-    "TUG:rtt150_fast": 1.0,
-    "TUG:amateur_class": 1.0,
-    "DAG:dag_visitor_fast": 1.0,
-    "DAG:amateur_class": 1.0,
-    "AUKR:amateur_class": 1.0,
-    "ULUP:amateur_class": 1.0,
-    "EGE:amateur_class": 1.0,
-    "IST:amateur_class": 1.0,
-    "ERC:amateur_class": 1.0,
-    "KRY:lunar_impact_system": 1.0,
-    "KRY:amateur_class": 1.0,
-    "SEV:midas_video": 0.0,
-    "SEV:amateur_class": 0.0,
-    "CAHA:amateur_class": 0.0,
-    "ORM:amateur_class": 0.0,
-    "TEI:amateur_class": 0.0,
-    "OUK:amateur_class": 0.0,
-    "KOT:amateur_class": 1.0,
-    "SAAO:amateur_class": 1.0,
-    "WISE:amateur_class": 1.0,
-    "SAO:amateur_class": 1.0,
-    "BYU:amateur_class": 1.0,
-    "MAID:amateur_class": 1.0,
-    "HAN:amateur_class": 0.0,
-    "TNO:amateur_class": 0.0,
-    "LIJ:amateur_class": 0.0,
-    "OKA:amateur_class": 0.0,
-    "KISO:amateur_class": 0.0,
-    "SSO:amateur_class": 0.0,
-    "MTJ:amateur_class": 0.0,
-    "MKO:amateur_class": 0.0,
-    "HAL:amateur_class": 0.0,
-    "APO:amateur_class": 0.0,
-    "PAL:amateur_class": 0.0,
-    "SPM:amateur_class": 0.0,
-    "CTIO:amateur_class": 0.0,
-    "PAR:amateur_class": 0.0,
-    "OPD:amateur_class": 0.0,
-    "CAS:amateur_class": 0.0
-   },
-   "peakV_median": 12.192800371267811,
-   "peakV_p10": 8.517107903907197,
-   "peakV_p90": 15.818870748615314,
-   "p_any_by_eta_quartile": [
-    0.18866666666666668,
-    0.5273333333333333,
-    0.824,
-    0.9673333333333334
-   ],
-   "p_conf_by_eta_quartile": [
-    0.022,
-    0.252,
-    0.6566666666666666,
-    0.896
-   ],
-   "eta_quartile_edges_log10": [
-    -5.999449153184008,
-    -5.122146353666158,
-    -4.260984364703223,
-    -3.384376082411542,
-    -2.5005513618467377
-   ],
-   "n_stations": 40
-  },
-  "C_public_participation|v3-scaled": {
-   "p_any": 0.6076666666666667,
-   "p_confirmed": 0.4031666666666667,
-   "p_two_indep": 0.3463333333333333,
-   "p_obvious_any": 0.403,
-   "p_live": 0.22466666666666665,
-   "p_rapid_replay": 0.513,
-   "p_turkish": 0.4786666666666667,
-   "p_obvious_turkish": 0.31816666666666665,
-   "p_eyepiece_witness": 0.040760297878061985,
-   "p_naked_eye_witness": 2.3695044346503007e-07,
-   "p_binocular_witness": 0.0012890945561434806,
-   "mean_n_det": 1.7375,
-   "station_p_det": {
-    "TUG:tug_t100_qhy": 0.17783333333333334,
-    "TUG:rtt150_fast": 0.22083333333333333,
-    "TUG:amateur_class": 0.06316666666666666,
-    "DAG:dag_visitor_fast": 0.15583333333333332,
-    "DAG:amateur_class": 0.07883333333333334,
-    "AUKR:amateur_class": 0.05416666666666667,
-    "ULUP:amateur_class": 0.04783333333333333,
-    "EGE:amateur_class": 0.06283333333333334,
-    "IST:amateur_class": 0.0435,
-    "ERC:amateur_class": 0.059666666666666666,
-    "KRY:lunar_impact_system": 0.25966666666666666,
-    "KRY:amateur_class": 0.06216666666666667,
-    "SEV:midas_video": 0.0,
-    "SEV:amateur_class": 0.0,
-    "CAHA:amateur_class": 0.0,
-    "ORM:amateur_class": 0.0,
-    "TEI:amateur_class": 0.0,
-    "OUK:amateur_class": 0.0,
-    "KOT:amateur_class": 0.09,
-    "SAAO:amateur_class": 0.07933333333333334,
-    "WISE:amateur_class": 0.08583333333333333,
-    "SAO:amateur_class": 0.056,
-    "BYU:amateur_class": 0.0585,
-    "MAID:amateur_class": 0.0815,
-    "HAN:amateur_class": 0.0,
-    "TNO:amateur_class": 0.0,
-    "LIJ:amateur_class": 0.0,
-    "OKA:amateur_class": 0.0,
-    "KISO:amateur_class": 0.0,
-    "SSO:amateur_class": 0.0,
-    "MTJ:amateur_class": 0.0,
-    "MKO:amateur_class": 0.0,
-    "HAL:amateur_class": 0.0,
-    "APO:amateur_class": 0.0,
-    "PAL:amateur_class": 0.0,
-    "SPM:amateur_class": 0.0,
-    "CTIO:amateur_class": 0.0,
-    "PAR:amateur_class": 0.0,
-    "OPD:amateur_class": 0.0,
-    "CAS:amateur_class": 0.0
-   },
-   "station_fov_cov": {
-    "TUG:tug_t100_qhy": 1.0,
-    "TUG:rtt150_fast": 1.0,
-    "TUG:amateur_class": 1.0,
-    "DAG:dag_visitor_fast": 1.0,
-    "DAG:amateur_class": 1.0,
-    "AUKR:amateur_class": 1.0,
-    "ULUP:amateur_class": 1.0,
-    "EGE:amateur_class": 1.0,
-    "IST:amateur_class": 1.0,
-    "ERC:amateur_class": 1.0,
-    "KRY:lunar_impact_system": 1.0,
-    "KRY:amateur_class": 1.0,
-    "SEV:midas_video": 0.0,
-    "SEV:amateur_class": 0.0,
-    "CAHA:amateur_class": 0.0,
-    "ORM:amateur_class": 0.0,
-    "TEI:amateur_class": 0.0,
-    "OUK:amateur_class": 0.0,
-    "KOT:amateur_class": 1.0,
-    "SAAO:amateur_class": 1.0,
-    "WISE:amateur_class": 1.0,
-    "SAO:amateur_class": 1.0,
-    "BYU:amateur_class": 1.0,
-    "MAID:amateur_class": 1.0,
-    "HAN:amateur_class": 0.0,
-    "TNO:amateur_class": 0.0,
-    "LIJ:amateur_class": 0.0,
-    "OKA:amateur_class": 0.0,
-    "KISO:amateur_class": 0.0,
-    "SSO:amateur_class": 0.0,
-    "MTJ:amateur_class": 0.0,
-    "MKO:amateur_class": 0.0,
-    "HAL:amateur_class": 0.0,
-    "APO:amateur_class": 0.0,
-    "PAL:amateur_class": 0.0,
-    "SPM:amateur_class": 0.0,
-    "CTIO:amateur_class": 0.0,
-    "PAR:amateur_class": 0.0,
-    "OPD:amateur_class": 0.0,
-    "CAS:amateur_class": 0.0
-   },
-   "peakV_median": 12.533296025656597,
-   "peakV_p10": 10.018463733274258,
-   "peakV_p90": 15.169138604042159,
-   "p_any_by_eta_quartile": [
-    0.268,
-    0.5473333333333333,
-    0.7193333333333334,
-    0.896
-   ],
-   "p_conf_by_eta_quartile": [
-    0.07133333333333333,
-    0.27066666666666667,
-    0.49133333333333334,
-    0.7793333333333333
-   ],
-   "eta_quartile_edges_log10": [
-    -6.899241792609979,
-    -4.8857504138128265,
-    -4.404072649002419,
-    -3.9335689637092432,
-    -1.938199308875387
-   ],
-   "n_stations": 40
+   "visual": {
+    "site": "IST",
+    "observable": true,
+    "moon_alt": 52.89691017063468,
+    "sun_alt": -17.305098548799357,
+    "none": {
+     "p_conditional": 1.5625305940925871e-06,
+     "p_with_weather": 1.0169821823807687e-07,
+     "threshold_median": 3.2083255764070184
+    },
+    "binoculars": {
+     "p_conditional": 0.017930684806859533,
+     "p_with_weather": 0.004575180794718164,
+     "threshold_median": 7.3377729269455365
+    },
+    "telescope20cm": {
+     "p_conditional": 0.22769877402803274,
+     "p_with_weather": 0.059822670691526664,
+     "threshold_median": 10.717808404858387
+    }
+   }
   }
  },
+ "strategies": {
+  "A_turkiye_priority": {
+   "description": "Turkish facilities only (TUG T100+QHY, RTT150 fast, DAG, university/amateur stations); TUG T100 streamed live",
+   "stations": [
+    "TUG:tug_t100_qhy",
+    "TUG:rtt150_fast",
+    "DAG:dag_dirac",
+    "DAG:dag_visitor_fast",
+    "AUKR:amateur_class",
+    "ULUP:amateur_class",
+    "EGE:amateur_class",
+    "IST:amateur_class",
+    "ERC:amateur_class"
+   ],
+   "streaming": [
+    "TUG:tug_t100_qhy"
+   ]
+  },
+  "B_global_science": {
+   "description": "all professional stations worldwide with fast or NIR cameras plus NELIOTA and MIDAS; no amateur stations; TUG T100 and NELIOTA streamed",
+   "stations": [
+    "TUG:tug_t100_qhy",
+    "TUG:rtt150_fast",
+    "DAG:dag_dirac",
+    "DAG:dag_visitor_fast",
+    "KRY:lunar_impact_system",
+    "SEV:midas_video",
+    "CAHA:fast_camera_possible",
+    "ORM:fast_camera_large",
+    "TEI:fast_camera_possible",
+    "KOT:fast_camera_possible",
+    "SAAO:fast_camera_large",
+    "SAO:fast_camera_large",
+    "BYU:fast_camera_possible",
+    "MAID:fast_camera_possible",
+    "HAN:fast_camera_possible",
+    "TNO:fast_camera_large",
+    "LIJ:fast_camera_possible",
+    "OKA:fast_camera_large",
+    "KISO:fast_camera_possible",
+    "SSO:fast_camera_large",
+    "MTJ:fast_camera_possible",
+    "MKO:nir_large",
+    "MKO:fast_camera_large",
+    "HAL:fast_camera_possible",
+    "APO:fast_camera_large",
+    "PAL:fast_camera_large",
+    "SPM:fast_camera_possible",
+    "CTIO:fast_camera_large",
+    "PAR:nir_large",
+    "OPD:fast_camera_possible",
+    "CAS:fast_camera_possible"
+   ],
+   "streaming": [
+    "TUG:tug_t100_qhy",
+    "KRY:lunar_impact_system"
+   ]
+  },
+  "C_public_participation": {
+   "description": "Turkish stations, NELIOTA, MIDAS and amateur-class stations at every site (public venues), with streaming from TUG, NELIOTA and three amateur venues",
+   "stations": [
+    "TUG:tug_t100_qhy",
+    "TUG:rtt150_fast",
+    "TUG:amateur_class",
+    "DAG:dag_visitor_fast",
+    "DAG:amateur_class",
+    "AUKR:amateur_class",
+    "ULUP:amateur_class",
+    "EGE:amateur_class",
+    "IST:amateur_class",
+    "ERC:amateur_class",
+    "KRY:lunar_impact_system",
+    "KRY:amateur_class",
+    "SEV:midas_video",
+    "SEV:amateur_class",
+    "CAHA:amateur_class",
+    "ORM:amateur_class",
+    "TEI:amateur_class",
+    "OUK:amateur_class",
+    "KOT:amateur_class",
+    "SAAO:amateur_class",
+    "WISE:amateur_class",
+    "SAO:amateur_class",
+    "BYU:amateur_class",
+    "MAID:amateur_class",
+    "HAN:amateur_class",
+    "TNO:amateur_class",
+    "LIJ:amateur_class",
+    "OKA:amateur_class",
+    "KISO:amateur_class",
+    "SSO:amateur_class",
+    "MTJ:amateur_class",
+    "MKO:amateur_class",
+    "HAL:amateur_class",
+    "APO:amateur_class",
+    "PAL:amateur_class",
+    "SPM:amateur_class",
+    "CTIO:amateur_class",
+    "PAR:amateur_class",
+    "OPD:amateur_class",
+    "CAS:amateur_class"
+   ],
+   "streaming": [
+    "TUG:tug_t100_qhy",
+    "AUKR:amateur_class",
+    "IST:amateur_class",
+    "KRY:lunar_impact_system",
+    "SEV:midas_video"
+   ]
+  }
+ },
+ "mc_settings": {
+  "n_outer": 200,
+  "n_inner": 150,
+  "seed": 20267005,
+  "detection_snr": 8.0,
+  "obvious_snr": 30.0,
+  "dual_camera_snr": 15.0,
+  "cluster_km": 100.0
+ },
  "public": {
-  "peakV_median": 12.192800371267811,
-  "naked_eye_threshold": 2.9262599305936283,
-  "binocular_threshold": 6.426259930593629,
-  "eyepiece20cm_threshold": 9.426259930593629,
-  "phone_standalone_limit": 0.9500000000000002,
-  "phone_afocal20cm_limit": 8.950000000000001
+  "site": "IST",
+  "visual": {
+   "site": "IST",
+   "observable": true,
+   "moon_alt": 52.89691017063468,
+   "sun_alt": -17.305098548799357,
+   "none": {
+    "p_conditional": 1.1134407041237163e-13,
+    "p_with_weather": 4.543238269438258e-16,
+    "threshold_median": 3.2083255764070184
+   },
+   "binoculars": {
+    "p_conditional": 0.0071898269257684765,
+    "p_with_weather": 0.0016708515873775562,
+    "threshold_median": 7.3377729269455365
+   },
+   "telescope20cm": {
+    "p_conditional": 0.12901361466615127,
+    "p_with_weather": 0.03340011369077619,
+    "threshold_median": 10.717808404858387
+   }
+  },
+  "phone_standalone_limit_broad": 1.1000000000000005,
+  "phone_afocal20cm_limit_broad": 9.100000000000001,
+  "phone_note": "steady-source limits in the unfiltered (broad) CMOS band, not V magnitudes; flash detection also depends on the frame rate and processing"
  }
 }
