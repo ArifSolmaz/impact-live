@@ -1,0 +1,22 @@
+{
+ "main": {
+  "deorbit_dv_m_s": 25.0,
+  "impact_before_overflight_s": 91.50116656583418,
+  "burn_to_impact_s": 2791.643133266572,
+  "n_checked": 61,
+  "max_miss_km": 0.4231455808149533,
+  "median_miss_km": 0.3761372666528345,
+  "max_abs_impact_time_error_s": 0.00020116567611694336,
+  "note": "RK4 two-body descent from the burn state compared with the circular-orbit ground point at the overflight time; the residual is the target motion during the 15-92 s offset, which the mapping neglects"
+ },
+ "incl88_j2": {
+  "deorbit_dv_m_s": 25.0,
+  "impact_before_overflight_s": 91.50116656583418,
+  "burn_to_impact_s": 2791.643133266572,
+  "n_checked": 61,
+  "max_miss_km": 0.46551383593058693,
+  "median_miss_km": 0.42749066566513166,
+  "max_abs_impact_time_error_s": 0.00020116567611694336,
+  "note": "RK4 two-body descent from the burn state compared with the circular-orbit ground point at the overflight time; the residual is the target motion during the 15-92 s offset, which the mapping neglects"
+ }
+}

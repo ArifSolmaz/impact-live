@@ -12,7 +12,8 @@ Sources
   (`iers_degraded_accuracy = 'ignore'` turns the error into a warning). The table version, coverage and the values
   used are recorded by `iers_provenance()` (outputs/validation/iers_provenance.json). No accuracy better than the
   following is claimed for 2027-2029 epochs: UTC is kept within 0.9 s of UT1, so the held UT1-UTC value can be wrong by
-  up to about 1 s, i.e. up to ~15 arcsec of Earth rotation (0.004 deg in topocentric altitude/azimuth of the Moon);
+  up to 0.9 s + |held value| (about 1.05 s for the archived table), i.e. up to ~16 arcsec of Earth rotation
+  (0.004 deg in topocentric altitude/azimuth of the Moon); iers_provenance() records the exact bound;
   polar motion errors are below 1 arcsec. This is irrelevant to the 20-deg altitude cuts and hour-scale planning
   here, but sub-arcsecond pointing near an actual event needs current Earth-orientation parameters.
 
@@ -155,8 +156,11 @@ def iers_provenance(epochs=('2027-09-01', '2028-04-01', '2029-03-01')):
                files={os.path.basename(f): hashlib.sha256(open(f, 'rb').read()).hexdigest() for f in files},
                measured_until=Time(meas.max(), format='mjd').iso[:10] if len(meas) else None,
                predicted_until=Time(pred.max(), format='mjd').iso[:10] if len(pred) else None,
-               beyond_table='UT1-UTC held at the last tabulated value; polar motion = 50-year mean (astropy behaviour)',
-               ut1_utc_bound_beyond_table_s=1.0, rotation_bound_arcsec=15.0, epochs={})
+               beyond_table='UT1-UTC held at the last tabulated value; polar motion = 50-year mean (astropy behaviour)', epochs={})
+    held = float(u.Quantity(t['UT1_UTC'][-1]).to_value(u.s))
+    bound = 0.9 + abs(held)                     # |UT1 - UTC| < 0.9 s by IERS policy, plus the held value itself (re-audit GE-V2-07)
+    out.update(ut1_utc_held_s=held, ut1_utc_bound_beyond_table_s=bound, rotation_bound_arcsec=bound * 15.0411,
+               bound_note='0.9 s + |held UT1-UTC|; Earth rotation 15.0411 arcsec per second of time')
     for e in epochs:
         tt = Time(e, scale='utc')
         with np.errstate(all='ignore'):

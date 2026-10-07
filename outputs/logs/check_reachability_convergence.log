@@ -1,29 +1,67 @@
-production (10 min, 8 phases) done (136s)
-fine time (5 min, 8 phases) done (357s)
-fine phase (10 min, 16 phases) done (559s)
-                           variant                       cls  delta  mean_p30  d_mean_p30  d_min_p30  d_p_first_3mo  rel_d_opp_hours
-0    production (10 min, 8 phases)  A_turkiye_evening_public    0.6     0.417       0.000        0.0            0.0            0.000
-1    production (10 min, 8 phases)  A_turkiye_evening_public    2.5     0.432       0.000        0.0            0.0            0.000
-2    production (10 min, 8 phases)          B_global_science    0.6     0.987       0.000        0.0            0.0            0.000
-3    production (10 min, 8 phases)          B_global_science    2.5     0.989       0.000        0.0            0.0            0.000
-4    production (10 min, 8 phases)             C_any_turkish    0.6     0.954       0.000        0.0            0.0            0.000
-5    production (10 min, 8 phases)             C_any_turkish    2.5     0.960       0.000        0.0            0.0            0.000
-6    production (10 min, 8 phases)            P_plume_global    0.6     0.177       0.000        0.0            0.0            0.000
-7    production (10 min, 8 phases)            P_plume_global    2.5     0.234       0.000        0.0            0.0            0.000
-8      fine time (5 min, 8 phases)  A_turkiye_evening_public    0.6     0.420       0.003        0.0            0.0            0.004
-9      fine time (5 min, 8 phases)  A_turkiye_evening_public    2.5     0.437       0.005        0.0            0.0            0.005
-10     fine time (5 min, 8 phases)          B_global_science    0.6     0.987       0.000        0.0            0.0            0.005
-11     fine time (5 min, 8 phases)          B_global_science    2.5     0.989       0.000        0.0            0.0            0.005
-12     fine time (5 min, 8 phases)             C_any_turkish    0.6     0.953      -0.001        0.0            0.0            0.003
-13     fine time (5 min, 8 phases)             C_any_turkish    2.5     0.960      -0.001        0.0            0.0            0.002
-14     fine time (5 min, 8 phases)            P_plume_global    0.6     0.178       0.001        0.0            0.0           -0.004
-15     fine time (5 min, 8 phases)            P_plume_global    2.5     0.234       0.000        0.0            0.0            0.002
-16  fine phase (10 min, 16 phases)  A_turkiye_evening_public    0.6     0.417      -0.000        0.0            0.0            0.009
-17  fine phase (10 min, 16 phases)  A_turkiye_evening_public    2.5     0.431      -0.000        0.0            0.0            0.000
-18  fine phase (10 min, 16 phases)          B_global_science    0.6     0.987      -0.000        0.0            0.0            0.001
-19  fine phase (10 min, 16 phases)          B_global_science    2.5     0.989       0.000        0.0            0.0            0.001
-20  fine phase (10 min, 16 phases)             C_any_turkish    0.6     0.954       0.001        0.0            0.0            0.003
-21  fine phase (10 min, 16 phases)             C_any_turkish    2.5     0.960       0.000        0.0            0.0            0.000
-22  fine phase (10 min, 16 phases)            P_plume_global    0.6     0.177       0.001        0.0            0.0            0.012
-23  fine phase (10 min, 16 phases)            P_plume_global    2.5     0.234      -0.000        0.0            0.0            0.010
-max |d mean_p30| 0.005; max |d p_first_3mo| 0.000; max |rel d opp-hours| 0.012
+production (10 min, 8 phases, nside 32) done (418s)
+fine time (5 min) done (1034s)
+fine phase (16 phases) done (1508s)
+fine space (nside 64) done (2329s)
+shifted nodes (+2.5 deg) done (2508s)
+shifted phases (+22.5 deg) done (2693s)
+burn 50 m/s done (2873s)
+                                    variant                       cls  delta  mean_p30  d_mean_p30  d_min_p30  d_p_first_3mo  rel_d_opp_hours
+0   production (10 min, 8 phases, nside 32)  A_turkiye_evening_public    0.6     0.423       0.000        0.0          0.000            0.000
+1   production (10 min, 8 phases, nside 32)  A_turkiye_evening_public    2.5     0.445       0.000        0.0          0.000            0.000
+2   production (10 min, 8 phases, nside 32)          B_global_science    0.6     0.987       0.000        0.0          0.000            0.000
+3   production (10 min, 8 phases, nside 32)          B_global_science    2.5     0.987       0.000        0.0          0.000            0.000
+4   production (10 min, 8 phases, nside 32)             C_any_turkish    0.6     0.956       0.000        0.0          0.000            0.000
+5   production (10 min, 8 phases, nside 32)             C_any_turkish    2.5     0.959       0.000        0.0          0.000            0.000
+6   production (10 min, 8 phases, nside 32)            P_plume_global    0.6     0.176       0.000        0.0          0.000            0.000
+7   production (10 min, 8 phases, nside 32)            P_plume_global    2.5     0.240       0.000        0.0          0.000            0.000
+8                         fine time (5 min)  A_turkiye_evening_public    0.6     0.423       0.000        0.0          0.000            0.000
+9                         fine time (5 min)  A_turkiye_evening_public    2.5     0.445       0.000        0.0          0.000            0.000
+10                        fine time (5 min)          B_global_science    0.6     0.987       0.000        0.0          0.000            0.000
+11                        fine time (5 min)          B_global_science    2.5     0.987       0.000        0.0          0.000           -0.000
+12                        fine time (5 min)             C_any_turkish    0.6     0.956      -0.000        0.0          0.000           -0.001
+13                        fine time (5 min)             C_any_turkish    2.5     0.959       0.000        0.0          0.000           -0.001
+14                        fine time (5 min)            P_plume_global    0.6     0.176       0.000        0.0          0.000            0.000
+15                        fine time (5 min)            P_plume_global    2.5     0.240       0.000        0.0          0.000            0.000
+16                   fine phase (16 phases)  A_turkiye_evening_public    0.6     0.427       0.004        0.0          0.021            0.004
+17                   fine phase (16 phases)  A_turkiye_evening_public    2.5     0.450       0.005        0.0          0.021            0.000
+18                   fine phase (16 phases)          B_global_science    0.6     0.987      -0.000        0.0          0.000            0.002
+19                   fine phase (16 phases)          B_global_science    2.5     0.987      -0.000        0.0          0.000            0.002
+20                   fine phase (16 phases)             C_any_turkish    0.6     0.956      -0.000        0.0          0.000            0.004
+21                   fine phase (16 phases)             C_any_turkish    2.5     0.960       0.000        0.0          0.000            0.001
+22                   fine phase (16 phases)            P_plume_global    0.6     0.176       0.000        0.0          0.000            0.011
+23                   fine phase (16 phases)            P_plume_global    2.5     0.240       0.000        0.0          0.000            0.007
+24                    fine space (nside 64)  A_turkiye_evening_public    0.6     0.426       0.003        0.0          0.000            0.018
+25                    fine space (nside 64)  A_turkiye_evening_public    2.5     0.451       0.007        0.0          0.000            0.003
+26                    fine space (nside 64)          B_global_science    0.6     0.987       0.000        0.0          0.000            0.012
+27                    fine space (nside 64)          B_global_science    2.5     0.987       0.000        0.0          0.000            0.005
+28                    fine space (nside 64)             C_any_turkish    0.6     0.957       0.001        0.0          0.000            0.008
+29                    fine space (nside 64)             C_any_turkish    2.5     0.964       0.004        0.0          0.000            0.005
+30                    fine space (nside 64)            P_plume_global    0.6     0.184       0.008        0.0          0.000            0.038
+31                    fine space (nside 64)            P_plume_global    2.5     0.241       0.001        0.0          0.000            0.065
+32                 shifted nodes (+2.5 deg)  A_turkiye_evening_public    0.6     0.416      -0.007        0.0          0.000           -0.075
+33                 shifted nodes (+2.5 deg)  A_turkiye_evening_public    2.5     0.447       0.002        0.0          0.000           -0.009
+34                 shifted nodes (+2.5 deg)          B_global_science    0.6     0.984      -0.004        0.0          0.000           -0.037
+35                 shifted nodes (+2.5 deg)          B_global_science    2.5     0.987       0.000        0.0          0.000           -0.017
+36                 shifted nodes (+2.5 deg)             C_any_turkish    0.6     0.951      -0.005        0.0          0.000           -0.041
+37                 shifted nodes (+2.5 deg)             C_any_turkish    2.5     0.965       0.006        0.0          0.000           -0.019
+38                 shifted nodes (+2.5 deg)            P_plume_global    0.6     0.168      -0.008        0.0          0.000           -0.216
+39                 shifted nodes (+2.5 deg)            P_plume_global    2.5     0.218      -0.022        0.0          0.000           -0.072
+40               shifted phases (+22.5 deg)  A_turkiye_evening_public    0.6     0.430       0.007        0.0          0.042            0.000
+41               shifted phases (+22.5 deg)  A_turkiye_evening_public    2.5     0.455       0.010        0.0          0.042           -0.003
+42               shifted phases (+22.5 deg)          B_global_science    0.6     0.987      -0.000        0.0          0.000           -0.000
+43               shifted phases (+22.5 deg)          B_global_science    2.5     0.987      -0.000        0.0          0.000           -0.002
+44               shifted phases (+22.5 deg)             C_any_turkish    0.6     0.956      -0.001        0.0          0.000           -0.001
+45               shifted phases (+22.5 deg)             C_any_turkish    2.5     0.960       0.001        0.0          0.000           -0.001
+46               shifted phases (+22.5 deg)            P_plume_global    0.6     0.176       0.000        0.0          0.000            0.000
+47               shifted phases (+22.5 deg)            P_plume_global    2.5     0.240       0.000        0.0          0.000           -0.001
+48                              burn 50 m/s  A_turkiye_evening_public    0.6     0.424       0.001        0.0          0.000            0.000
+49                              burn 50 m/s  A_turkiye_evening_public    2.5     0.446       0.001        0.0          0.000            0.000
+50                              burn 50 m/s          B_global_science    0.6     0.987       0.000        0.0          0.000           -0.001
+51                              burn 50 m/s          B_global_science    2.5     0.987       0.000        0.0          0.000           -0.001
+52                              burn 50 m/s             C_any_turkish    0.6     0.956      -0.000        0.0          0.000           -0.002
+53                              burn 50 m/s             C_any_turkish    2.5     0.959      -0.000        0.0          0.000            0.000
+54                              burn 50 m/s            P_plume_global    0.6     0.176       0.000        0.0          0.000           -0.003
+55                              burn 50 m/s            P_plume_global    2.5     0.240      -0.000        0.0          0.000           -0.001
+numerical: max |d mean_p30| 0.008; max |d min_p30| 0.000; max |d p_first_3mo| 0.021; max |rel d opp-hours| 0.065
+sampling: max |d mean_p30| 0.022; max |d min_p30| 0.000; max |d p_first_3mo| 0.042; max |rel d opp-hours| 0.216
+burn: max |d mean_p30| 0.001; max |d min_p30| 0.000; max |d p_first_3mo| 0.000; max |rel d opp-hours| 0.003

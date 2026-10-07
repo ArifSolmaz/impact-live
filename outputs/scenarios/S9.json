@@ -64,8 +64,8 @@
    }
   ],
   "required_node_mod180_deg": 86.49885539002106,
-  "nearest_family_node_deg": 85.0,
-  "offset_from_family_grid_deg": 1.4988553900210633,
+  "nearest_family_node_deg": 265.0,
+  "offset_from_family_grid_deg": 1.498855390021049,
   "p_random_polar_plane_within": {
    "0.6": 0.006666666666666666,
    "2.5": 0.027777777777777776
@@ -1888,7 +1888,8 @@
   "height_needed_km": 2599.973809375006,
   "emission_criterion_ok": false,
   "regime": "plume over sunlit ground (low contrast, LCROSS-like)",
-  "instrument": "1-m telescope, V band, 1-s exposures, throughput 0.5, seeing 1.5 arcsec; background-subtraction systematic 1e-3 and 1e-2 of the background",
+  "instrument": "1-m telescope, V band, 0.5\"/pixel, full well 60 ke-, read noise 5 e-; 1-s integration windows; seeing 1.5 arcsec; source and background extincted; background-subtraction systematic 1e-3 and 1e-2 of the background",
+  "defaults": "regolith grains, p Phi 0.03, dust/sunlit-ground contrast kappa 0.2",
   "cases": [],
   "note": "Housen & Holsapple (2011) point-source scaling with its domain [n1 a, n2 R]; two oblique-impact rules bracket a grazing impact by a hollow spacecraft, for which no validated rule exists; impactor bulk density is a calibration choice (the LCROSS like-for-like check favours ~400 kg/m3), not a validation."
  },
@@ -1980,38 +1981,62 @@
    "p_note": "assumed probability that LRO is still operating in 2028 (scenario input, not measured; not a probability of imaging the crater)",
    "latency_summary": "well-located near-side or mid-latitude impacts: first documented image after 0.6-11 days; far-side, high-latitude or poorly located impacts: about 2-4 months; public release 12-193 days after the event",
    "latency_note": "heuristic from a small, selected precedent sample (impacts only; first documented image, release counted from the event); not a calibrated forecast for this site",
-   "low_sun_season_approx": {
+   "low_sun_season": {
     "next_season": [
-     "2028-03-29",
+     "2028-03-28",
      "2028-05-28"
     ],
-    "days_until": 0,
-    "inside": true
-   },
-   "season_note": "approximate orbit-plane illumination season (+-3 weeks model spread); does not guarantee a sunlit pass over this point"
-  },
-  "danuri": {
-   "p_operational_assumed": 0.4,
-   "low_sun_season_approx": {
-    "next_season": [
-     "2028-03-23",
-     "2028-06-02"
+    "start_range": [
+     "2028-03-28",
+     "2028-04-05"
+    ],
+    "end_range": [
+     "2028-05-28",
+     "2028-06-05"
     ],
     "days_until": 0,
-    "inside": true
-   }
+    "inside": true,
+    "boundary_uncertain": true,
+    "extrapolated": true
+   },
+   "near_noon_season": {
+    "next_season": [
+     "2028-07-05",
+     "2028-08-01"
+    ],
+    "start_range": [
+     "2028-07-05",
+     "2028-07-14"
+    ],
+    "end_range": [
+     "2028-08-01",
+     "2028-08-11"
+    ],
+    "days_until": 94,
+    "inside": false,
+    "boundary_uncertain": false,
+    "extrapolated": true
+   },
+   "season_note": "orbit-plane illumination season: beta angle from JPL Horizons tracking-based LRO elements, extrapolated beyond 2026-09-02 (quadratic node trend; start_range and end_range from alternative fits); assumes no orbit manoeuvre and does not guarantee a sunlit pass over this point"
+  },
+  "danuri": {
+   "planned_impact": "2028-03",
+   "available_in_baseline": false,
+   "p_operational_assumed": 0.0,
+   "p_continued_operation_sensitivity": 0.4,
+   "note": "KASA plans a lunar impact in March 2028 (press release 10 Feb 2025); after it, Danuri follow-up exists only in the changed-plan sensitivity"
   },
   "high_latitude_note": ""
  },
  "mc": {
   "wide|broad": {
    "n_outer": 200,
-   "n_inner": 150,
-   "N": 30000,
+   "n_inner": 600,
+   "N": 120000,
    "eta_prior": "wide",
    "T0_prior": "broad",
    "eps_max": 0.1,
-   "rejected_fraction": 0.021749763589526183,
+   "rejected_fraction": 0.02083180338302615,
    "eta_bins": [
     -6.0,
     -5.5,
@@ -2033,12 +2058,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2058,12 +2088,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2083,12 +2118,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2108,12 +2148,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2133,12 +2178,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2158,12 +2208,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2183,12 +2238,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2208,12 +2268,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2233,12 +2298,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2294,12 +2364,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2319,12 +2394,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2344,12 +2424,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2369,12 +2454,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2394,12 +2484,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2419,12 +2514,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2444,12 +2544,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2469,12 +2574,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2494,12 +2604,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2621,12 +2736,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2646,12 +2766,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2671,12 +2796,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2696,12 +2826,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2721,12 +2856,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2746,12 +2886,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2771,12 +2916,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2796,12 +2946,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2821,12 +2976,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3089,14 +3249,14 @@
     }
    },
    "peakV": {
-    "median": 12.008748335468153,
-    "p10": 8.29006506468496,
-    "p90": 15.635697678594676
+    "median": 11.99588765528464,
+    "p10": 8.257167452237491,
+    "p90": 15.621254689669776
    },
    "T0_percentiles": [
-    1945.6448117374819,
-    3005.9686550866836,
-    4662.132258801572
+    1948.2222106516265,
+    3011.285806269403,
+    4659.5359212165295
    ],
    "visual": {
     "site": "IST",
@@ -3106,12 +3266,12 @@
   },
   "v-scaled|broad": {
    "n_outer": 200,
-   "n_inner": 150,
-   "N": 30000,
+   "n_inner": 600,
+   "N": 120000,
    "eta_prior": "v-scaled",
    "T0_prior": "broad",
    "eps_max": 0.1,
-   "rejected_fraction": 0.06480875339006831,
+   "rejected_fraction": 0.06469941777538757,
    "eta_bins": [
     -6.0,
     -5.5,
@@ -3133,12 +3293,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3158,12 +3323,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3183,12 +3353,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3208,12 +3383,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3233,12 +3413,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3258,12 +3443,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3283,12 +3473,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3308,12 +3503,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3333,12 +3533,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3394,12 +3599,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3419,12 +3629,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3444,12 +3659,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3469,12 +3689,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3494,12 +3719,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3519,12 +3749,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3544,12 +3779,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3569,12 +3809,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3594,12 +3839,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3721,12 +3971,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3746,12 +4001,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3771,12 +4031,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3796,12 +4061,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3821,12 +4091,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3846,12 +4121,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3871,12 +4151,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3896,12 +4181,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3921,12 +4211,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4189,14 +4484,14 @@
     }
    },
    "peakV": {
-    "median": 10.077071922892241,
-    "p10": 7.56797925382104,
-    "p90": 12.709098198684636
+    "median": 10.064758133500888,
+    "p10": 7.5788055995632355,
+    "p90": 12.690237599850006
    },
    "T0_percentiles": [
-    1987.9982217838274,
-    3039.7150572880873,
-    4676.872650342999
+    1986.7052331107295,
+    3042.5213931973967,
+    4678.0431373127
    ],
    "visual": {
     "site": "IST",
@@ -4318,7 +4613,7 @@
  },
  "mc_settings": {
   "n_outer": 200,
-  "n_inner": 150,
+  "n_inner": 600,
   "seed": 20269005,
   "detection_snr": 8.0,
   "obvious_snr": 30.0,

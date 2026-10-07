@@ -7,6 +7,13 @@ Evidence cutoff: 5 October 2026. All URLs accessed 2026-10-05. Companion file: `
 - **[S]** secondary source only (Wikipedia, Planetary Society).
 - **[D]** derived by this report from fetched data, for example JPL Horizons orbital elements or LROC image-ID timing. The method is stated.
 - **[U]** unverified. Could not be confirmed with the tools available (WebSearch disabled; several sites 404, robots-blocked or rate-limited).
+- **[P]** supplied by the study's author from the original source (text quoted to us; not retrieved by our tools).
+
+**Release 2.1 reconciliation (7 October 2026).** LRO illumination seasons are now computed reproducibly by
+`scripts/make_orbiter_seasons.py` from archived JPL Horizons elements (`data/horizons/horizons_lro_elements_2023-2028.txt`,
+record revised 30 Sep 2026) and agree with the estimates in section 4 within one day; Danuri's planned March 2028 lunar
+impact (KASA, 10 Feb 2025) is now the baseline and its seasons are computed from its archived Horizons elements; the GRAIL LAMP result is taken from Retherford et al. (2013). The replaced
+statements are listed in `CHANGELOG.md`.
 
 ---
 
@@ -24,7 +31,7 @@ Evidence cutoff: 5 October 2026. All URLs accessed 2026-10-05. Companion file: `
 2. **LRO's orbit is no longer the 2015 "20 × 165 km" frozen orbit.**
    - Since about 2019–2020 it has been near-circular: osculating periapsis about 57–88 km and apoapsis about 97–123 km, mean altitude about 90 km. Inclination has drifted to about 82.5–84°, and the period is about 117 min [D from Horizons].
    - At this altitude the NAC pixel scale is about 0.8–1.0 m [V: IM-1 0.89 m; Chang'e 6 0.85 m].
-3. **Danuri (KPLO) is operating, with life "extended from 2023 to 2027" [V, KARI].**
+3. **Danuri (KPLO) is operating, with life "extended from 2023 to 2027" [V, KARI]; KASA plans low-altitude landing-technology tests after the end of 2027 and a lunar impact in March 2028 [P: KASA press release, 10 Feb 2025].**
    - It was moved from a 100 km circular orbit to about 60 km (Mar–Sep 2025), then to an elliptical orbit of about 50–65 × 200–215 km with periapsis over the south pole (since about Nov 2025) [D from Horizons/KARI ephemeris].
    - In the Falcon 9 case, Danuri's LUTI imaged the crater **a few hours after impact**. That is the fastest orbital follow-up on record [V].
 4. **Chandrayaan-2 orbiter is still operating.**
@@ -100,7 +107,9 @@ Evidence cutoff: 5 October 2026. All URLs accessed 2026-10-05. Companion file: `
 - The PDS SPICE archive holds merged reconstructed `lrorg_YYYYDOY_yyyydoy_v01.bsp` files built from daily definitive ephemerides [V]. Latest: `lrorg_2025349_2026074_v01.bsp`, covering 15 Dec 2025–15 Mar 2026, posted 2026-06-04, i.e. about 3 months behind [V].
 - **No public predicted ("lrorp") SPK was found** [U].
 - JPL Horizons (-85) has reconstructed data to 2026-03-15, concatenated predicts to 2026-08-05, and an "extended forecast" to **2028-02-13** [V]. That forecast shows a constant period (7008.0 s) and a node drift about 16× slower than observed, so it is a low-fidelity placeholder and not usable for planning imaging [D].
+  - Release 2.1: the Horizons record revised 30 Sep 2026 (archived in `data/horizons/`) has tag-up solutions to 2026-09-02 and a 558-day prediction to 2028-03-12. Its node regresses at 0.004-0.02 deg/day against 0.09-0.12 deg/day observed in 2023-2026, so it is also treated as a placeholder; only the tracking-based part is used [D].
 - Danuri: KARI solutions in Horizons, with predictions to 2027-03-02 [V].
+  - Release 2.1: a later query (record with KARI tag-up data through 2026-09-29 and predictions to 2027-04-01; supplied by the study's author, archived as `data/horizons/horizons_kplo_elements_2023-2027.txt`) is used for Danuri's seasons; only the tracking-based part is used [P/D].
 - Chandrayaan-2: ISRO orbit determination to 2026-11-08 [V].
 
 ### Which LRO instruments could observe what
@@ -170,7 +179,7 @@ Timing basis:
 **2. Plume or thermal observation: low probability unless the impact is controlled and coordinated.**
 - Both documented orbital observations of an impact event were NASA-controlled impacts with LRO pre-positioned and instruments pre-commanded:
   - LCROSS 2009: Diviner looked about 90 s after impact from about 80 km [V]; LAMP plume spectra [U].
-  - GRAIL 2012: LAMP slit view of the plume [S].
+  - GRAIL 2012: LAMP detected H and Hg emission in the impact plumes (Retherford et al. 2013, LPSC #3004) [V].
 - Geometric chance that LRO (~90 km altitude) has line of sight to a random impact point at a random time: about 2.5% (horizon range ~550 km) [D].
 - For Danuri: ~1.7% at 60 km, ~5% at 200 km altitude [D].
 - Additional requirements: impact time known to about a minute and location to about km, days to weeks in advance; LAMP/Diviner pointing loaded in the command sequence; a sunlit or hot plume in the field of view.
@@ -180,7 +189,7 @@ Timing basis:
 - Ground-based flash monitoring (NASA MEO-type) is the complementary channel. It was attempted for Falcon 9; no result was reported in the fetched sources.
 
 **3. Earliest post-impact image.**
-- Fastest path: Danuri LUTI within hours, if Danuri is still operating (extension "to 2027") and KARI agrees. Precedent: Falcon 9 [V].
+- Fastest path: Danuri LUTI within hours, if Danuri is still operating (extension "to 2027"; planned lunar impact March 2028 [P]) and KARI agrees. Precedent: Falcon 9 [V].
   - GSD will be several metres: altitude ≈ 100 km at 20°S but ≈ 155–200 km at northern mid-latitudes [D].
   - That is enough to detect an 18 m crater and its albedo halo; marginal for a few-metre crater.
 - LRO NAC: next dayside overflight of the site, typically 0.4–11 d for well-located events [V/D], up to about 27 d in the worst phasing [D].
@@ -190,24 +199,25 @@ Timing basis:
 
 **4. Later low-Sun imaging, for morphology and stereo DTMs.**
 - For a low-latitude site, LRO gives incidence ≥55° only when |β| ≥ 55°.
-- Estimated LRO low-Sun windows, extrapolating the 2023–2026 node drift (±~3 weeks by 2028) [D]:
+- LRO low-Sun seasons, computed in release 2.1 from the tracking-based Horizons elements (to 2026-09-02) with a quadratic node trend (`outputs/tables/orbiter_seasons.json`; boundary ranges from alternative fits grow from ~2 days in mid-2027 to ~1-2 weeks in late 2028) [D]:
   - 12 May–13 Jul 2027
   - 23 Oct–21 Dec 2027
-  - 29 Mar–28 May 2028
-  - 8 Sep–6 Nov 2028
-- Estimated near-noon / eclipse-season windows (|β| ≤ 15°; good for albedo, poor for topography):
+  - 28 Mar–28 May 2028
+  - 7 Sep–5 Nov 2028
+- Near-noon / eclipse-season windows (|β| ≤ 15°; good for albedo, poor for topography) [D]:
   - 9 Mar–4 Apr 2027
   - 20 Aug–16 Sep 2027
-  - 26 Jan–21 Feb 2028
-  - 6 Jul–1 Aug 2028
+  - 26 Jan–20 Feb 2028
+  - 5 Jul–1 Aug 2028
+- The 5 Oct 2026 estimates that these replace (low Sun 12 May–13 Jul 2027, 23 Oct–21 Dec 2027, 29 Mar–28 May 2028, 8 Sep–6 Nov 2028; near noon 9 Mar–4 Apr 2027, 20 Aug–16 Sep 2027, 26 Jan–21 Feb 2028, 6 Jul–1 Aug 2028; from a node history sampled every 61 days that was not archived) agree with these within one day. A hold-out test of the quadratic extrapolation (fits ending 2024-03, 2024-09 and 2025-03, compared with tracking data to 2026-09) moved season boundaries by at most 5 days. The extrapolation assumes no LRO orbit manoeuvre.
 - At high latitudes (≥60°), incidence stays ≥60° year-round.
-- Danuri low-Sun windows, if still operating: ~23 Mar–2 Jun and ~25 Sep–2 Dec each year [D].
+- Danuri low-Sun windows: 23 Mar–2 Jun 2027 and 25 Sep–3 Dec 2027, computed in release 2.1 from the archived Horizons elements of Danuri (`data/horizons/horizons_kplo_elements_2023-2027.txt`, tracking to 2026-09-29; query supplied by the study's author) [D]. Danuri's node drifts by only 0.004–0.007°/day, so the seasons repeat almost every year; the 5 Oct 2026 estimate (~23 Mar–2 Jun and ~25 Sep–2 Dec) agrees within one day, and the KARI prediction in the same record gives beta angles within 0.6° of the extrapolation. In the release-2.1 baseline Danuri is not available after its planned March 2028 impact.
 - Worst case from impact to the first low-Sun LRO image: about 3.3 months (gap between windows) plus up to 27 d.
 - Public release: featured or press images in 1–5 weeks for notable events [V precedents]; LROC PDS about 3 months after acquisition [V]; ShadowCam PDS about 1 year [V].
 
 **5. Availability risk for mid-2027 to 2028.**
 - LRO: fuel stated to last "until 2027" [V]; FY2027 budget threat [V] with the LRO-specific outcome [U].
-- Danuri: extension "to 2027" [V].
+- Danuri: extension "to 2027" [V]; low-altitude tests and a planned lunar impact in March 2028 [P: KASA, 10 Feb 2025].
 - Chandrayaan-2: about 7-year life, which ends around 2026 [V].
 - Chang'e 7: not launched [S].
 - Elytra/Ocula: NET 2027 [V].
@@ -222,8 +232,8 @@ Timing basis:
 - Whether LRO is on the FY2027 termination list.
 - LRO reaction-wheel and battery status in 2025–26.
 - Existence of public predicted LRO SPKs ("lrorp").
-- Species LAMP detected in the GRAIL/LCROSS plumes (papers not retrievable).
-- Exact Danuri end date and KARI's stated reasons for the 2025 orbit changes.
+- Species LAMP detected in the LCROSS plume (Gladstone et al. 2010, not retrievable). GRAIL is resolved: H and Hg (Retherford et al. 2013) [V].
+- Exact date of Danuri's planned March 2028 impact (KASA gives the month only) and KARI's stated reasons for the 2025 orbit changes.
 - LUTI swath and exact GSD; PolCam specifications.
 - Chandrayaan-2 data latency, 2027+ plans and TMC-2 specifications.
 - Chang'e 7 launch status from a CNSA primary source, and Chinese data access.

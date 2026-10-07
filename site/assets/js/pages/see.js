@@ -9,7 +9,8 @@ const S1 = SC.scenarios.find((s) => s.id === 'S1');
 const css = getComputedStyle(document.documentElement); const C = (v) => css.getPropertyValue(v).trim();
 // order: methods that never reach half their maximum chance first, then by the brightness at which they do
 const halfKey = (m) => m.half ?? (m.beyond ? 99 : -99);
-const halfText = (m) => (m.half === null || m.half === undefined) ? t(m.beyond ? 'see.beyond' : 'see.never') : t('see.half_at', { m: fmt.num(m.half, 1) });
+const beyondText = (m) => t('see.beyond', { m: fmt.num(m.sampled ? m.sampled[1] : 22, 1) });
+const halfText = (m) => (m.half === null || m.half === undefined) ? (m.beyond ? beyondText(m) : t('see.never')) : t('see.half_at', { m: fmt.num(m.half, 1) });
 const methods = [...MAG.methods].sort((a, b) => halfKey(a) - halfKey(b));
 const binOf = (mag) => Math.max(0, Math.min(MAG.bins.count - 1, Math.floor((mag - MAG.bins.start) / MAG.bins.step)));
 
@@ -28,7 +29,7 @@ function ladder() {
     el('div', { class: 'meter', role: 'img', 'aria-label': fmt.pct(m.p) }, el('span', { style: `width:${Math.max(1, m.p * 100)}%` })),
     el('div', { class: 'lval' }, fmt.pct(m.p, m.p < 0.01 ? 1 : 0)))));
   if (!ladderTable) ladderTable = tableToggle(document.getElementById('ladder-table'), () => ({ head: [t('see.sim_method'), t('see.v_equiv'), t('see.p_bright'), t('see.limit')],
-    rows: methods.map((m) => [L(m.label), m.band, fmt.pct(m.p, 1), (m.half === null || m.half === undefined) ? t(m.beyond ? 'see.beyond' : 'see.never') : fmt.num(m.half, 2)]) }));
+    rows: methods.map((m) => [L(m.label), m.band, fmt.pct(m.p, 1), (m.half === null || m.half === undefined) ? (m.beyond ? beyondText(m) : t('see.never')) : fmt.num(m.half, 2)]) }));
   else ladderTable.refresh();
 }
 
@@ -55,6 +56,9 @@ function play() {
   const m = methods.find((x) => x.key === sel.value); const mag = magAt(+range.value / 100);
   const p = m.curve[binOf(mag)];
   const msg = document.getElementById('sim-msg');
+  if (p === null || p === undefined) {                     // bin not sampled by the prior (re-audit WB-N02)
+    document.getElementById('sim-result').replaceChildren(el('span', { class: 'result-pill maybe' }, t('see.sim_na', { mag: fmt.num(mag, 1) }))); return;
+  }
   document.getElementById('sim-result').replaceChildren(el('span', { class: `result-pill ${p >= 0.5 ? 'yes' : (p < 0.05 ? 'no' : 'maybe')}` }, t('see.sim_p', { mag: fmt.num(mag, 1), p: fmt.pct(p, p < 0.01 ? 1 : 0) })));
   cancelAnimationFrame(anim); const t0 = performance.now(); msg.classList.add('hidden');
   const peak = Math.min(1, 0.15 + 0.85 * p);       // schematic: brighter spot for a higher chance; not a photometric rendering

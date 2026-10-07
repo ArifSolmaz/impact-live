@@ -1,0 +1,15 @@
+{
+ "rows": 8842,
+ "astropy": "8.0.1",
+ "criteria": {
+  "min_moon_alt_deg": 20,
+  "max_sun_alt_deg": -12
+ },
+ "total_count_mismatches": 15,
+ "max_abs_total_count_difference": 1,
+ "turkish_count_mismatches": 6,
+ "tug_mismatches": 0,
+ "rows_with_fewer_than_3_sites_but_stored_3_or_more": 0,
+ "max_threshold_margin_of_mismatched_rows_deg": 0.0071105425974309355,
+ "note": "release 2.0 (nearest-grid-time gates): 921 of 4450 rows differed (re-audit GE-V2-03)"
+}

@@ -1,4 +1,4 @@
-"""Opportunity statistics from the trajectory-level overflight analysis (outputs/reachability/opportunities_<set>.npz).
+"""Opportunity statistics from the circular-overflight screening analysis (outputs/reachability/opportunities_<set>.npz).
 
 All probabilities are fractions of sampled (orbit-plane, orbital-phase) combinations under a uniform prior on both,
 i.e. conditional statements about an unknown plane and phase, not mission forecasts. Products:
@@ -9,7 +9,8 @@ i.e. conditional statements about an unknown plane and phase, not mission foreca
   opportunity_statistics.csv           per (plane, phase): lunations with an opportunity, first opportunity, totals
   timeline_window_probability.csv      for each launch family / science duration: P for terminal windows that open
                                        at the end of the science phase
-  opportunity_convergence.csv          the same statistics from subsets of planes and phases (convergence check)
+  opportunity_convergence.csv          the same statistics from subsets of planes and phases (convergence check) and
+                                       for each traversal direction separately
 """
 import sys, os, numpy as np, yaml, pandas as pd, datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -51,8 +52,10 @@ for ci, cls in enumerate(classes):
             per_lun = pd.Series(occ_c[comb]).groupby(lun).any()
             rows_s.append(dict(cls=cls, delta=dl, node=float(nodes[comb // nph]), phase_deg=float(z['phases_deg'][comb % nph]), n_lunations_with_opp=int(per_lun.sum()),
                                n_lunations=int(per_lun.index.max() + 1), first_after_ref_days=float(fa[comb]), opportunity_hours=int(occ_c[comb].sum())))
-        # convergence: subsets of planes (every 2nd node) and phases (every 2nd phase)
-        for lab, nsel, psel in [('all', slice(None), slice(None)), ('nodes/2', slice(None, None, 2), slice(None)), ('phases/2', slice(None), slice(None, None, 2)), ('both/2', slice(None, None, 2), slice(None, None, 2))]:
+        # convergence: subsets of planes (every 2nd node) and phases (every 2nd phase); the two traversal directions
+        # (nodes 0-175 and 180-355, the same geometric planes flown in opposite directions; re-audit GE-V2-02)
+        for lab, nsel, psel in [('all', slice(None), slice(None)), ('nodes/2', slice(None, None, 2), slice(None)), ('phases/2', slice(None), slice(None, None, 2)), ('both/2', slice(None, None, 2), slice(None, None, 2)),
+                                ('direction 1', nodes < 180, slice(None)), ('direction 2', nodes >= 180, slice(None))]:
             oc = occ[nsel, psel, ci, di, :].reshape(-1, occ.shape[-1])
             _, p30 = window_prob(oc, 30); fa_s = first_after(oc, h_ref)
             rows_c.append(dict(cls=cls, delta=dl, subset=lab, n_combinations=int(oc.shape[0]), mean_p30=float(p30.mean()), min_p30=float(p30.min()),
@@ -64,6 +67,7 @@ conv = pd.DataFrame(rows_c)
 # differences of each subset from the full set
 full = conv[conv.subset == 'all'].set_index(['cls', 'delta'])
 conv['d_mean_p30'] = [r.mean_p30 - full.loc[(r.cls, r.delta)].mean_p30 for r in conv.itertuples()]
+conv['d_min_p30'] = [r.min_p30 - full.loc[(r.cls, r.delta)].min_p30 for r in conv.itertuples()]
 conv['d_p_first_3mo'] = [r.p_first_3mo - full.loc[(r.cls, r.delta)].p_first_3mo for r in conv.itertuples()]
 conv.to_csv(f'{root}/outputs/tables/opportunity_convergence.csv', index=False)
 # ---- launch families: terminal windows opening at the end of the science phase (nominal phase durations)

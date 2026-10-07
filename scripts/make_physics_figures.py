@@ -2,7 +2,8 @@
 fig_flash_sensitivity  peak band magnitude vs eta_vis and T0 (ballistic case) with the radiative-energy consistency limit
 fig_lightcurves_limits light curves (true band peaks), exposure dilution, instrument limits vs exposure
 fig_ejecta_crater      ejecta mass-speed with the Housen & Holsapple (2011) domain, shadow height, crater consistency check
-fig_plume_S2           phase-space plume for scenario S2 (sunlit visible mass, signal-to-noise) and the LCROSS check
+fig_plume_S2           phase-space plume for scenario S2 (sunlit visible mass, exposure-integrated signal-to-noise with the grain
+                       sensitivity) and the LCROSS check
 fig_public_thresholds  predicted flash brightness vs visual thresholds (V) and phone limits (broad band, separately)
 and outputs/tables/peak_magnitude_distribution.json (seeded prior-predictive sample summary)."""
 import sys, os, numpy as np, yaml, json
@@ -35,7 +36,7 @@ axs[0].set_ylabel('initial temperature T0 (K)')
 cb = fig.colorbar(im, ax=axs, fraction=0.02, pad=0.01); cb.set_label('peak Vega magnitude (unocculted, 380 000 km)')
 fig.suptitle(f'Flash brightness sensitivity, ballistic case (E_k = {E_k:.2e} J: {m_bal/1e3:.1f} t at {phys["v_km_s"]} km/s), cooling blackbody, tau = 0.5 s, isotropic. '
              f'Laboratory-trend extrapolation (Swift et al. 2011): eta ~ {I.lab_trend_eta(phys["v_km_s"]):.0e}, far left of the axis.', fontsize=8.5)
-P.evidence_tag(fig, 'MODEL / HYPOTHETICAL SCENARIO - no calibrated visible efficiency exists for this speed')
+P.evidence_tag(fig, 'MODEL / HYPOTHETICAL SCENARIO - no calibrated visible efficiency transferable to this regime was established in our source review')
 P.savefig(fig, 'fig_flash_sensitivity')
 # ---------------------------------------------------------------- 2. light curves, dilution, limits
 fig, axs = plt.subplots(1, 3, figsize=(13.5, 3.8))
@@ -92,13 +93,20 @@ th = np.linspace(0, 12, 200); axs[1].plot(th, G.shadow_height_km(90 + th), color
 axs[1].axvspan(0.5, 6, color=P.CAT[1], alpha=0.12); axs[1].text(3.2, 30, 'plume class\n0.5-6 deg:\n0.066-9.57 km', fontsize=7, color=P.CAT[1], ha='center')
 axs[1].set_xlabel('angular distance beyond the terminator (deg)'); axs[1].set_ylabel('height of the shadow edge (km)')
 axs[1].set_title('b) Height ejecta must reach to be sunlit (point Sun, sphere;\nthe finite solar disc and terrain broaden the edge)', loc='left', fontsize=8); axs[1].set_ylim(0, 40)
-# crater consistency: only cases with published mass, speed and angle; no parameter is fitted to any of them
-cases = [('GRAIL (each ~130 kg, 1.6 km/s, ~2 deg)', (130, 130), (1.6, 1.7), (1.5, 2.5), 5.0, False),
-         ('LADEE (248 kg, 1.699 km/s, low angle: 1-10 deg assumed)', (248, 248), (1.699, 1.699), (1.0, 10.0), 3.0, True),
-         ('Falcon 9 stage (3.9-4.9 t, 2.43 km/s, ~31 deg)', (3900, 4900), (2.43, 2.43), (28, 34), 18.0, False)]
+# crater consistency (re-audit PH-21): published mass and speed; angle published except for LADEE (assumed 1-10 deg: an
+# assumed-angle sensitivity with a censored size, < 3 m). LCROSS is near-vertical, so it tests the scaling but not the
+# oblique rules (the two rules coincide there). No parameter is fitted to any case; agreement of broad envelopes is
+# qualitative consistency, not evidence that favours either rule.
+cases = [('GRAIL (each ~130 kg, 1.6 km/s, ~2 deg)', (130, 130), (1.6, 1.7), (1.5, 2.5), 5.0, False, False, 'LROC images/596'),
+         ('LADEE (248 kg, 1.699 km/s; angle not published, 1-10 deg assumed)', (248, 248), (1.699, 1.699), (1.0, 10.0), 3.0, True, True, 'LROC images/822'),
+         ('Falcon 9 stage (3.9-4.9 t, 2.43 km/s, ~31 deg)', (3900, 4900), (2.43, 2.43), (28, 34), 18.0, False, False, 'LROC images/1499; NASA'),
+         ('LCROSS Centaur (2271.6 kg, 2.507 km/s, 85.9 deg)', (2271.61, 2271.61), (2.506885, 2.506885), (83.6, 88.2), 22.0, False, False,
+          'Fassett et al. 2024 (ShadowCam, 22 m; earlier indirect estimates 25-30 m, NASA ~20 m)')]
 crater_check = []
-for k, (lab, mm, vv, aa, d_obs, upper) in enumerate(cases):
-    rec = dict(case=lab, observed_m=d_obs, observed_is_upper_limit=upper)
+for k, (lab, mm, vv, aa, d_obs, upper, angle_assumed, src) in enumerate(cases):
+    rec = dict(case=lab, observed_m=d_obs, observed_is_upper_limit=upper, angle_assumed=angle_assumed, observation_source=src,
+               kind=('assumed-angle sensitivity and censored-size consistency check' if angle_assumed else
+                     'near-vertical scaling check (the oblique rules coincide)' if min(aa) > 80 else 'consistency check'))
     for j, rule in enumerate(('vertical-component', 'vertical-equivalent')):
         vals = []
         for m_ in mm:
@@ -114,34 +122,45 @@ for k, (lab, mm, vv, aa, d_obs, upper) in enumerate(cases):
 env = I.crater_rim_diameter_envelope(m_bal, phys['v_km_s'], phys['angle_deg'])
 axs[2].axhspan(env['all'][0], env['all'][2], color=P.CAT[0], alpha=0.10); axs[2].text(1.15, env['all'][2] * 0.8, 'AYAP-1 ballistic\ncase envelope', fontsize=6, color=P.CAT[0])
 axs[2].plot([1, 80], [1, 80], color=P.TEXT2, lw=0.8, ls='--'); axs[2].set_xscale('log'); axs[2].set_yscale('log'); axs[2].set_xlim(1, 80); axs[2].set_ylim(0.8, 120)
-axs[2].set_xlabel('observed crater diameter (m, LROC)'); axs[2].set_ylabel('model rim-diameter envelope (m)')
-axs[2].set_title('c) Consistency check, no tuning (thin: vertical-component rule;\nthick: vertical-equivalent; parameter sets x densities 150-1000)', loc='left', fontsize=8)
+axs[2].set_xlabel('observed crater diameter (m; LROC, ShadowCam)'); axs[2].set_ylabel('model rim-diameter envelope (m)')
+axs[2].set_title('c) Qualitative consistency, no tuning (thin: vertical-component rule;\nthick: vertical-equivalent; parameter sets x densities 150-1000)', loc='left', fontsize=8)
 axs[2].legend(fontsize=5.5, loc='upper left')
-P.evidence_tag(fig, 'MODEL; panel c compares with OBSERVED LROC crater sizes (research/precedents.csv); not a validation of either oblique-impact rule')
+P.evidence_tag(fig, 'MODEL; panel c compares with OBSERVED crater sizes (research/precedents.csv); broad envelopes, not a validation of either oblique-impact rule')
 fig.tight_layout(); P.savefig(fig, 'fig_ejecta_crater')
 # ---------------------------------------------------------------- 4. plume for S2 and the LCROSS check
-s2 = next(s for s in cfg['scenarios'] if s['id'] == 'S2'); es = G.epoch_state(s2['epoch_utc'])
-site_unit = E.latlon_to_vec(s2['lat'], s2['lon'], 1.0) @ es.M; sun_unit = (es.r_sun - es.r_moon) / np.linalg.norm(es.r_sun - es.r_moon)
-o_tug = E.observer_gcrs(30.3356, 36.8242, 2500.0, es.t); obsv = {'TUG': (o_tug - es.r_moon) * 1e3}
-card2 = json.load(open(f'{root}/outputs/scenarios/S2.json'))
-bkg_tug = card2['plume']['cases'][-1]['observers'].get('TUG', {}).get('background_sb_V', 13.5) if card2['plume']['cases'] else 13.5
+from astropy.time import Time
+sites_cfg = {x['id']: x for x in yaml.safe_load(open(f'{root}/config/sites.yaml'))['sites']}
+card2 = json.load(open(f'{root}/outputs/scenarios/S2.json')); es = G.epoch_state(card2['epoch_utc'])
+site_unit = E.latlon_to_vec(card2['lat'], card2['lon'], 1.0) @ es.M; sun_unit = (es.r_sun - es.r_moon) / np.linalg.norm(es.r_sun - es.r_moon)
+tug = sites_cfg['TUG']; o_tug = E.observer_gcrs(tug['lon'], tug['lat'], tug['alt'], Time(card2['sites']['TUG']['t_reception_utc'], scale='utc'))
+obsv = {'TUG': (o_tug - es.r_moon) * 1e3}
+case2 = next(x for x in card2['plume']['cases'] if x['impactor'] == 'bus 400 kg/m3' and x['rule'] == 'vertical-equivalent')
+bkg_tug, ext_tug = case2['observers']['TUG']['background_sb_V'], case2['observers']['TUG']['extinction_mag']
+m2, v2, a2 = float(np.mean(card2['physics']['mass_kg'])), card2['physics']['v_km_s'], card2['physics']['angle_deg']
 fig, axs = plt.subplots(1, 3, figsize=(14, 3.9))
 runs = [('bus 400 kg/m3', 'sand'), ('dense parts + hollow bus', 'sand'), ('dense parts + hollow bus', 'perlite/sand')]
 for k, (model, params) in enumerate(runs):
-    r = PL.plume_simulation(site_unit, sun_unit, obsv, m_bal, phys['v_km_s'], phys['angle_deg'], model=model, rule='vertical-equivalent', params=params)
+    r = PL.plume_simulation(site_unit, sun_unit, obsv, m2, v2, a2, model=model, rule='vertical-equivalent', params=params, v_lo=case2['v_lo_m_s'])
     if not r['ok']:
         continue
     ob = r['observers']['TUG']
     axs[0].plot(r['times'], ob['M_vis'], color=P.CAT[k], lw=1.6, label=f'{model}, {params}')
-    for sys_f, ls in ((1e-3, '-'), (1e-2, ':')):
-        snr, con, pk = PL.plume_detectability(ob, bkg_tug, sys_frac=sys_f)
-        axs[1].plot(r['times'], snr, color=P.CAT[k], lw=1.4, ls=ls)
+    combos = [dict(grains='regolith', pPhi=0.03, kappa=0.2, sys_frac=1e-3), dict(grains='regolith', pPhi=0.03, kappa=0.2, sys_frac=1e-2)]
+    if k == 0:
+        combos.append(dict(grains='fine-rich', pPhi=0.03, kappa=0.2, sys_frac=1e-3))
+    res = PL.plume_detectability_multi(r, 'TUG', bkg_tug, combos, ext_mag=ext_tug)
+    for d, ls in zip(res[:2], ('-', ':')):
+        axs[1].plot(d['t_start'], d['snr'], color=P.CAT[k], lw=1.4, ls=ls)
+    if k == 0:
+        axs[1].plot(res[2]['t_start'], res[2]['snr'], color=P.TEXT2, lw=1.2, ls='-.', label='bus 400 kg/m3, fine-rich grains (1e-3)')
+axs[0].set_xscale('symlog', linthresh=10); axs[1].set_xscale('symlog', linthresh=10)
 axs[0].set_xlabel('time after impact (s)'); axs[0].set_ylabel('sunlit ejecta mass visible from TUG (kg)')
-axs[0].set_title("a) S2 (3.3 deg beyond the terminator, shadow edge 2.9 km):\nsunlit visible mass, rule 'vertical equivalent' (the other rule: cannot determine)", loc='left', fontsize=8)
+axs[0].set_title(f"a) S2 ({card2['plume']['shadow_height_km']:.1f}-km shadow edge): sunlit visible mass, in-domain\nejecta from {case2['v_lo_m_s']:.0f} m/s, rule 'vertical equivalent'", loc='left', fontsize=8)
 axs[0].legend(fontsize=6)
-axs[1].axhline(5, color=P.TEXT2, lw=0.8, ls='--'); axs[1].text(5, 5.3, 'SNR 5', fontsize=6, color=P.TEXT2)
-axs[1].set_xlabel('time after impact (s)'); axs[1].set_ylabel('best-aperture SNR, 1-m telescope, 1-s V frame'); axs[1].set_ylim(0, 6)
-axs[1].set_title('b) Plume signal-to-noise against the total background\n(solid: subtraction systematic 1e-3; dotted: 1e-2)', loc='left', fontsize=8)
+axs[1].axhline(5, color=P.TEXT2, lw=0.8, ls='--'); axs[1].text(12, 5.3, 'SNR 5', fontsize=6, color=P.TEXT2)
+axs[1].set_xlabel('start of the 1-s integration window (s)'); axs[1].set_ylabel('SNR, 1-m telescope, 1-s V window')
+axs[1].set_ylim(0, 10); axs[1].legend(fontsize=6, loc='upper right')
+axs[1].set_title('b) Exposure-integrated SNR, regolith grains, p Phi 0.03 (solid: subtraction\nsystematic 1e-3; dotted: 1e-2); dash-dot: fine-rich grains', loc='left', fontsize=8)
 labs, vals, lcross = [], [], []
 for model in ['hollow Centaur', 'Centaur as 400 kg/m3', 'dense parts + hollow']:
     for params in ['sand', 'sand/fly ash', 'perlite/sand']:
@@ -149,6 +168,9 @@ for model in ['hollow Centaur', 'Centaur as 400 kg/m3', 'dense parts + hollow']:
         labs.append(f'{model}\n{params}'); vals.append(r_['M_illuminated_kg'])
 y = np.arange(len(vals)); axs[2].barh(y, vals, color=[P.CAT[0]] * 3 + [P.CAT[1]] * 3 + [P.CAT[2]] * 3, height=0.6)
 axs[2].axvspan(2240 - 400, 2240 + 400, color=P.CAT[7], alpha=0.15); axs[2].axvline(2240, color=P.CAT[7], lw=1.2)
+for yy, r_ in zip(y, lcross):
+    if r_['M_illuminated_kg'] == 0:                                          # no in-domain ejecta reach the 20-s view
+        axs[2].text(30, yy, f"0 kg (in-domain ejecta only below {max(r_['vmax_domain']):.0f} m/s)", va='center', fontsize=5.5, color=P.TEXT2)
 axs[2].set_yticks(y); axs[2].set_yticklabels(labs, fontsize=5.5); axs[2].invert_yaxis(); axs[2].set_xlabel('illuminated ejecta mass at 20 s (kg)')
 axs[2].set_title('c) LCROSS like-for-like check (observed 2240 +/- 400 kg,\nStrycker et al. 2013): a calibration of the bulk density, not a validation', loc='left', fontsize=8)
 P.evidence_tag(fig, 'MODEL / HYPOTHETICAL SCENARIO - within the HH2011 scaling domain only')
@@ -204,7 +226,9 @@ summ['visual_thresholds_V'] = {a: dict(F24=v[0], F_geo=v[1], F1p4=v[2]) for a, v
 json.dump(summ, open(f'{root}/outputs/tables/peak_magnitude_distribution.json', 'w'), indent=1)
 env_bal = I.crater_rim_diameter_envelope(m_bal, phys['v_km_s'], phys['angle_deg'])
 json.dump(dict(lcross=lcross, crater_consistency=crater_check, ballistic_envelope_m={k: list(v) for k, v in env_bal.items()},
-               note='LCROSS: like-for-like illuminated ejecta mass at 20 s (Strycker et al. 2013 observed 2240 +/- 400 kg); crater: '
-                    'out-of-sample consistency of the rim-diameter envelopes with LROC-observed craters (no parameter fitted)'),
+               note='LCROSS plume: like-for-like illuminated ejecta mass at 20 s (Strycker et al. 2013 observed 2240 +/- 400 kg), a calibration of the '
+                    'bulk density rather than a validation; craters: qualitative consistency of broad rim-diameter envelopes (no parameter fitted) with '
+                    'observed craters (LROC; LCROSS 22 m from ShadowCam, Fassett et al. 2024); LADEE has no published angle (assumed-angle, censored-size '
+                    'check) and LCROSS is near-vertical (tests the scaling, not the oblique rules); not evidence that favours either rule'),
           open(f'{root}/outputs/tables/ejecta_checks.json', 'w'), indent=1)
 print('done')

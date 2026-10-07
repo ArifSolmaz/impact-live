@@ -1,6 +1,6 @@
 {
- "release": "2.0.0",
- "release_tag": "v2.0.0",
+ "release": "2.1.0",
+ "release_tag": "v2.1.0",
  "git_commit": null,
  "working_tree_dirty": null,
  "git_note": "git commit not recorded (manifest written outside the release repository); the release is identified by its tag",
@@ -41,15 +41,15 @@
  "config_sha256": {
   "config/domain.yaml": "502030284a71ad3308f34144d9c8f022323cce2cd4f66cd03bd28fe3f0aeb597",
   "config/instruments.yaml": "11f73ca5f277772ccda55da31e17f3674c2e721193316b9723fa9a1d4f6012dc",
-  "config/orbit_families.yaml": "1e3c88c64df181402a1855b67f9cfbd41498220a50a2da7a854c5aeaa4390cb8",
-  "config/orbiters.yaml": "4106a1f5b416843cad0b9bea8a28b7bb03652e3481c68dc1100c5aae72958229",
-  "config/scenarios.yaml": "6507c58d4483b53ce46dadbe28557749faea48a2aed428807def165ba45c62dd",
+  "config/orbit_families.yaml": "e5cbe5b0be14e553a5e8ba7c4ba3aa587d7e68bed6decd1499d8ed02bf7ec1b7",
+  "config/orbiters.yaml": "c4db839cc07845fa3bd4fb70b9436f243fbb4927babd75e97bd78618c70e517b",
+  "config/scenarios.yaml": "009890c89c7ea7a064263fb36ebf1b01de9914526ca655fa836a9e3cdfa3ef81",
   "config/sites.yaml": "92dcb0ba1383435ac41487ed25d3f3bcbce513cf5e3a3d9bc485c08d31ac08ab",
   "config/timeline.yaml": "f65acc72f4b8b07c0be928c324f04f87e05a2b7a5dc935eb3c04ac38a0e3bf86"
  },
  "monte_carlo": {
   "n_outer": 200,
-  "n_inner": 150,
+  "n_inner": 600,
   "seed": 20261005,
   "detection_snr": 8.0,
   "obvious_snr": 30.0,
@@ -78,6 +78,31 @@
    "n_seq": 3000
   }
  },
- "n_released_files": 258,
+ "random_seeds": {
+  "monte_carlo_per_scenario": {
+   "S1": 20261005,
+   "S10": 20270005,
+   "S11": 20271005,
+   "S2": 20262005,
+   "S3": 20263005,
+   "S4": 20264005,
+   "S5": 20265005,
+   "S6": 20266005,
+   "S7": 20267005,
+   "S8": 20268005,
+   "S9": 20269005
+  },
+  "monte_carlo_rule": "20261005 + 1000 x scenario index (scripts/run_scenarios.py; the same seed for every prior and sensitivity block of a card)",
+  "injection_recovery": 20261007,
+  "injection_random_streams": "one numpy generator per system and clip, per trial and for the fit bootstrap, each seeded with [SEED, system index, ...], so that a platform-dependent difference in one random draw cannot shift every later draw",
+  "injection_clip_bootstrap": 5,
+  "injection_clip_textures": "second-camera texture normalisation: clip index c (np.random.default_rng(c))",
+  "synthetic_terrain": 7,
+  "prior_predictive_sample": 1,
+  "website_field_factor_sample": 2,
+  "sensitivity_ladder": 1,
+  "lightcurve_validation": 11
+ },
+ "n_released_files": 275,
  "note": "MANIFEST.sha256 lists every released file; data/DATA_MANIFEST.sha256 the input data; regenerate with `make manifest` after `make pdf`."
 }

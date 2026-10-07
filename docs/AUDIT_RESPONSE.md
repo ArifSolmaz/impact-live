@@ -280,7 +280,9 @@ definition-dependent range (`ayap1obs/weather.py`).
 
 **ST-05 · MAJOR · Population sums are not a lower bound.** — *Fixed.* `ayap1obs/population.py` sums GeoNames settlement
 populations at their own coordinates, merges duplicates within 10 km (0 and 25 km as a range) and labels the result a
-settlement sum, not a census, bound or audience.
+settlement sum, not a census, bound or audience. *[Correction in release 2.1 (re-audit ST-N06): the smaller record is
+heuristically excluded, not merged; its population is not added to the retained record, and the 0/10/25-km results are
+heuristic sensitivity cases, not population bounds.]*
 
 **ST-06 · MODERATE · City geometry at cell centres.** — *Fixed.* Exact coordinates; the number reclassified relative to
 the old grid is reported in each card.

@@ -166,67 +166,100 @@ class FlashModel:
         ok = m < mag_limit
         return float(t[ok].max() - t[ok].min()) if ok.any() else 0.0
 
-# ------------------------------------------------------------------ fast tables for the Monte Carlo ---------------------------
-# With tau_T = tau_L = tau the light curve depends on time only through x = t / tau, so the band energy received in an
+# ------------------------------------------------------------------ fast light-curve integrals ---------------------------
+# With tau_T = tau_L = tau the light curve depends on time only through x = t / tau. The band energy received in an
 # exposure [a, b] is  E_band = E_bol [G_b(b/tau; T0) - G_b(a/tau; T0)] / (Omega d^2)  with
 #   G_b(x; T0) = int_0^x exp(-x') f_b(T(x')) dx',   T(x) = Tf + (T0 - Tf) exp(-x),
-# and E_bol = eta_vis E_k / W(T0) with W(T0) = int_0^inf exp(-x) f_vis(T(x)) dx.
-T0_GRID = np.linspace(1000.0, 6000.0, 51)
-X_GRID = np.concatenate([[0.0], np.geomspace(1e-5, 40.0, 700)])
+# and E_bol = eta_vis E_k / W(T0) with W(T0) = G_vis(inf; T0). The substitution s = exp(-x') turns the time integral
+# into a temperature integral:
+#   G_b(x; T0) = [Phi_b(T0) - Phi_b(T(x))] / (T0 - Tf),   Phi_b(T) = int^T f_b(T') dT',
+# so every exposure integral, W and the band-peak rate follow from ONE temperature table per band. Phi_b is integrated
+# with 3-point Gauss-Legendre quadrature on 0.5-K cells and interpolated with cubic Hermite polynomials that use its exact
+# derivative f_b; the band fractions integrate the Planck function over the band with 400 (V etc.) or 800 (0.40-0.90 um)
+# trapezoid nodes. scripts/validate_lightcurves.py compares these integrals with independent adaptive quadrature over the
+# temperature and duration priors and reports the worst-case error (re-audit PH-N04: release 2.0 interpolated a 100-K x
+# 700-node table bilinearly, with errors up to 0.15 mag for cool flashes).
+T_TAB = np.arange(500.0, 7000.0 + 0.25, 0.5)
+T0_MIN, T0_MAX = 1000.0, 6900.0
+X_GRID = np.array([0.0, 40.0])          # largest x used for clipping (exp(-40) of the luminosity remains)
+_GL_X, _GL_W = np.polynomial.legendre.leggauss(3)
 
-def _T_of_x():
-    Tf = floor_temperature(T0_GRID)[:, None]
-    return Tf + (T0_GRID[:, None] - Tf) * np.exp(-X_GRID)[None, :]
+def _band_f(T, band, fine=True):
+    if band == 'vis':
+        return _fraction_vec(T, 0.40e-6, 0.90e-6, 800 if fine else 400)
+    b = BANDS[band]
+    return _fraction_vec(T, b['lam'] - b['width'] / 2, b['lam'] + b['width'] / 2, 400 if fine else 200)
 
 @lru_cache(maxsize=None)
-def _W_table():
-    integrand = np.exp(-X_GRID)[None, :] * visible_fraction_vec(_T_of_x())
-    return np.trapezoid(integrand, X_GRID, axis=1)
+def _phi_table(band):
+    """(f_b at the nodes, Phi_b at the nodes) on T_TAB."""
+    f = _band_f(T_TAB, band)
+    h = np.diff(T_TAB); mid = 0.5 * (T_TAB[1:] + T_TAB[:-1])
+    nodes = mid[:, None] + 0.5 * h[:, None] * _GL_X[None, :]
+    inc = 0.5 * h * (_band_f(nodes, band) * _GL_W[None, :]).sum(axis=1)
+    return f, np.concatenate([[0.0], np.cumsum(inc)])
 
-@lru_cache(maxsize=None)
-def band_tables(band):
-    """(G[iT0, ix], W[iT0], x_peak[iT0]) for the band; W uses the eta_vis band (0.40-0.90 um)."""
-    integrand = np.exp(-X_GRID)[None, :] * band_fraction_vec(_T_of_x(), band)
-    G = np.concatenate([np.zeros((len(T0_GRID), 1)), np.cumsum(0.5 * (integrand[:, 1:] + integrand[:, :-1]) * np.diff(X_GRID)[None, :], axis=1)], axis=1)
-    xpk = X_GRID[np.argmax(integrand, axis=1)]
-    return G, _W_table(), xpk
+def _phi(band, T):
+    f, Phi = _phi_table(band)
+    T = np.clip(np.asarray(T, float), T_TAB[0], T_TAB[-1]); dT = T_TAB[1] - T_TAB[0]
+    i = np.clip(np.floor((T - T_TAB[0]) / dT).astype(np.int64), 0, len(T_TAB) - 2); t = (T - T_TAB[i]) / dT
+    t2, t3 = t * t, t * t * t
+    return (2 * t3 - 3 * t2 + 1) * Phi[i] + (t3 - 2 * t2 + t) * dT * f[i] + (-2 * t3 + 3 * t2) * Phi[i + 1] + (t3 - t2) * dT * f[i + 1]
 
-def _interp_T0(T0):
-    T0 = np.clip(np.asarray(T0, float), T0_GRID[0], T0_GRID[-1])
-    i = np.clip(np.searchsorted(T0_GRID, T0) - 1, 0, len(T0_GRID) - 2)
-    f = (T0 - T0_GRID[i]) / (T0_GRID[i + 1] - T0_GRID[i])
-    return i, f
+def _f_interp(band, T):
+    f, _ = _phi_table(band)
+    T = np.clip(np.asarray(T, float), T_TAB[0], T_TAB[-1]); dT = T_TAB[1] - T_TAB[0]
+    i = np.clip(np.floor((T - T_TAB[0]) / dT).astype(np.int64), 0, len(T_TAB) - 2); w = (T - T_TAB[i]) / dT
+    return np.exp(np.log(np.maximum(f[i], 1e-300)) * (1 - w) + np.log(np.maximum(f[i + 1], 1e-300)) * w)   # log-linear
+
+def _T0_clip(T0):
+    return np.clip(np.asarray(T0, float), T0_MIN, T0_MAX)
 
 def G_eval(band, T0, x):
-    """G_b(x; T0) for arrays T0 (n,) and x (n, k) by linear interpolation in T0 and in x."""
-    G, _, _ = band_tables(band)
-    i, f = _interp_T0(T0)
-    x = np.clip(np.asarray(x, float), 0.0, X_GRID[-1])
-    j = np.clip(np.searchsorted(X_GRID, x) - 1, 0, len(X_GRID) - 2)
-    fx = (x - X_GRID[j]) / (X_GRID[j + 1] - X_GRID[j])
-    ii = i.reshape(i.shape + (1,) * (x.ndim - i.ndim)); ff = f.reshape(f.shape + (1,) * (x.ndim - f.ndim))
-    g0 = G[ii, j] * (1 - fx) + G[ii, j + 1] * fx
-    g1 = G[ii + 1, j] * (1 - fx) + G[ii + 1, j + 1] * fx
-    return g0 * (1 - ff) + g1 * ff
+    """G_b(x; T0) for arrays T0 (n,) and x (n, k) or broadcastable shapes (temperature-integral form, tabulated Phi_b;
+    accuracy in outputs/validation/lightcurve_accuracy.md)."""
+    T0 = _T0_clip(T0); x = np.clip(np.asarray(x, float), 0.0, X_GRID[-1])
+    Tf = floor_temperature(T0)
+    T0b = T0.reshape(T0.shape + (1,) * (x.ndim - T0.ndim)); Tfb = Tf.reshape(Tf.shape + (1,) * (x.ndim - Tf.ndim))
+    Tx = Tfb + (T0b - Tfb) * np.exp(-x)
+    return (_phi(band, T0b) - _phi(band, Tx)) / (T0b - Tfb)
 
 def W_eval(T0):
-    _, W, _ = band_tables('V')
-    i, f = _interp_T0(T0)
-    return W[i] * (1 - f) + W[i + 1] * f
+    T0 = _T0_clip(T0); Tf = floor_temperature(T0)
+    return (_phi('vis', T0) - _phi('vis', Tf)) / (T0 - Tf)
+
+def band_rate_eval(band, T0, x):
+    """dG_b/dx = exp(-x) f_b(T(x)) (band power per unit bolometric energy per unit x)."""
+    T0 = _T0_clip(T0); x = np.clip(np.asarray(x, float), 0.0, X_GRID[-1]); Tf = floor_temperature(T0)
+    T0b = T0.reshape(T0.shape + (1,) * (x.ndim - T0.ndim)); Tfb = Tf.reshape(Tf.shape + (1,) * (x.ndim - Tf.ndim))
+    return np.exp(-x) * _f_interp(band, Tfb + (T0b - Tfb) * np.exp(-x))
+
+@lru_cache(maxsize=None)
+def _peak_table(band):
+    """x at the band-rate maximum and the maximum rate on a 1-K grid of T0: maximise (T - Tf) f_b(T) / (T0 - Tf) over
+    T in [Tf, T0] (T = T0 is the onset)."""
+    T0s = np.arange(T0_MIN, T0_MAX + 0.5, 1.0); Tf = floor_temperature(T0s)
+    s = np.linspace(0.0, 1.0, 4001)[None, :]                         # s = exp(-x) in [0, 1]
+    T = Tf[:, None] + (T0s - Tf)[:, None] * s
+    r = s * _f_interp(band, T)
+    k = np.argmax(r, axis=1)
+    s_pk = s[0, k]
+    x_pk = np.where(s_pk > 0, -np.log(np.maximum(s_pk, 1e-12)), X_GRID[-1])
+    return T0s, x_pk, r[np.arange(len(T0s)), k]
 
 def xpeak_eval(band, T0):
-    _, _, xpk = band_tables(band)
-    i, f = _interp_T0(T0)
-    return xpk[i] * (1 - f) + xpk[i + 1] * f
+    T0s, x_pk, _ = _peak_table(band)
+    return np.interp(_T0_clip(T0), T0s, x_pk)
+
+def peak_rate_eval(band, T0):
+    T0s, _, r_pk = _peak_table(band)
+    return np.exp(np.interp(_T0_clip(T0), T0s, np.log(r_pk)))
 
 def peak_band_magnitude_fast(band, eta, E_k, T0, tau, distance_m=D_MOON_M):
-    """Vectorised true band-peak magnitude (fine sampling of x around the tabulated peak)."""
-    xs = np.clip(xpeak_eval(band, T0)[:, None] * np.linspace(0.6, 1.4, 9)[None, :] + np.linspace(0, 1e-3, 9)[None, :], 0, X_GRID[-1])
-    dx = 1e-4
-    rate = (G_eval(band, T0, xs + dx) - G_eval(band, T0, xs)) / dx           # d G / d x = exp(-x) f_b(T(x))
-    pk = rate.max(axis=1)
+    """Vectorised true band-peak magnitude: max over time of the band flux, from the band-rate maximum tabulated on a 1-K
+    grid of T0 (accuracy in outputs/validation/lightcurve_accuracy.md)."""
     E_bol = eta * E_k / W_eval(T0)
-    F = E_bol * pk / tau / (4 * np.pi * distance_m ** 2) / BANDS[band]['width']
+    F = E_bol * peak_rate_eval(band, T0) / tau / (4 * np.pi * distance_m ** 2) / BANDS[band]['width']
     return -2.5 * np.log10(F / BANDS[band]['f0'])
 
 # ------------------------------------------------------------------ flash priors --------------------------------------------

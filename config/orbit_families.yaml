@@ -5,9 +5,9 @@ time_step_min: 10                            # grid for overflight times (crossi
 phases: 8                                    # orbital phases u0 = k x 45 deg (marginalised with equal weight)
 cross_track_tolerance_deg: [0.6, 2.5]        # plane-change allowances: ~17 and ~71 m/s (dv = 2 v sin(delta/2), v = 1.633 km/s)
 family_sets:
-  main:       {inclination_deg: 90.0, node_start: 0, node_stop: 180, node_step: 5, drift: 0.0}      # unique planes for i = 90
+  main:       {inclination_deg: 90.0, node_start: 0, node_stop: 360, node_step: 5, drift: 0.0}      # 36 geometric planes x 2 traversal directions (re-audit GE-V2-02)
   incl88_j2:  {inclination_deg: 88.0, node_start: 0, node_stop: 360, node_step: 10, drift: j2}     # sensitivity: 88 deg with J2 nodal drift
-deorbit_dv_m_s: [25, 50]                     # in-plane retrograde burns used to place the burn before each overflight
+deorbit_dv_m_s: [25, 50]                     # in-plane retrograde burns: impact (du_d - n t_f)/n before the circular overflight; 25 m/s is the production case, 50 m/s a sensitivity
 terminal_windows_days: [7, 14, 30, 60, 90]
 terminal_velocity_scenarios:
   - {id: V_BAL, label: "ballistic de-orbit (dv ~25-50 m/s)", v_km_s: 1.68, angle_deg: 3, mass_kg: 2000, status: "mission-consistent scenario (no braking)"}

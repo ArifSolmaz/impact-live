@@ -69,8 +69,8 @@ scenarios:
     physics: V_BAL
     rationale: "Waxing Moon (illum 0.39) 52 deg high at TUG at 21:00 Istanbul; site ~29 deg west of the sunrise terminator (Mare Insularum / Copernicus region, hypothetical), low emission angle, 14 configured sites in dark sky"
   - id: S2
-    name: "Favourable for plume: 3 deg beyond the sunrise terminator"
-    class: favourable
+    name: "Terminator plume test: 3 deg beyond the sunrise terminator"
+    class: test
     lat: -5.0
     lon: 3.5
     epoch_utc: "2028-04-01 18:00:00"

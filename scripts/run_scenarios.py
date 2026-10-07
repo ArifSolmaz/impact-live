@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import warnings; warnings.filterwarnings('ignore')
 from astropy.time import Time
 import matplotlib.pyplot as plt
-from ayap1obs import geometry as G, ephem as E, impact as I, detect as D, terrain as T, montecarlo as MC, population as Pp, plotting as P, reachability as Rr, grid as Gd, screening as S, plume as PL
+from ayap1obs import geometry as G, ephem as E, impact as I, detect as D, terrain as T, montecarlo as MC, population as Pp, plotting as P, reachability as Rr, grid as Gd, screening as S, plume as PL, orbiters as Orb
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 for _d in ('validation', 'screening', 'reachability', 'scenarios', 'tables', 'figures', 'logs'):  # OUTPUT_DIRS
     os.makedirs(os.path.join(root, 'outputs', _d), exist_ok=True)
@@ -29,7 +29,11 @@ dom = yaml.safe_load(open(f'{root}/config/domain.yaml')); CR = dom['criteria']
 templates = MC.load_templates()
 outdir = f'{root}/outputs/scenarios'
 only = sys.argv[1:]
-N_OUTER = int(os.environ.get('MC_OUTER', '200')); N_INNER = int(os.environ.get('MC_INNER', '150'))
+N_OUTER = int(os.environ.get('MC_OUTER', '200')); N_INNER = int(os.environ.get('MC_INNER', '600'))
+WEATHER_SENS = {'S1', 'S11'}                                       # spring and winter scenarios (re-audit ST-N04)
+WEATHER_VARIANTS = {'flat season': dict(seasonality=False), 'L = 250 km': dict(L_km=250.0), 'L = 1000 km': dict(L_km=1000.0),
+                    'prior spread x0.5': dict(weather_spread=0.5), 'prior spread x2': dict(weather_spread=2.0)}
+INNER_CONVERGENCE = (150, 600, 2400)                               # S1, fixed outer draws (re-audit ST-01)
 ETA_PRIORS = ['wide', 'v-scaled']
 T0_SENSITIVITY = {'S1': ['cool', 'narrow'], 'S11': ['cool', 'narrow']}
 PUBLIC_SITE = 'IST'
@@ -85,12 +89,20 @@ def p_random_polar_plane(lat, delta_deg):
     c = np.cos(np.radians(lat)); sd = np.sin(np.radians(delta_deg))
     return 1.0 if c <= sd else float(2 * np.arcsin(sd / c) / np.pi)
 
-def plume_cases(es, lat, lon, m, v, angle, observers, bkg, h_need_km):
-    """Phase-space plume for the bracketing rules, impactor models and HH2011 parameter sets."""
+PLUME_V_FLOOR = 1.0          # m/s: slowest ejecta modelled (they rise 0.3 m and land within ~0.6 m of the rim)
+PLUME_GRAINS = ('regolith', 'coarse', 'fine-rich'); PLUME_PPHI = (0.01, 0.03, 0.1); PLUME_KAPPA = (0.2, 0.5, 1.0)
+
+def plume_cases(es, lat, lon, m, v, angle, observers, bkg, ext, h_need_km):
+    """Phase-space plume (release 2.1) for the bracketing rules, impactor models and HH2011 parameter sets. Population:
+    all in-domain ejecta from PLUME_V_FLOOR upwards; for a site whose ground is dark the slowest speed is the vertical
+    launch speed to the height where parcels become sunlit and visible (slower ejecta can never be lit), declared in
+    each case. Default reporting: regolith grains, p Phi 0.03, dust/ground contrast kappa 0.2 (dust seen against sunlit
+    ground), subtraction systematic 1e-3 and 1e-2; sensitivities: grains, p Phi, kappa."""
     site_unit = E.latlon_to_vec(lat, lon, 1.0) @ es.M
     sun_unit = (es.r_sun - es.r_moon); sun_unit /= np.linalg.norm(sun_unit)
-    h = max(h_need_km, 0.05) * 1e3                                    # vertical launch to height h in two-body gravity
-    v_need = float(np.sqrt(2 * PL.MU_MOON * h / (PL.R_MOON_M * (PL.R_MOON_M + h)))) if np.isfinite(h_need_km) else np.inf
+    h = max(h_need_km, 0.0) * 1e3 if np.isfinite(h_need_km) else np.inf
+    v_need = float(np.sqrt(2 * PL.MU_MOON * h / (PL.R_MOON_M * (PL.R_MOON_M + h)))) if np.isfinite(h) else np.inf
+    v_lo = max(PLUME_V_FLOOR, 0.95 * v_need) if np.isfinite(v_need) else np.inf
     rows = []
     for rule in ('vertical-component', 'vertical-equivalent'):
         for model in PL.IMPACTOR_MODELS:
@@ -104,19 +116,34 @@ def plume_cases(es, lat, lon, m, v, angle, observers, bkg, h_need_km):
                 if v_need > vmax:
                     row['status'] = f'cannot determine: reaching sunlight/visibility needs > {v_need:.0f} m/s (vertical launch), above the scaling-domain maximum {vmax:.0f} m/s'
                     rows.append(row); continue
-                res = PL.plume_simulation(site_unit, sun_unit, observers, m, v, angle, model=model, rule=rule, params=params)
+                res = PL.plume_simulation(site_unit, sun_unit, observers, m, v, angle, model=model, rule=rule, params=params, v_lo=v_lo, v_floor=PLUME_V_FLOOR)
                 if not res['ok']:
                     row['status'] = 'cannot determine: ' + res['reason']; rows.append(row); continue
                 row['status'] = 'within-domain estimate (ejecta faster than the domain maximum are not modelled)'
-                row['M_fast_total_kg'] = res['total_mass_fast']
+                row.update(v_lo_m_s=res['v_lo'], M_selected_kg=res['M_selected_kg'], M_domain_kg=res['M_domain_kg'],
+                           population=f"in-domain ejecta from {res['v_lo']:.1f} m/s to {res['vmax']:.0f} m/s ({res['M_selected_kg']:.3g} of {res['M_domain_kg']:.3g} kg in the domain)")
+                row['M_fast_total_kg'] = res['M_selected_kg']
                 for name, ob in res['observers'].items():
                     out = {}
-                    for sys_f in (1e-3, 1e-2):
-                        snr, con, pk = PL.plume_detectability(ob, bkg[name], sys_frac=sys_f)
-                        k = int(np.argmax(snr))
-                        out[f'sys{sys_f:g}'] = dict(snr_max=float(snr[k]), t_snr_max_s=float(res['times'][k]), contrast_max=float(con.max()), peak_sb=float(np.min(pk)))
+                    combos = [dict(grains='regolith', pPhi=0.03, kappa=PLUME_KAPPA[0], sys_frac=1e-3), dict(grains='regolith', pPhi=0.03, kappa=PLUME_KAPPA[0], sys_frac=1e-2)]
+                    combos += [dict(grains=g_, pPhi=0.03, kappa=PLUME_KAPPA[0], sys_frac=1e-3) for g_ in PLUME_GRAINS]
+                    combos += [dict(grains='regolith', pPhi=q, kappa=PLUME_KAPPA[0], sys_frac=1e-3) for q in PLUME_PPHI]
+                    combos += [dict(grains='regolith', pPhi=0.03, kappa=q, sys_frac=1e-3) for q in PLUME_KAPPA]
+                    combos += [dict(grains='fine-rich', pPhi=PLUME_PPHI[-1], kappa=PLUME_KAPPA[-1], sys_frac=1e-3)]      # optimistic corner of the declared ranges
+                    rs = PL.plume_detectability_multi(res, name, bkg[name], combos, ext_mag=ext[name])
+                    for sys_f, d in zip((1e-3, 1e-2), rs[:2]):
+                        k = int(np.argmax(d['snr']))
+                        out[f'sys{sys_f:g}'] = dict(snr_max=float(d['snr'][k]), t_snr_max_s=float(d['t_start'][k]), contrast_max=float(d['contrast'].max()))
+                    d = rs[0]
+                    out['camera'] = dict(t_exposure_s=d['t_exposure_s'], n_frames=d['n_frames'], usable=d['usable'])
+                    out['grains_sys0.001'] = {g_: float(r_['snr'].max()) for g_, r_ in zip(PLUME_GRAINS, rs[2:5])}
+                    out['pphi_sys0.001'] = {f'{q:g}': float(r_['snr'].max()) for q, r_ in zip(PLUME_PPHI, rs[5:8])}
                     out['M_vis_max_kg'] = float(ob['M_vis'].max()); out['t_M_vis_max_s'] = float(res['times'][int(np.argmax(ob['M_vis']))])
-                    out['tau_max'] = float(ob['tau_max'].max()); out['background_sb_V'] = float(bkg[name])
+                    out['M_contrast_class_max_kg'] = float(ob['M_con'].max())
+                    if out['M_contrast_class_max_kg'] > 0:
+                        out['kappa_sys0.001'] = {f'{q:g}': float(r_['snr'].max()) for q, r_ in zip(PLUME_KAPPA, rs[8:11])}
+                    out['optimistic_corner_sys0.001'] = dict(snr_max=float(rs[11]['snr'].max()), assumptions=f'fine-rich grains, p Phi {PLUME_PPHI[-1]:g}, kappa {PLUME_KAPPA[-1]:g}')
+                    out['tau_max'] = d['tau_max']; out['background_sb_V'] = float(bkg[name]); out['extinction_mag'] = float(ext[name])
                     row['observers'][name] = out
                 rows.append(row)
     return rows
@@ -222,8 +249,9 @@ for si, scn in enumerate(cfg['scenarios']):
                          emission_criterion_ok=card['geometry']['plume_emission_ok'],
                          regime=('plume over sunlit ground (low contrast, LCROSS-like)' if inc0 < 90 else
                                  ('sunlit plume over dark ground possible' if h_shadow < 30 else 'sunlight only far above the surface')),
-                         instrument='1-m telescope, V band, 1-s exposures, throughput 0.5, seeing 1.5 arcsec; background-subtraction systematic 1e-3 and 1e-2 of the background',
-                         cases=plume_cases(es, lat, lon, m_mean, v, angle, observers, bkg, h_need) if run_plume else [],
+                         instrument=PL.CAMERA_1M['label'] + '; 1-s integration windows; seeing 1.5 arcsec; source and background extincted; background-subtraction systematic 1e-3 and 1e-2 of the background',
+                         defaults='regolith grains, p Phi 0.03, dust/sunlit-ground contrast kappa 0.2',
+                         cases=plume_cases(es, lat, lon, m_mean, v, angle, observers, bkg, {'geocentre': 0.0, 'TUG': ext_tug}, h_need) if run_plume else [],
                          note=('Housen & Holsapple (2011) point-source scaling with its domain [n1 a, n2 R]; two oblique-impact rules bracket a grazing impact by a hollow spacecraft, '
                                'for which no validated rule exists; impactor bulk density is a calibration choice (the LCROSS like-for-like check favours ~400 kg/m3), not a validation.'))
     # ---- crater
@@ -239,22 +267,21 @@ for si, scn in enumerate(cfg['scenarios']):
     # ---- settlement population sums
     cov = Pp.coverage_at_epoch(t_imp, lat, lon); cls_map = Pp.classify_coverage(cov)
     card['population'] = Pp.settlement_sums(t_imp, lat, lon, cov)
-    # ---- orbiters: assumptions and precedents only
-    lro = orb['lro']
-    def season_status(wins):
-        t0 = t_imp.to_datetime()
-        for a, b in wins:
-            a_, b_ = dt.datetime.strptime(a, '%Y-%m-%d'), dt.datetime.strptime(b, '%Y-%m-%d')
-            if b_ >= t0:
-                return dict(next_season=[a, b], days_until=max(0, (a_ - t0).days), inside=bool(a_ <= t0 <= b_))
-        return None
+    # ---- orbiters: assumptions, computed LRO illumination seasons and the Danuri disposal plan
+    lro = orb['lro']; dan = orb['danuri']
+    seas = json.load(open(f'{root}/outputs/tables/orbiter_seasons.json'))
+    season_status = lambda wins: Orb.season_status(t_imp.to_datetime(), wins)
+    dan_ok = t_imp.to_datetime() <= dt.datetime.strptime(dan['available_until'], '%Y-%m-%d')
     card['orbiters'] = dict(lro=dict(p_operational_assumed=lro['p_operational_2028'], p_operational_sensitivity=lro['p_operational_sensitivity'],
                                      p_note='assumed probability that LRO is still operating in 2028 (scenario input, not measured; not a probability of imaging the crater)',
                                      latency_summary=lro['latency_precedents']['summary'],
                                      latency_note='heuristic from a small, selected precedent sample (impacts only; first documented image, release counted from the event); not a calibrated forecast for this site',
-                                     low_sun_season_approx=season_status(lro['illumination_seasons_approx']['low_sun']),
-                                     season_note='approximate orbit-plane illumination season (+-3 weeks model spread); does not guarantee a sunlit pass over this point'),
-                            danuri=dict(p_operational_assumed=orb['danuri']['p_operational_2028'], low_sun_season_approx=season_status(orb['danuri']['illumination_seasons_approx']['low_sun'])),
+                                     low_sun_season=season_status(seas['lro']['low_sun']), near_noon_season=season_status(seas['lro']['near_noon']),
+                                     season_note=Orb.SEASON_NOTE),
+                            danuri=dict(planned_impact=dan['planned_impact'], available_in_baseline=bool(dan_ok),
+                                        p_operational_assumed=dan['p_operational_before_planned_end'] if dan_ok else dan['p_operational_after_planned_end'],
+                                        p_continued_operation_sensitivity=None if dan_ok else dan['continued_operation_sensitivity'],
+                                        note='KASA plans a lunar impact in March 2028 (press release 10 Feb 2025); after it, Danuri follow-up exists only in the changed-plan sensitivity'),
                             high_latitude_note='at |lat| >= 60 deg the incidence stays high most of the year, but the lunar sub-solar latitude and terrain still decide whether the site is lit' if abs(lat) >= 60 else '')
     # ---- event-level Monte Carlo
     for st in UNION:
@@ -269,6 +296,16 @@ for si, scn in enumerate(cfg['scenarios']):
         card['mc'][f'{ep}|broad'] = MC.simulate(sc_mc, UNION, STRATEGIES, eta_prior=ep, T0_prior='broad', n_outer=N_OUTER, n_inner=N_INNER, seed=seed, public_site=PUBLIC_SITE)
     for T0p in T0_SENSITIVITY.get(scn['id'], []):
         card['mc'][f'wide|{T0p}'] = MC.simulate(sc_mc, UNION, STRATEGIES, eta_prior='wide', T0_prior=T0p, n_outer=N_OUTER, n_inner=N_INNER, seed=seed, public_site=PUBLIC_SITE)
+    pick = lambda r, outs: {st: {o: {k: r['strategies'][st][o][k] for k in ('p', 'mc_se', 'ci95', 'outer_p05', 'outer_p95', 'outer_raw_p05', 'outer_raw_p95')}
+                                 for o in outs} for st in STRATEGIES}
+    if scn['id'] in WEATHER_SENS:                                       # weather-model sensitivities, wide|broad
+        card['mc_weather_sensitivity'] = {v: pick(MC.simulate(sc_mc, UNION, STRATEGIES, eta_prior='wide', T0_prior='broad', n_outer=N_OUTER, n_inner=N_INNER,
+                                                              seed=seed, public_site=PUBLIC_SITE, **kw), ('any', 'two_indep', 'confirmed'))
+                                          for v, kw in WEATHER_VARIANTS.items()}
+    if scn['id'] == 'S1':                                               # convergence of the outer ranges in the inner sample size
+        card['mc_inner_convergence'] = {str(ni): pick(MC.simulate(sc_mc, UNION, STRATEGIES, eta_prior='wide', T0_prior='broad', n_outer=N_OUTER, n_inner=ni,
+                                                                  seed=seed, public_site=PUBLIC_SITE), ('any', 'two_indep'))
+                                        for ni in INNER_CONVERGENCE}
     card['strategies'] = {k: dict(description=cfg['strategies'][k]['description'], stations=[UNION[i].key for i in v_['stations']],
                                   streaming=[UNION[i].key for i in sorted(v_['streaming'])]) for k, v_ in STRATEGIES.items()}
     card['mc_settings'] = dict(n_outer=N_OUTER, n_inner=N_INNER, seed=seed, detection_snr=MC.DET_SNR, obvious_snr=MC.OBV_SNR, dual_camera_snr=MC.CONF_SNR, cluster_km=MC.CLUSTER_KM)

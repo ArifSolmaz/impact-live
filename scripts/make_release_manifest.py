@@ -79,6 +79,12 @@ cards = sorted(glob.glob('outputs/scenarios/S*.json'))
 mc = json.load(open(cards[0]))['mc_settings'] if cards else {}
 inj = json.load(open('outputs/tables/injection_recovery.json')) if os.path.exists('outputs/tables/injection_recovery.json') else {}
 inj_sizes = {k: dict(ntrial=v['ntrial'], n_seq=v['n_seq']) for k, v in inj.items() if not k.startswith('_')}
+# random seeds of every stochastic product (re-audit ST-N03), read from the products where they are stored
+seeds = dict(monte_carlo_per_scenario={os.path.basename(c)[:-5]: json.load(open(c))['mc_settings'].get('seed') for c in cards},
+             monte_carlo_rule='20261005 + 1000 x scenario index (scripts/run_scenarios.py; the same seed for every prior and sensitivity block of a card)',
+             injection_recovery=inj.get('_settings', {}).get('seed'), injection_random_streams=inj.get('_settings', {}).get('random_streams'),
+             injection_clip_bootstrap=5, injection_clip_textures='second-camera texture normalisation: clip index c (np.random.default_rng(c))',
+             synthetic_terrain=7, prior_predictive_sample=1, website_field_factor_sample=2, sensitivity_ladder=1, lightcurve_validation=11)
 # ---- released files
 released = []
 for d in ('ayap1obs', 'scripts', 'config', 'data', 'research', 'docs', 'site', 'outputs'):
@@ -91,7 +97,7 @@ rec = dict(release=version, release_tag=f'v{version}' if version else None, git_
            python=sys.version.split()[0], platform=platform.platform(), machine=platform.machine(),
            packages=pkgs, packages_differing_from_requirements=mismatch, external_data=ext,
            config_sha256={p: sha(p) for p in sorted(glob.glob('config/*.yaml'))},
-           monte_carlo=mc, injection=inj_sizes, n_released_files=len(released) + 1,
+           monte_carlo=mc, injection=inj_sizes, random_seeds=seeds, n_released_files=len(released) + 1,
            note='MANIFEST.sha256 lists every released file; data/DATA_MANIFEST.sha256 the input data; regenerate with `make manifest` after `make pdf`.')
 os.makedirs('outputs/validation', exist_ok=True)
 json.dump(rec, open('outputs/validation/release_manifest.json', 'w'), indent=1)

@@ -10,18 +10,19 @@ const repo = repoUrl(meta);
 function findings() {
   const p = S1.p;
   const plumeSnr = Math.max(0, ...SC.scenarios.map((s) => s.plume.snr_max || 0));
+  const plumeFine = Math.max(0, ...SC.scenarios.map((s) => s.plume.snr_fine || 0));
   const items = [
     t('sci.f1', { med: fmt.num(MAG.pct.wide.p50, 1) }),
-    t('sci.f2', { a: fmt.pct(p.A.wide.any), b: fmt.pct(p.B.wide.any), two: `${fmt.pct(p.A.wide.two)}–${fmt.pct(p.B.wide.two)}` }),
+    t('sci.f2', { a: fmt.pct(p.A.wide.any), b: fmt.pct(p.B.wide.any), twoA: fmt.pct(p.A.wide.two), twoB: fmt.pct(p.B.wide.two) }),
     t('sci.f3', { eye: fmt.pct(S1.visual.eyepiece.p) }),
     t('sci.f4', { a: fmt.pct(OPP.A_w30), b: fmt.pct(OPP.B_w30) }),
-    t('sci.f5', { snr: fmt.num(plumeSnr, 1) }),
+    t('sci.f5', { snr: fmt.num(plumeSnr, 1), fine: fmt.num(plumeFine, 0) }),
     t('sci.f6', { min: fmt.num(Math.min(S1.crater.vc[0], S1.crater.ve[0])), max: fmt.num(Math.max(S1.crater.vc[1], S1.crater.ve[1])) }),
   ];
   document.getElementById('findings').replaceChildren(...items.map((x) => el('li', {}, x)));
 }
 function methods() {
-  document.getElementById('methods').replaceChildren(...[1, 2, 3, 4, 5, 6].map((i) => el('div', { class: 'card' }, el('div', { class: 'kicker' }, String(i).padStart(2, '0')), el('h3', {}, t(`m.${i}_t`)), el('p', { class: 'secondary small', style: 'margin:0' }, t(`m.${i}_d`)))));
+  document.getElementById('methods').replaceChildren(...[1, 2, 3, 4, 5, 6].map((i) => el('div', { class: 'card' }, el('div', { class: 'kicker' }, String(i).padStart(2, '0')), el('h3', {}, t(`m.${i}_t`)), el('p', { class: 'secondary small', style: 'margin:0' }, t(`m.${i}_d`, { outer: fmt.num(SC.mc.n_outer), inner: fmt.num(SC.mc.n_inner), n: fmt.num(SC.mc.n_outer * SC.mc.n_inner) })))));
 }
 function gallery() {
   const lb = document.getElementById('lightbox'), img = document.getElementById('lb-img');

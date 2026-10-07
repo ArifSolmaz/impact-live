@@ -3,25 +3,31 @@ terminal state.
 
 Structure (release 2):
 * Outer loop (epistemic, n_outer draws): site clear-sky probabilities, station readiness probabilities, station
-  calibration factors, Earthshine level, scattered-light coefficient, background-subtraction systematic, terrain
-  visibility probability and the visual field factor.
+  throughput factors, Earthshine level, scattered-light coefficient, background-subtraction systematic, terrain
+  visibility probability and the visual field factor. The flash parameters (including the luminous efficiency) are
+  drawn per event, so the outer-draw range is a range under these assumptions averaged over the flash prior; the
+  dependence on the luminous efficiency is reported separately (by_eta).
 * Inner loop (event draws per outer draw): flash parameters (mass, speed, eta_vis, T0, tau, with the radiative-energy
   consistency cut), ONE impact time offset and ONE impact location offset shared by all stations, correlated weather,
   readiness, per-station pointing error, per-camera exposure phase and per-camera measurement noise.
 * Each station: geometry at the photon reception time (linearised in the time offset), recording window, field of
   view (the shared surface offset projected into that station's sky with its own Jacobian, plus pointing error),
   range-corrected flux, extinction, total background, an exposure shortened if the background would exceed half the
-  full well (unavailable if even the shortest exposure saturates), and the best-frame counts obtained by integrating
-  the light curve over the actual overlap of each exposure with the flash for a random exposure phase. Synchronised
-  dual-camera systems share the phase; independent cameras do not.
+  full well (unavailable if even the shortest exposure saturates), and the counts in each candidate frame obtained by
+  integrating the light curve over the actual overlap of the exposure with the flash for a random exposure phase. The
+  source core is clipped at full well (re-audit PH-N07). Every candidate frame gets its own noise draw (plus a draw
+  shared by the frames of one camera for the reference and subtraction systematic) and the best OBSERVED frame is
+  taken (re-audit PH-N05). Synchronised dual-camera systems share the phase and are compared frame by frame;
+  independent cameras are not.
 * Outcomes: detected (observed SNR >= 8 in any camera), obvious (>= 30), dual-camera validation (both cameras of one
   station >= 15 in the same frame), two independent sites (>= 2 detections more than 100 km apart), confirmed (either
   of the last two), live (obvious at a streaming station), rapid replay (detected at a station with a real-time
   pipeline), Turkish detection.
 Strategies are evaluated on the same simulated events (common random numbers), so differences between strategies
-are paired. Reported: pooled probabilities with Wilson intervals (Monte Carlo precision), the 5-95 % range of the
-conditional probability across outer draws (weather/readiness/calibration/background uncertainty), and the
-probability by eta_vis bin (the flash-brightness uncertainty, which dominates).
+are paired. Reported: pooled probabilities with cluster-robust Monte Carlo intervals, the 5-95 % range of the
+conditional probability across outer draws with the finite inner sampling removed by a beta-binomial fit (re-audit
+ST-01; the raw outer-sample quantiles are kept for comparison), and the probability by eta_vis bin (the
+flash-brightness uncertainty, which dominates).
 """
 from __future__ import annotations
 import numpy as np, yaml, os
@@ -81,6 +87,33 @@ def clusters_of(stations):
             lab[(Dm[i] < CLUSTER_KM) & (lab < 0)] = c; c += 1
     return lab
 
+def epistemic_quantiles(k_j, n, q=(5, 50, 95)):
+    """Quantiles of the per-outer-draw CONDITIONAL probability, with the finite inner sampling removed (re-audit ST-01):
+    the success counts k_j of the outer draws (n events each) are modelled as beta-binomial and the beta distribution
+    fitted by maximum likelihood; its quantiles describe the spread of the conditional probability over the outer
+    assumption draws. When the counts show no extra-binomial spread the distribution collapses to the pooled
+    probability. Returns (quantiles, dict(var_total, var_binomial, var_epistemic, beta_a, beta_b))."""
+    from scipy.stats import betabinom, beta as beta_dist
+    from scipy.optimize import minimize
+    k_j = np.asarray(k_j, int); m = len(k_j); p = k_j.sum() / (m * n)
+    pk = k_j / n; var_t = float(pk.var(ddof=1)) if m > 1 else 0.0
+    var_b = float(np.mean(pk * (1 - pk)) * n / (n - 1) / n) if n > 1 else 0.0
+    info = dict(var_total=var_t, var_binomial=var_b, var_epistemic=max(var_t - var_b, 0.0), beta_a=None, beta_b=None)
+    if p <= 0.0 or p >= 1.0 or var_t <= var_b:
+        return [float(p)] * len(q), info
+    def nll(th):
+        mu = 1 / (1 + np.exp(-th[0])); phi = np.exp(th[1])
+        return -betabinom.logpmf(k_j, n, mu * phi, (1 - mu) * phi).sum()
+    mu0 = min(max(p, 1e-4), 1 - 1e-4); var_e = max(var_t - var_b, 1e-12)
+    phi0 = max(mu0 * (1 - mu0) / var_e - 1, 1e-2)
+    r = minimize(nll, x0=[np.log(mu0 / (1 - mu0)), np.log(phi0)], method='Nelder-Mead', options=dict(xatol=1e-8, fatol=1e-8, maxiter=4000))
+    mu = 1 / (1 + np.exp(-r.x[0])); phi = np.exp(r.x[1])
+    if phi > 1e7:                                                     # no detectable extra-binomial spread
+        return [float(p)] * len(q), info
+    a_, b_ = mu * phi, (1 - mu) * phi
+    info.update(beta_a=float(a_), beta_b=float(b_))
+    return [float(beta_dist.ppf(x / 100.0, a_, b_)) for x in q], info
+
 OUTCOMES = ['any', 'two_indep', 'dual_validated', 'confirmed', 'obvious_any', 'live', 'rapid', 'turkish', 'obvious_turkish']
 
 def simulate(scenario, stations, strategies, eta_prior='wide', T0_prior='broad', n_outer=200, n_inner=150, seed=20261005,
@@ -138,7 +171,21 @@ def simulate(scenario, stations, strategies, eta_prior='wide', T0_prior='broad',
         dist_m = g['range_km'] * 1e3
         cams = st.cameras(); groups = sorted(set(c[1] for c in cams))
         phase = {gr: rng.uniform(0, st.inst['frame_time_s'], N) for gr in groups}
-        snr_cam = []; usable = np.ones(N, bool); sat = np.zeros(N, bool)
+        Tf = float(st.inst['frame_time_s']); tau = fp['tau']
+        # candidate frames per synchronisation group: the first three after the phase and three around each band's peak
+        # (union over the bands of the group, so synchronised cameras are compared frame by frame); duplicates removed
+        frames = {}
+        for gr in groups:
+            ph = phase[gr]; cols = [np.zeros(N), np.ones(N), 2 * np.ones(N)]
+            for band in sorted({bd for bd, g_ in cams if g_ == gr}):
+                k_pk = np.floor((I.xpeak_eval(band, fp['T0']) * tau - (ph - Tf)) / Tf)
+                cols += [np.maximum(k_pk - 1, 0), np.maximum(k_pk, 0), np.maximum(k_pk + 1, 0)]
+            ks = np.stack(cols, axis=1)
+            dup = np.zeros(ks.shape, bool)
+            for c_ in range(1, ks.shape[1]):
+                dup[:, c_] = (ks[:, :c_] == ks[:, c_:c_ + 1]).any(axis=1)
+            frames[gr] = (ks, dup)
+        obs_cam = []; usable = np.ones(N, bool); sat = np.zeros(N, bool)
         for band, gr in cams:
             inst = st.instrument(band); inst.sys_frac = 0.0
             ext = D.extinction_mag(band, X, st.site.get('alt', 2500.0))
@@ -148,34 +195,30 @@ def simulate(scenario, stations, strategies, eta_prior='wide', T0_prior='broad',
             ok_e = t_e >= inst.min_exposure_s
             usable &= ok_e
             t_e = np.maximum(t_e, inst.min_exposure_s)
-            # candidate frames: the first three after the phase and three around the band peak
-            Tf = inst.frame_time_s; tau = fp['tau']; ph = phase[gr]
-            t_pk = I.xpeak_eval(band, fp['T0']) * tau
-            k_pk = np.floor((t_pk - (ph - Tf)) / Tf)
-            ks = np.stack([np.zeros(N), np.ones(N), 2 * np.ones(N), np.maximum(k_pk - 1, 0), np.maximum(k_pk, 0), np.maximum(k_pk + 1, 0)], axis=1)
-            s0 = (ph - Tf)[:, None] + ks * Tf
-            a = np.maximum(s0, 0.0); b = np.maximum(s0 + t_e[:, None], 0.0)
-            Gb = I.G_eval(band, fp['T0'], b / tau[:, None]); Ga = I.G_eval(band, fp['T0'], a / tau[:, None])
+            ks, dup = frames[gr]
+            s0 = (phase[gr] - Tf)[:, None] + ks * Tf
+            a_ = np.maximum(s0, 0.0); b_ = np.maximum(s0 + t_e[:, None], 0.0)
+            Gb = I.G_eval(band, fp['T0'], b_ / tau[:, None]); Ga = I.G_eval(band, fp['T0'], a_ / tau[:, None])
             E_frame = (E_bol / (4 * np.pi * dist_m ** 2))[:, None] * np.clip(Gb - Ga, 0, None) * (10 ** (-0.4 * ext))[:, None]
-            counts = D.photons_from_energy(E_frame, band, inst.area, inst.throughput)
+            counts = D.photons_from_energy(E_frame, band, inst.area, inst.throughput) * cal[kk, j][:, None]   # station throughput factor
             B = D.background_e_per_pixel(inst, bkg, t_e)
-            n_pix = D.aperture_pixels(inst)
-            S = counts * D.AP_FRAC
-            var = S + n_pix * (B[:, None] * (1 + 1.0 / inst.n_ref) + inst.dark_e_s * t_e[:, None] + inst.read_noise_e ** 2) + (sys_f[kk][:, None] * B[:, None] * n_pix) ** 2
-            snr_k = S / np.sqrt(var) * cal[kk, j][:, None]
-            snr_cam.append(snr_k)
-            kb = np.argmax(snr_k, axis=1)
-            sat |= (counts[np.arange(N), kb] * D.peak_pixel_fraction(inst) + B) > inst.full_well_e
-        snr_cam = np.array(snr_cam)                                     # cams x N x frames
-        noise = rng.standard_normal((len(cams), N))
-        best = snr_cam.max(axis=2) + noise                              # observed best SNR per camera
+            S = D.clipped_aperture_signal(inst, counts, B[:, None])                 # core saturation clips the signal (PH-N07)
+            v_f, v_s = D.noise_terms(inst, S, B[:, None], t_e[:, None])         # sys_frac = 0 here: the outer-draw systematic is added next
+            v_s = v_s + (sys_f[kk][:, None] * B[:, None] * D.aperture_pixels(inst)) ** 2
+            # observed SNR in every candidate frame: independent frame noise plus the camera's shared reference and
+            # subtraction-systematic error; the best frame is chosen AFTER the noise is added (re-audit PH-N05)
+            z_s = rng.standard_normal((N, 1)); z_f = rng.standard_normal(S.shape)
+            obs = (S + np.sqrt(v_f) * z_f + np.sqrt(np.maximum(v_s, 0)) * z_s) / np.sqrt(v_f + np.maximum(v_s, 0))
+            obs[dup] = -np.inf
+            obs_cam.append(obs)
+            sat |= (((counts * D.peak_pixel_fraction(inst) + B[:, None]) > inst.full_well_e) & ~dup).any(axis=1)
+        best = np.array([o.max(axis=1) for o in obs_cam])                  # observed best SNR per camera
         ok = avail & in_fov & clear[:, j] & ready[:, j] & terrain_ok & usable
         det[:, j] = ok & (best.max(axis=0) >= DET_SNR)
         obv[:, j] = ok & (best.max(axis=0) >= OBV_SNR)
         if len(cams) == 2:
-            if cams[0][1] == cams[1][1]:                                 # synchronised: both cameras in the same frame
-                kj = np.argmax(np.minimum(snr_cam[0], snr_cam[1]), axis=1); ii = np.arange(N)
-                joint = np.minimum(snr_cam[0][ii, kj] + noise[0], snr_cam[1][ii, kj] + noise[1])
+            if cams[0][1] == cams[1][1]:                                 # synchronised: both cameras in the same observed frame
+                joint = np.minimum(obs_cam[0], obs_cam[1]).max(axis=1)
             else:                                                       # independent cameras, coincident within the flash
                 joint = best.min(axis=0)
             selfc[:, j] = ok & (joint >= CONF_SNR)
@@ -207,13 +250,16 @@ def simulate(scenario, stations, strategies, eta_prior='wide', T0_prior='broad',
         events[name] = ind
         out = {}
         for o, x in ind.items():
-            k = int(x.sum()); pk = x.reshape(n_outer, n_inner).mean(axis=1)
+            k = int(x.sum()); kj = x.reshape(n_outer, n_inner).sum(axis=1); pk = kj / n_inner
             byeta = [float(x[(log_eta >= lo) & (log_eta < lo + 0.5)].mean()) if np.any((log_eta >= lo) & (log_eta < lo + 0.5)) else None for lo in bins[:-1]]
             # Monte Carlo precision of the pooled probability: events are nested in outer draws, so the standard error is
             # that of the mean of the n_outer outer-draw means (the iid Wilson interval, kept for reference, understates it)
             se = float(pk.std(ddof=1) / np.sqrt(n_outer)) if n_outer > 1 else float('nan')
+            qe, vinfo = epistemic_quantiles(kj, n_inner)
             out[o] = dict(p=k / N, k=k, mc_se=se, ci95=[max(0.0, k / N - 1.96 * se), min(1.0, k / N + 1.96 * se)], wilson95_iid=wilson(k, N),
-                          outer_p05=float(np.percentile(pk, 5)), outer_p50=float(np.percentile(pk, 50)), outer_p95=float(np.percentile(pk, 95)), by_eta=byeta)
+                          outer_p05=qe[0], outer_p50=qe[1], outer_p95=qe[2],
+                          outer_raw_p05=float(np.percentile(pk, 5)), outer_raw_p95=float(np.percentile(pk, 95)),
+                          var_total=vinfo['var_total'], var_binomial=vinfo['var_binomial'], var_epistemic=vinfo['var_epistemic'], by_eta=byeta)
         out['n_stations'] = int(len(idx))
         out['station_p_det'] = {stations[i].key: float(det[:, i].mean()) for i in idx}
         out['station_p_fov'] = {stations[i].key: (float(in_fov_all[:, i].mean()) if stations[i].geometry.get('candidate', False) else None) for i in idx}
@@ -236,36 +282,40 @@ def simulate(scenario, stations, strategies, eta_prior='wide', T0_prior='broad',
     res['peakV'] = dict(median=float(np.median(pkV)), p10=float(np.percentile(pkV, 10)), p90=float(np.percentile(pkV, 90)))
     res['T0_percentiles'] = [float(x) for x in np.percentile(fp['T0'], [5, 50, 95])]
     # conditional visual-threshold model at the public reference site
-    res['visual'] = visual_model(sc, stations, public_site, fp, eta, E_bol, kk, es_off, k_scat, F_vis, attention, dt_min, terrain_ok,
-                                 clear if stations else None)
+    res['visual'] = visual_model(sc, stations, public_site, fp, eta, E_bol, kk, es_off, k_scat, F_vis, attention, dt_min, d_along, d_cross,
+                                 terrain_ok, clear if stations else None)
     if keep_events:
         res['_events'] = events; res['_log_eta'] = log_eta; res['_pkV'] = pkV; res['_snr'] = snr_best_all; res['_det'] = det
     return res
 
-def visual_model(sc, stations, public_site, fp, eta, E_bol, kk, es_off, k_scat, F_vis, attention, dt_min, terrain_ok, clear):
+def visual_model(sc, stations, public_site, fp, eta, E_bol, kk, es_off, k_scat, F_vis, attention, dt_min, d_along, d_cross, terrain_ok, clear):
     """Conditional visual-threshold model at the public reference site: P(a prepared observer notices the flash),
-    (a) conditional on the site having the Moon >= 15 deg in a sky darker than Sun -6 deg, the point visible, clear
-    weather and no terrain blocking, and (b) including the site's weather and those conditions. Light received in the
-    first T_EYE seconds, V band, extincted; Crumey thresholds with field factor F (outer draw)."""
+    (a) conditional on the site having the Moon >= 15 deg in a sky darker than Sun -6 deg and the point visible (each
+    evaluated per event with the shared impact-time and position offsets, re-audit PH-14), clear weather and no terrain
+    blocking, and (b) including the site's weather, terrain and those conditions. Light received in the first T_EYE
+    seconds, V band, extincted at the event's airmass; Crumey thresholds with field factor F (outer draw)."""
     g = sc.get('public_geometry')
     if g is None:
         return dict(site=public_site, observable=False)
-    if not g.get('visible', False):
+    if not g.get('visible', False) and g['emission'] - 4 * (abs(g['d_emission']) * sc['sigma_t_min'] + abs(g['J_em'][0]) * sc['sigma_along_km'] + abs(g['J_em'][1]) * sc['sigma_cross_km']) >= 90:
         return dict(site=public_site, observable=False, note='impact point not visible from the site')
-    N = len(eta)
-    X = kasten_young(g['moon_alt']); ext = float(D.extinction_mag('V', X, g.get('alt', 100.0)))
+    moon_alt = g['moon_alt'] + g['d_moon_alt'] * dt_min
+    sun_alt = g['sun_alt'] + g['d_sun_alt'] * dt_min
+    emission = g['emission'] + g['d_emission'] * dt_min + g['J_em'][0] * d_along + g['J_em'][1] * d_cross
+    cond = (moon_alt >= 15) & (sun_alt <= -6) & (emission < 90)
+    X = kasten_young(np.maximum(moon_alt, 0.5)); ext = D.extinction_mag('V', X, g.get('alt', 100.0))
     G1 = I.G_eval('V', fp['T0'], (D.T_EYE / fp['tau'])[:, None])[:, 0]
     E = E_bol / (4 * np.pi * (g['range_km'] * 1e3) ** 2) * G1 * 10 ** (-0.4 * ext)
     m_eff = -2.5 * np.log10(np.maximum(E, 1e-300) / D.T_EYE / I.BANDS['V']['width'] / I.BANDS['V']['f0'])
-    bkg = D.total_background_sb('V', g['illum'], g['dist_sunlit_arcmin'], g['sun_alt'], k_scat[kk], ext, es_off[kk], g.get('sunlit', False), g.get('incidence', 60.0))
-    cond_ok = (g['moon_alt'] >= 15) and (g['sun_alt'] <= -6)
-    out = dict(site=public_site, observable=bool(cond_ok), moon_alt=g['moon_alt'], sun_alt=g['sun_alt'])
+    bkg = D.total_background_sb('V', g['illum'], g['dist_sunlit_arcmin'], sun_alt, k_scat[kk], ext, es_off[kk], g.get('sunlit', False), g.get('incidence', 60.0))
+    wx = clear[:, g['station_index']] if (clear is not None and g.get('station_index') is not None) else np.ones(len(eta), bool)
+    out = dict(site=public_site, observable=bool(cond.any()), moon_alt=g['moon_alt'], sun_alt=g['sun_alt'], p_conditions=float(cond.mean()))
     for aid in D.AIDS:
         thr = D.visual_threshold_mag(bkg, aid, F_vis[kk])
         p = D.visual_detection_probability(m_eff, thr, attention)
-        out[aid] = dict(p_conditional=float(p.mean()) if cond_ok else 0.0,
-                        p_with_weather=float((p * (clear[:, g['station_index']] if (clear is not None and g.get('station_index') is not None) else 1.0) * terrain_ok).mean()) if cond_ok else 0.0,
-                        threshold_median=float(np.median(thr)))
+        out[aid] = dict(p_conditional=float(p[cond].mean()) if cond.any() else 0.0,
+                        p_with_weather=float((p * cond * wx * terrain_ok).mean()),
+                        threshold_median=float(np.median(thr[cond])) if cond.any() else float(np.median(thr)))
     return out
 
 def ladder_probabilities(instruments, eta_prior='wide', T0_prior='broad', n=20000, seed=1, mass=(1600, 2400), v_km_s=1.68, distance_m=3.8e8,
@@ -284,10 +334,20 @@ def ladder_probabilities(instruments, eta_prior='wide', T0_prior='broad', n=2000
         Tf = inst.frame_time_s; tau = fp['tau']; ph = rng.uniform(0, Tf, n)
         t_pk = I.xpeak_eval(inst.band, fp['T0']) * tau; k_pk = np.floor((t_pk - (ph - Tf)) / Tf)
         ks = np.stack([np.zeros(n), np.ones(n), 2 * np.ones(n), np.maximum(k_pk - 1, 0), np.maximum(k_pk, 0), np.maximum(k_pk + 1, 0)], axis=1)
+        dup = np.zeros(ks.shape, bool)
+        for c_ in range(1, ks.shape[1]):
+            dup[:, c_] = (ks[:, :c_] == ks[:, c_:c_ + 1]).any(axis=1)
         s0 = (ph - Tf)[:, None] + ks * Tf; a = np.maximum(s0, 0); b = np.maximum(s0 + inst.exposure_s, 0)
         E_frame = (E_bol / (4 * np.pi * distance_m ** 2))[:, None] * np.clip(I.G_eval(inst.band, fp['T0'], b / tau[:, None]) - I.G_eval(inst.band, fp['T0'], a / tau[:, None]), 0, None) * 10 ** (-0.4 * ext)
         counts = D.photons_from_energy(E_frame, inst.band, inst.area, inst.throughput)
-        snr = D.snr_from_counts(inst, counts, bkg).max(axis=1) * penalty
+        B = float(D.background_e_per_pixel(inst, bkg, inst.exposure_s))
+        S = D.clipped_aperture_signal(inst, counts, B)                          # clipped core
+        v_f, v_s = D.noise_terms(inst, S, B, inst.exposure_s)
+        z_s = rng.standard_normal((n, 1)); z_f = rng.standard_normal(S.shape)
+        # observed SNR per frame (noise before frame selection); the processing penalty scales the expected SNR
+        obs = (penalty * S + np.sqrt(v_f) * z_f + np.sqrt(v_s) * z_s) / np.sqrt(v_f + v_s)
+        obs[dup] = -np.inf
+        snr = obs.max(axis=1)
         detp = snr >= 8.0
         out[key] = dict(p=float(detp.mean()), band=inst.band, v50=_v50(pkV, detp), steady_limit=float(D.limiting_magnitude(inst, bkg, 8.0 / penalty) - ext))
         dets[key] = detp

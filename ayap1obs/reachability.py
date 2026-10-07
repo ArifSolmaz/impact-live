@@ -1,4 +1,4 @@
-"""Orbit-plane compatibility and trajectory-level impact opportunities from a ~100-km near-polar circular orbit.
+"""Orbit-plane compatibility and circular-overflight screening opportunities from a ~100-km near-polar circular orbit.
 
 The AYAP-1 orbit plane, orbital phase, terminal-burn plan and propellant budget are not published, so everything here
 is conditional on declared families of planes and phases.
@@ -6,24 +6,27 @@ is conditional on declared families of planes and phases.
 Orbit model. A circular orbit of radius a = R + h whose plane is fixed in the ICRF (optionally drifting about the
 lunar spin axis at a stated rate). A family is defined by its inclination i and ascending-node longitude Omega in the
 Mean-Earth (ME) frame at the reference epoch; the ICRF plane is obtained with the full DE421 ICRF->ME rotation at that
-epoch, and the plane is carried to any other epoch with the same full rotation (release 1 used a constant
-13.176 deg/day rotation about the ME z axis, which drifts by 0.2-0.5 deg over the domain). The spacecraft's argument
-of latitude is u(t) = u0 + n (t - t_ref), with the phase u0 unknown and marginalised.
+epoch, and the plane is carried to any other epoch with the same full rotation. The spacecraft's argument of latitude
+is u(t) = u0 + n (t - t_ref), with the phase u0 unknown and marginalised. A plane with node Omega and the plane with
+node Omega + 180 deg (same inclination 90 deg) are the same geometric plane traversed in opposite directions; phase
+cannot reverse the direction of motion, so release 2.1 samples nodes over [0, 360) (re-audit GE-V2-02).
 
 Two products:
 * Orbit-plane compatibility (an envelope): a surface point is compatible at time t if it lies within the cross-track
   allowance delta of the instantaneous plane. delta = 0.6 deg needs a ~17 m/s plane change and 2.5 deg ~71 m/s
   (dv = 2 v sin(delta/2), v = 1.633 km/s); 0.6 deg is therefore a plane-change allowance, not 'no plane change'.
   This ignores where the spacecraft is and is not a reachability statement.
-* Impact opportunities: for each phase u0 the spacecraft passes over (or closest to) a given point once per orbit;
-  an opportunity is such an overflight with the cross-track angle at that moment within delta. The terminal burn is
-  then placed one deorbit flight time earlier (deorbit_trajectory), so every opportunity is a definite impact time.
-  Observing conditions are evaluated at those times.
+* Circular-overflight screening opportunities: for each phase u0 the spacecraft passes over (or closest to) a given
+  point once per orbit; an opportunity is such an overflight with the cross-track angle within delta. The impact time
+  follows from an in-plane retrograde burn (deorbit_trajectory): the descent ellipse covers 84-147 deg of central angle
+  for 50-25 m/s, so the burn is made (du_d - n t_f)/n + t_f before the circular overflight and the impact occurs
+  (du_d - n t_f)/n before it (opportunities.transfer_offset_s; re-audit GE-01). propagate_descent() checks this mapping
+  by numerical two-body integration. Opportunities are screening products for hypothetical planes, not burn solutions.
 Limitations: two-body circular motion; no gravity-field evolution, third-body perturbations or orbit maintenance
 (100-km near-polar orbits decay within months without maintenance: Ramanan & Adimurthy 2005; Genova 2026, NTRS
-20260002233); no terrain along the 3-degree descent path (1 km of terrain shifts a 3-degree impact point ~19 km
-along track). Inclinations i and 180 - i with nodes 180 deg apart describe the same plane traversed in the opposite
-direction, so for i = 90 deg Omega in [0, 180) covers every plane.
+20260002233); the cross-track manoeuvre's timing and phase change are not modelled; the descent ends on the reference
+sphere (no terrain: the flight-path angle at impact is ~3 deg below the local horizontal, so 1 km of terrain moves the
+impact point ~19 km along track).
 """
 from __future__ import annotations
 import numpy as np
@@ -220,3 +223,37 @@ def planes_through_point(jd_utc_epoch, lat_deg, lon_deg, inclination_deg=90.0, j
         out.append(dict(node_ref_deg=float(np.degrees(np.arctan2(node[1], node[0])) % 360), inclination_ref_deg=float(incl_ref),
                         pass_type='northbound' if northbound else 'southbound'))
     return out
+
+def propagate_descent(plane: Plane, phase_rad, jd_burn_tdb, dv_m_s, step_s=1.0, t_max_s=4000.0):
+    """Numerical check of the burn-to-impact mapping (re-audit GE-01): state on the circular orbit at the burn epoch,
+    in-plane retrograde burn of dv, RK4 two-body integration in the ICRF until the reference sphere is reached.
+    Vectorised over arrays of phases and burn epochs. Returns (impact TDB JD, impact unit vectors in the ME frame)."""
+    phase_rad = np.atleast_1d(phase_rad).astype(float); jd_b = np.atleast_1d(jd_burn_tdb).astype(float)
+    a = R_MOON + plane.altitude_km; n = plane.mean_motion
+    n_i, e_i, f_i = plane.vectors_icrf(jd_b)
+    u = phase_rad + n * (jd_b - plane.t_ref_jd) * 86400.0
+    r = a * (np.cos(u)[:, None] * e_i + np.sin(u)[:, None] * f_i)
+    v = a * n * (-np.sin(u)[:, None] * e_i + np.cos(u)[:, None] * f_i)
+    v *= (1 - dv_m_s / 1000.0 / np.linalg.norm(v, axis=1))[:, None]
+    def acc(x):
+        d = np.linalg.norm(x, axis=1, keepdims=True)
+        return -MU_MOON * x / d ** 3
+    t = np.zeros(len(u)); done = np.zeros(len(u), bool); t_imp = np.full(len(u), np.nan); r_imp = np.zeros_like(r)
+    for _ in range(int(t_max_s / step_s)):
+        k1v = acc(r); k1r = v
+        k2v = acc(r + 0.5 * step_s * k1r); k2r = v + 0.5 * step_s * k1v
+        k3v = acc(r + 0.5 * step_s * k2r); k3r = v + 0.5 * step_s * k2v
+        k4v = acc(r + step_s * k3r); k4r = v + step_s * k3v
+        r_new = r + step_s / 6 * (k1r + 2 * k2r + 2 * k3r + k4r); v_new = v + step_s / 6 * (k1v + 2 * k2v + 2 * k3v + k4v)
+        d0 = np.linalg.norm(r, axis=1); d1 = np.linalg.norm(r_new, axis=1)
+        hit = ~done & (d1 <= R_MOON)
+        if hit.any():
+            fr = ((d0[hit] - R_MOON) / (d0[hit] - d1[hit]))[:, None]
+            r_imp[hit] = r[hit] * (1 - fr) + r_new[hit] * fr; t_imp[hit] = t[hit] + fr[:, 0] * step_s; done |= hit
+        r, v = np.where(done[:, None], r, r_new), np.where(done[:, None], v, v_new); t = t + step_s
+        if done.all():
+            break
+    jd_imp = jd_b + t_imp / 86400.0
+    M = np.array([E.icrf_to_me(j) for j in jd_imp])
+    p = np.einsum('nij,nj->ni', M, r_imp / np.linalg.norm(r_imp, axis=1, keepdims=True))
+    return jd_imp, p

@@ -4,8 +4,10 @@ Each site has an annual central probability that the line of sight to the Moon i
 at a random night hour (p_los), derived from the site's quoted statistic (config/sites.yaml: clear_frac with its
 definition clear_def) by a definition-dependent factor, and an uncertainty half-range. These are planning
 assumptions from mixed sources, NOT a consistent climatology and not forecasts (no per-site hourly cloud dataset
-could be used in this study). A qualitative monthly pattern is assigned per site (season); the alternative 'flat'
-pattern is used as a sensitivity case.
+could be used in this study). A qualitative monthly pattern is assigned per site (season); it is guessed, not
+fitted, so it is not evidence for differences between scenarios. The 'flat' pattern, L = 250 and 1000 km and prior
+spreads x0.5 and x2 are run as sensitivity cases for S1 (spring) and S11 (winter) and exported in those scenario cards
+(card key mc_weather_sensitivity, scripts/run_scenarios.py; re-audit ST-N04).
 
 Epistemic structure: in the network Monte Carlo the site probabilities are drawn once per outer iteration from Beta
 distributions whose 90 % range matches the half-range; event trials inside an outer iteration share those
@@ -13,7 +15,7 @@ probabilities. The spread of the conditional detection probability across outer 
 weather/readiness uncertainty; the pooled mean equals the prior-predictive mean.
 
 Spatial correlation: a Gaussian copula with latent-normal correlation rho_ij = exp(-d_ij / L), L = 500 km
-(synoptic-scale assumption; 250 and 1000 km are sensitivity cases). rho is the correlation of the latent normal
+(synoptic-scale assumption; 250 and 1000 km are the sensitivity cases above). rho is the correlation of the latent normal
 variables, not of the clear/cloudy indicators: two sites 100 km apart (rho = 0.82) with p = 0.5 have an indicator
 correlation of (2/pi) asin(0.82) = 0.61, so they are partly redundant but not perfectly correlated. Co-located
 stations share the same sky.

@@ -22,7 +22,7 @@ export function t(key, vars) {
 export function L(obj) { return obj ? (obj[state.lang] ?? obj.en ?? '') : ''; }
 
 export function applyI18n(root = document) {
-  root.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  root.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n, el.dataset.i18nVars ? JSON.parse(el.dataset.i18nVars) : undefined); });
   root.querySelectorAll('[data-i18n-html]').forEach((el) => { el.innerHTML = t(el.dataset.i18nHtml); });
   root.querySelectorAll('[data-i18n-attr]').forEach((el) => {
     el.dataset.i18nAttr.split(';').forEach((pair) => { const [attr, key] = pair.split(':'); if (attr && key) el.setAttribute(attr.trim(), t(key.trim())); });
@@ -45,8 +45,9 @@ export const fmt = {
   num(x, d = 0) { return x === null || x === undefined || Number.isNaN(x) ? '–' : new Intl.NumberFormat(loc(), { minimumFractionDigits: d, maximumFractionDigits: d }).format(x); },
   pct(x, d = 0) {
     if (x === null || x === undefined || Number.isNaN(x)) return '–';
-    if (x > 0 && x < 0.01 && d === 0) return (state.lang === 'tr' ? '<%1' : '<1%');
-    if (x === 0) return (state.lang === 'tr' ? '≈%0' : '≈0%');
+    // below the display precision: an explicit '<' label instead of a rounded zero (re-audit WB-N05)
+    const unit = Math.pow(10, -d) / 100;
+    if (x >= 0 && x < unit) { const u = new Intl.NumberFormat(loc(), { maximumFractionDigits: d }).format(Math.pow(10, -d)); return state.lang === 'tr' ? `<%${u}` : `<${u}%`; }
     return new Intl.NumberFormat(loc(), { style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d }).format(x);
   },
   pctNum(x) { return new Intl.NumberFormat(loc(), { maximumFractionDigits: 0 }).format(x * 100); },

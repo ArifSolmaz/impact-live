@@ -7,16 +7,16 @@ affected sections are skipped and the manuscript will not compile). Inputs:
   outputs/tables/{scenario_summary,strategy_objectives,strategy_nondominance,opportunity_window_probability,
       opportunity_probability_vs_duration,opportunity_statistics,opportunity_convergence,reachability_convergence,
       timeline_window_probability,reachability_region_summary,timeline_families,refined_windows,convergence,
-      observing_windows_calendar,daily_availability,facility_site_time_matrix}.csv
-  outputs/tables/{injection_recovery,peak_magnitude_distribution,ejecta_checks}.json
-  outputs/validation/{ephemeris_validation,iers_provenance}.json, outputs/screening/{maps,classes}.npz
+      observing_windows_calendar,daily_availability,facility_site_time_matrix,plume_convergence}.csv
+  outputs/tables/{injection_recovery,peak_magnitude_distribution,ejecta_checks,orbiter_seasons}.json
+  outputs/validation/{ephemeris_validation,iers_provenance,lightcurve_accuracy,transfer_check}.json, outputs/screening/{maps,classes}.npz
   research/orbiter_latency.csv, config/*.yaml
 """
 import sys, os, json, glob, yaml, numpy as np, pandas as pd
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.makedirs(os.path.join(root, 'paper', 'sections'), exist_ok=True)
 sys.path.insert(0, root)
-from ayap1obs import impact as I, detect as D, montecarlo as MC, reachability as R
+from ayap1obs import impact as I, detect as D, montecarlo as MC, reachability as R, opportunities as OP
 ALLOW_MISSING = os.environ.get('ALLOW_MISSING') == '1'
 SEC = f'{root}/paper/sections'
 
@@ -73,6 +73,7 @@ def nm(name, val, fmt='{:.2f}'):
     DEFINED.add(name)
     NUM.append(f'\\newcommand{{\\N{name}}}{{{val if isinstance(val, str) else fmt.format(val)}}}')
 
+KG = lambda v: f'{v:.0f}' if v < 9999.5 else f'{v:,.0f}'.replace(',', '\\,')            # 4105, 189\,152 (thin space from five digits)
 W = {'S1': 'One', 'S2': 'Two', 'S3': 'Three', 'S4': 'Four', 'S5': 'Five', 'S6': 'Six', 'S7': 'Seven', 'S8': 'Eight', 'S9': 'Nine', 'S10': 'Ten', 'S11': 'Eleven'}
 SL = {'A_turkiye_priority': 'A', 'B_global_science': 'B', 'C_public_participation': 'C'}
 OUT = {'any': 'any', 'two_indep': 'two', 'dual_validated': 'dual', 'confirmed': 'conf', 'obvious_any': 'obv', 'live': 'live', 'rapid': 'rapid', 'turkish': 'tr'}
@@ -123,7 +124,7 @@ def pr3(sid, strat, out, prior=PRIOR):
     m = mcs(sid, strat, out, prior)
     return f"{fp(m['p'])} ({fp(m['outer_p05'])}--{fp(m['outer_p95'])})"
 L = [r'\begin{landscape}', r'\begin{table}', r'\centering',
-     r'\caption{Network outcome probabilities per scenario and strategy, conditional on the spacecraft reaching the stated terminal state (wide $\eta_{\rm vis}$ prior, broad $T_0$ prior; $N=\NnEvents$ events in $\NnOuter$ outer draws). Each entry is the pooled probability and, in brackets, the 5--95\% range of the conditional probability over the outer (epistemic) draws; the 95\% Monte Carlo interval of every pooled value is narrower than $\pm$\NmcHalfMax. Two sites: detections at stations more than 100~km apart; confirmed: two sites or a dual-camera validation; live: obvious ($\geq$30) at a streaming station; $v$-scaled: the speed-scaled prior.}',
+     r'\caption{Network outcome probabilities per scenario and strategy, conditional on the spacecraft reaching the stated terminal state (wide $\eta_{\rm vis}$ prior, broad $T_0$ prior; $N=\NnEvents$ events in $\NnOuter$ outer draws). Each entry is the pooled probability and, in brackets, the 5--95\% range of the conditional probability over the outer (epistemic) draws after removing the binomial noise of the \NnInner{} inner events per draw (beta-binomial deconvolution, Section~\ref{sec:mc}); the 95\% Monte Carlo interval of every pooled value is narrower than $\pm$\NmcHalfMax. Two sites: detections at stations more than 100~km apart; confirmed: two sites or a dual-camera validation; live: obvious ($\geq$30) at a streaming station; $v$-scaled: the speed-scaled prior.}',
      r'\label{tab:probabilities}', r'\scriptsize', r'\setlength{\tabcolsep}{3pt}',
      r'\begin{tabular}{@{}llllllllll@{}}', r'\toprule',
      r' & \multicolumn{3}{c}{P(at least one detection)} & \multicolumn{3}{c}{P(two sites)} & P(confirmed) & P(live) & P(any) \\',
@@ -139,15 +140,16 @@ open(f'{SEC}/tab_probabilities.tex', 'w').write('\n'.join(L))
 so_all = pd.read_csv(need('outputs/tables/strategy_objectives.csv')); so = so_all[so_all.prior == PRIOR]
 nd = pd.read_csv(need('outputs/tables/strategy_nondominance.csv'))
 ndk = {(r.scenario, r.strategy): bool(r.nondominated) for r in nd.itertuples()}
+ndc = {(r.scenario, r.strategy): bool(r.nondominated_conservative) for r in nd.itertuples()}
 L = [r'\begin{table}[t]', r'\centering',
-     r'\caption{Strategy objectives for four scenarios (wide prior; pooled probabilities, outer 5--95\% ranges in Table~\ref{tab:probabilities}). Stations: recruited / available at the epoch; weight: illustrative relative resource weight summed over recruited (available) stations, dimensionless and not telescope time; ND: jointly nondominated within the scenario across P(two sites), P(live), P(T\"urkiye) and the recruited weight, using paired 95\% intervals.}',
+     r'\caption{Strategy objectives for four scenarios (wide prior; pooled probabilities, outer 5--95\% ranges in Table~\ref{tab:probabilities}). Stations: recruited / available at the epoch; weight: illustrative relative resource weight summed over recruited (available) stations, dimensionless and not telescope time; ND: nondominated within the scenario across P(two sites), P(live), P(T\"urkiye) and the recruited weight; first entry descriptive (point estimates), second conservative (a strategy is dominated only if another is at least as good on every objective and significantly better on one, paired intervals with a Bonferroni correction over the three probabilities).}',
      r'\label{tab:strategies}', r'\footnotesize', r'\setlength{\tabcolsep}{3.5pt}',
      r'\begin{tabular}{@{}llrrrrrrrrl@{}}', r'\toprule',
      r'Scen. & Strategy & stations & weight & P(any) & P(two) & P(dual) & P(conf) & P(live) & P(TR) & ND \\', r'\midrule']
 for sid in ['S1', 'S11', 'S3', 'S4']:
     for strat, S in SL.items():
         r = so[(so.scenario == sid) & (so.strategy == strat)].iloc[0]
-        L.append(f"{sid} & {S} & {r.n_stations}/{r.n_available} & {r.weight_recruited:.1f} ({r.weight_available:.1f}) & {fp(r.p_any)} & {fp(r.p_two_indep)} & {fp(r.p_dual_validated)} & {fp(r.p_confirmed)} & {fp(r.p_live)} & {fp(r.p_turkish)} & {'yes' if ndk.get((sid, strat)) else 'no'} \\\\")
+        L.append(f"{sid} & {S} & {r.n_stations}/{r.n_available} & {r.weight_recruited:.1f} ({r.weight_available:.1f}) & {fp(r.p_any)} & {fp(r.p_two_indep)} & {fp(r.p_dual_validated)} & {fp(r.p_confirmed)} & {fp(r.p_live)} & {fp(r.p_turkish)} & {'yes' if ndk.get((sid, strat)) else 'no'}/{'yes' if ndc.get((sid, strat)) else 'no'} \\\\")
     if sid != 'S4':
         L.append(r'\addlinespace[2pt]')
 L += [r'\bottomrule', r'\end{tabular}', r'\end{table}']
@@ -167,7 +169,7 @@ def lun(cls, dl):
     x = ost[(ost.cls == cls) & (np.isclose(ost.delta, dl))]
     return x.n_lunations_with_opp, int(x.n_lunations.max())
 L = [r'\begin{table}[t]', r'\centering',
-     r'\caption{Terminal-window opportunity statistics for an unknown orbit plane and phase (36 polar planes $\times$ 8 phases, uniform prior; \protect\path{outputs/tables/opportunity_window_probability.csv}). $P_W$: probability of at least one opportunity of the class within a window of $W$ days, given as the mean and the minimum over all start days in the domain; lunations: range over planes and phases of the number of lunations (of \NnLun) with at least one opportunity; fixed start: probability of a first opportunity within 3/6/12 months of 2027-09-01 (release-1 statistic, for comparison). Classes: A T\"urkiye evening, public phase, waxing, central near side, $\geq$3 sites; B central near side, $\geq$3 sites; C central near side, $\geq$1 Turkish site; P sunlit-plume geometry, $\geq$3 sites. $\delta$: cross-track allowance (0.6$^\circ\approx$\NdvSix~m/s, 2.5$^\circ\approx$\NdvTwoFive~m/s).}',
+     r'\caption{Terminal-window opportunity statistics for an unknown orbit plane and phase (72 directed polar planes, i.e. 36 node longitudes $\times$ 2 traversal directions, $\times$ 8 phases, uniform prior; circular-overflight screening opportunities with the impact placed \NtrOffset~s before the overflight for the 25-m/s de-orbit burn; \protect\path{outputs/tables/opportunity_window_probability.csv}). $P_W$: probability of at least one opportunity of the class within a window of $W$ days, given as the mean and the minimum over all start days in the domain; lunations: range over planes and phases of the number of lunations (of \NnLun) with at least one opportunity; fixed start: probability of a first opportunity within 3/6/12 months of 2027-09-01 (release-1 statistic, for comparison). Classes: A T\"urkiye evening, public phase, waxing, central near side, $\geq$3 sites; B central near side, $\geq$3 sites; C central near side, $\geq$1 Turkish site; P sunlit-plume geometry, $\geq$3 sites. $\delta$: cross-track allowance (0.6$^\circ\approx$\NdvSix~m/s, 2.5$^\circ\approx$\NdvTwoFive~m/s).}',
      r'\label{tab:opportunity}', r'\footnotesize', r'\setlength{\tabcolsep}{4pt}',
      r'\begin{tabular}{@{}llrrrrrrl@{}}', r'\toprule',
      r'Class & $\delta$ & $P_{30}$ mean & $P_{30}$ min & $P_{60}$ mean & $P_{60}$ min & $P_{90}$ min & lunations & fixed start 3/6/12 mo \\', r'\midrule']
@@ -185,7 +187,7 @@ REG = ['near side central', 'eastern limb region', 'western limb region', 'north
 def rreg(dl, q, reg, col='mean_opportunities'):
     return float(rrs[(np.isclose(rrs.delta, dl)) & (rrs.quantity == q) & (rrs.region == reg)][col].values[0])
 L = [r'\begin{table}[t]', r'\centering',
-     r'\caption{Admissible overflights per pixel over the domain, averaged over the 36 planes, the 8 phases and the pixels of each region (trajectory-level overflights evaluated at their own times). flash\_cov3: flash geometry with $\geq$3 sites available; flash\_tr: flash geometry with $\geq$1 Turkish site; plume\_tr: sunlit-plume geometry with $\geq$1 Turkish site.}',
+     r'\caption{Circular-overflight screening opportunities per pixel over the domain, averaged over the 72 directed planes, the 8 phases and the pixels of each region (station and class gates evaluated at the impact time of each opportunity). flash\_cov3: flash geometry with $\geq$3 sites available; flash\_tr: flash geometry with $\geq$1 Turkish site; plume\_tr: sunlit-plume geometry with $\geq$1 Turkish site.}',
      r'\label{tab:reach_region}', r'\footnotesize', r'\begin{tabular}{@{}lrrrrrr@{}}', r'\toprule',
      r' & \multicolumn{3}{c}{$\delta=0.6^\circ$} & \multicolumn{3}{c}{$\delta=2.5^\circ$} \\', r'\cmidrule(lr){2-4}\cmidrule(lr){5-7}',
      r'Region & flash\_cov3 & flash\_tr & plume\_tr & flash\_cov3 & flash\_tr & plume\_tr \\', r'\midrule']
@@ -197,14 +199,14 @@ open(f'{SEC}/tab_reach.tex', 'w').write('\n'.join(L))
 # ---- timeline families (nominal phase durations)
 tf_all = pd.read_csv(need('outputs/tables/timeline_families.csv')); tf = tf_all[tf_all.phase_case == 'nominal']
 L = [r'\begin{table}[t]', r'\centering',
-     r'\caption{Launch-to-impact timeline families with nominal phase durations (SCENARIO ASSUMPTIONS spanning the published statements). Window opens: end of the science phase (the impact hour is set by the pass schedule); sessions: T\"urkiye evening observing sessions (illuminated fraction 0.12--0.5, Moon $>25^\circ$ at TUG, Sun $<-12^\circ$) within $\pm$15 days; best: the session with the most sites, Istanbul time; LRO: inside an approximate LRO low-Sun season; $P_{30}$: probability of at least one opportunity of class A/B/P within 30 days after the window opens (unknown plane and phase, $\delta=0.6^\circ$; -- where the window extends beyond the domain).}',
+     r'\caption{Launch-to-impact timeline families with nominal phase durations (SCENARIO ASSUMPTIONS spanning the published statements). Window opens: end of the science phase (the impact hour is set by the pass schedule); sessions: T\"urkiye evening observing sessions (illuminated fraction 0.12--0.5, Moon $>25^\circ$ at TUG, Sun $<-12^\circ$) within $\pm$15 days; best: the session with the most sites, Istanbul time; LRO: inside a computed LRO low-Sun season (orbit plane extrapolated from tracking data, Section~\ref{sec:orbiters_method}); $P_{30}$: probability of at least one opportunity of class A/B/P within 30 days after the window opens (unknown plane and phase, $\delta=0.6^\circ$; -- where the window extends beyond the domain).}',
      r'\label{tab:timeline}', r'\scriptsize', r'\setlength{\tabcolsep}{3pt}', r'\begin{tabular}{@{}llrllrlllll@{}}', r'\toprule',
      r'Launch & date & mo & science start & window opens & sessions & best session & LRO & $P_{30}$ A & $P_{30}$ B & $P_{30}$ P \\', r'\midrule']
 def f30(x):
     return '--' if pd.isna(x) else f'{x:.2f}'
 for _, r in tf.iterrows():
     best = str(r.best_session_istanbul).replace('T', ' ')[:16] if 'none' not in str(r.best_session_istanbul) else 'none'
-    L.append(f"{r.launch} & {r.launch_date} & {r.science_months} & {r.science_start} & {r.impact_date} & {int(r.n_evening_sessions_pm15d) if pd.notna(r.n_evening_sessions_pm15d) else '--'} & {tex(best)} & {'yes' if r.in_LRO_low_sun_season_approx else 'no'} & {f30(r.p30_A)} & {f30(r.p30_B)} & {f30(r.p30_P)} \\\\")
+    L.append(f"{r.launch} & {r.launch_date} & {r.science_months} & {r.science_start} & {r.impact_date} & {int(r.n_evening_sessions_pm15d) if pd.notna(r.n_evening_sessions_pm15d) else '--'} & {tex(best)} & {'yes' if r.in_LRO_low_sun_season else 'no'} & {f30(r.p30_A)} & {f30(r.p30_B)} & {f30(r.p30_P)} \\\\")
 L += [r'\bottomrule', r'\end{tabular}', r'\end{table}']
 open(f'{SEC}/tab_timeline.tex', 'w').write('\n'.join(L))
 
@@ -229,32 +231,36 @@ open(f'{SEC}/tab_magtable.tex', 'w').write('\n'.join(L))
 inj = json.load(open(need('outputs/tables/injection_recovery.json')))
 INJ_TAG = {'nel': 'Nel', 'tug': 'Tug', 'ama': 'Ama', 'afo': 'Afo', 'std': 'Std'}
 L = [r'\begin{table}[t]', r'\centering',
-     r'\caption{Injection--recovery on synthetic lunar video (SIMULATION; \protect\path{outputs/tables/injection_recovery.json}). $m_{50}$, $m_{90}$: magnitudes recovered in 50\% and 90\% of trials (logistic fit, bootstrap 95\% intervals; \NinjNtrial{} trials per 0.25-mag step); analytic: steady-source SNR-8 limit of the aperture-sum estimator for the same background (not a matched-filter statistic); false alarms: candidates $\geq5\sigma$ per frame anywhere in the analysed field of \NinjNseq-frame blank sequences (exact Poisson 95\% intervals). For the NELIOTA-like system the second row requires candidates in both cameras in the same frame. Magnitudes in the system band ($R_c$ for NELIOTA, broad for the others).}',
-     r'\label{tab:injection}', r'\footnotesize', r'\setlength{\tabcolsep}{3.5pt}', r'\begin{tabular}{@{}p{4.6cm}lllrl@{}}', r'\toprule',
-     r'System & $m_{50}$ & $m_{90}$ & analytic & & false alarms per frame \\', r'\midrule']
+     r'\caption{Injection--recovery on synthetic lunar video (SIMULATION; \protect\path{outputs/tables/injection_recovery.json}). One detection pipeline serves injected and blank video. $m_{50}$, $m_{90}$: magnitudes recovered in 50\% and 90\% of trials (logistic fit, bootstrap 95\% intervals; \NinjNtrial{} trials per 0.25-mag step); analytic: steady-source SNR-8 limit of the aperture-sum estimator for the same background (not a matched-filter statistic); false alarms: candidates $\geq5\sigma$ per \NinjBox-pixel search box and frame in \NinjNclips{} independent blank clips of \NinjNseq{} frames, with clip-bootstrap 95\% intervals (a zero count gives a conditional one-sided limit); per window: expected false candidates in the frames searched for one injection. For the NELIOTA-like system the second row requires candidates in both cameras in the same frame. Magnitudes in the system band ($R_c$ for NELIOTA, broad for the others).}',
+     r'\label{tab:injection}', r'\footnotesize', r'\setlength{\tabcolsep}{3pt}', r'\begin{tabular}{@{}p{4.3cm}lllll@{}}', r'\toprule',
+     r'System & $m_{50}$ & $m_{90}$ & analytic & false alarms per box-frame & per window \\', r'\midrule']
+def far(x):
+    lo_, hi_ = x['ci95_clip_bootstrap']
+    return f"{x['rate']:.4f} ({lo_:.4f}--{hi_:.4f})" if x['total'] > 0 else f"0 ($<${hi_:.4f})"
 for key, tag in INJ_TAG.items():
-    r = inj[key]; f0 = r['fits']['cam0']; fa = r['false_alarms']; c0 = fa['candidate_rate_per_frame'][0]
-    L.append(f"{tex(r['label'])} & {f0['m50']:.2f} ({f0['m50_ci95'][0]:.2f}--{f0['m50_ci95'][1]:.2f}) & {f0['m90']:.2f} ({f0['m90_ci95'][0]:.2f}--{f0['m90_ci95'][1]:.2f}) & {r['analytic_limits']['steady_snr8']:.2f} & & "
-             f"{c0['rate']:.4f} ({c0['ci95'][0]:.4f}--{c0['ci95'][1]:.4f}) \\\\")
+    r = inj[key]; f0 = r['fits']['cam0']; fa = r['false_alarms']; c0 = fa['candidate_rate_per_box_frame'][0]
+    L.append(f"{tex(r['label'])} & {f0['m50']:.2f} ({f0['m50_ci95'][0]:.2f}--{f0['m50_ci95'][1]:.2f}) & {f0['m90']:.2f} ({f0['m90_ci95'][0]:.2f}--{f0['m90_ci95'][1]:.2f}) & {r['analytic_limits']['steady_snr8']:.2f} & "
+             f"{far(c0)} & {fa['expected_false_candidates_per_injection_window']:.2f} \\\\")
     if 'dual' in r['fits']:
-        fd = r['fits']['dual']; dc = fa.get('dual_coincidence_rate_per_frame')
-        L.append(f"\\quad both cameras, same frame & {fd['m50']:.2f} ({fd['m50_ci95'][0]:.2f}--{fd['m50_ci95'][1]:.2f}) & {fd['m90']:.2f} ({fd['m90_ci95'][0]:.2f}--{fd['m90_ci95'][1]:.2f}) & & & "
-                 + (f"{dc['rate']:.4f} ($<${dc['ci95'][1]:.4f})" if dc else '--') + r' \\')
+        fd = r['fits']['dual']; dc = fa.get('dual_coincidence_rate_per_box_frame')
+        L.append(f"\\quad both cameras, same frame & {fd['m50']:.2f} ({fd['m50_ci95'][0]:.2f}--{fd['m50_ci95'][1]:.2f}) & {fd['m90']:.2f} ({fd['m90_ci95'][0]:.2f}--{fd['m90_ci95'][1]:.2f}) & & "
+                 + (far(dc) if dc else '--') + r' & \\')
 L += [r'\bottomrule', r'\end{tabular}', r'\end{table}']
 open(f'{SEC}/tab_injection.tex', 'w').write('\n'.join(L))
 
 # ---- plume cases for the plume-relevant scenarios
 L = [r'\begin{table}[t]', r'\centering',
-     r"\caption{Phase-space plume model: within-domain estimates for scenarios S2 (3$^\circ$ beyond the terminator), S5 (sunlit ground) and S8 (polar, near the terminator). Rules: vertical-component ($U\sin\theta$) and vertical-equivalent ($U$); ``cannot determine'': the speed needed to reach sunlight (or to clear the limb) exceeds the scaling-domain maximum. SNR: best-aperture signal-to-noise ratio for a 1-m telescope, 1-s $V$ frames, from TUG, with a background-subtraction systematic of $10^{-3}$ ($10^{-2}$ in brackets); $M_{\rm vis}$: peak sunlit ejecta mass visible from TUG. Faster ejecta, outside the domain, are not modelled.}",
-     r'\label{tab:plume}', r'\scriptsize', r'\setlength{\tabcolsep}{3pt}', r'\begin{tabular}{@{}lllllrr@{}}', r'\toprule',
-     r'Scen. & rule & impactor & parameters & status & SNR & $M_{\rm vis}$ (kg) \\', r'\midrule']
+     r"\caption{Phase-space plume model: within-domain estimates for scenarios S2 (3$^\circ$ beyond the terminator), S5 (sunlit ground) and S8 (polar, near the terminator), for every in-domain ejecta speed from the slowest that can be lit and seen. Rules: vertical-component ($U\sin\theta$) and vertical-equivalent ($U$); ``cannot determine'': the speed needed to reach sunlight (or to clear the limb) exceeds the scaling-domain maximum. SNR: exposure-integrated signal-to-noise ratio in the best 1-s window for a 1-m telescope ($V$) at TUG, regolith grains, $p\Phi=0.03$, dust/ground contrast $\kappa=0.2$, background-subtraction systematic $10^{-3}$ ($10^{-2}$ in brackets); fine: fine-rich grains; corner: fine-rich grains, $p\Phi=0.1$ and $\kappa=1$, the optimistic corner of the declared ranges; $M_{\rm vis}$: peak sunlit ejecta mass visible from TUG. Faster ejecta, outside the domain, are not modelled.}",
+     r'\label{tab:plume}', r'\scriptsize', r'\setlength{\tabcolsep}{3pt}', r'\begin{tabular}{@{}lllllrrrr@{}}', r'\toprule',
+     r'Scen. & rule & impactor & parameters & status & SNR & fine & corner & $M_{\rm vis}$ (kg) \\', r'\midrule']
 for sid in ['S2', 'S5', 'S8']:
     for x in cards[sid]['plume']['cases']:
         ob = x.get('observers', {}).get('TUG')
         if ob:
-            L.append(f"{sid} & {x['rule']} & {tex(x['impactor'])} & {tex(x['params'])} & within domain & {ob['sys0.001']['snr_max']:.2f} ({ob['sys0.01']['snr_max']:.2f}) & {ob['M_vis_max_kg']:.0f} \\\\")
+            L.append(f"{sid} & {x['rule']} & {tex(x['impactor'])} & {tex(x['params'])} & within domain & {ob['sys0.001']['snr_max']:.2f} ({ob['sys0.01']['snr_max']:.2f}) & "
+                     f"{ob['grains_sys0.001']['fine-rich']:.1f} & {ob['optimistic_corner_sys0.001']['snr_max']:.1f} & {KG(ob['M_vis_max_kg'])} \\\\")
         else:
-            L.append(f"{sid} & {x['rule']} & {tex(x['impactor'])} & {tex(x['params'])} & cannot determine & -- & -- \\\\")
+            L.append(f"{sid} & {x['rule']} & {tex(x['impactor'])} & {tex(x['params'])} & cannot determine & -- & -- & -- & -- \\\\")
     if sid != 'S8':
         L.append(r'\addlinespace[2pt]')
 L += [r'\bottomrule', r'\end{tabular}', r'\end{table}']
@@ -264,7 +270,9 @@ open(f'{SEC}/tab_plume.tex', 'w').write('\n'.join(L))
 # SCENARIO CARDS (appendix)
 # =====================================================================================================================
 B = [r'\section{Scenario cards}', r'\label{app:scenarios}',
-     r"All coordinates are hypothetical test points chosen by the screening (latitude north-positive, longitude east-positive, ME frame); none is an official AYAP-1 target. The impact time is the emission time at the lunar surface; photons reach each station after its own light time. Reachability is conditional on the orbit plane and phase (Section~\ref{sec:reach}). Probabilities are conditional on reaching the stated terminal state; brackets give the 5--95\% range over the epistemic (outer) draws. ``Wide'' is the log-uniform $\eta_{\rm vis}$ prior and ``$v$-scaled'' the speed-scaled prior, both with the broad $T_0$ prior.", '']
+     r"All coordinates are hypothetical test points chosen by the screening (latitude north-positive, longitude east-positive, ME frame); none is an official AYAP-1 target. The impact time is the emission time at the lunar surface; photons reach each station after its own light time. Reachability is conditional on the orbit plane and phase (Section~\ref{sec:reach}). Probabilities are conditional on reaching the stated terminal state; brackets give the 5--95\% range over the epistemic (outer) draws after removing the inner-sample binomial noise. ``Wide'' is the log-uniform $\eta_{\rm vis}$ prior and ``$v$-scaled'' the speed-scaled prior, both with the broad $T_0$ prior.", '']
+def plim(x):
+    return 'none (the background saturates the pixels)' if x is None or not np.isfinite(x) else f'{x:.1f}'
 for sid in order:
     c = cards[sid]; sc = scn_cfg[sid]; g = c['geometry']; ph = c['physics']; rc = c['reachability']; pr = c['population']['by_radius']
     pB = lambda o, pri=PRIOR: mcs(sid, 'B_global_science', o, pri)
@@ -284,11 +292,19 @@ for sid in order:
     pl_cases = c['plume']['cases']; det = [x for x in pl_cases if x.get('observers', {}).get('TUG')]
     if det:
         snr = [x['observers']['TUG']['sys0.001']['snr_max'] for x in det]; mv = [x['observers']['TUG']['M_vis_max_kg'] for x in det]
-        pl_txt = f"{len(det)} of {len(pl_cases)} model cases estimable within the scaling domain: peak visible sunlit mass {min(mv):.0f}--{max(mv):.0f} kg, best SNR {min(snr):.2f}--{max(snr):.2f} (1-m telescope, 1-s $V$ frames, systematic $10^{{-3}}$); the others cannot be determined"
+        fine = [x['observers']['TUG']['grains_sys0.001']['fine-rich'] for x in det]
+        rg = lambda v, f: f(min(v)) if f(min(v)) == f(max(v)) else f'{f(min(v))}--{f(max(v))}'      # range, or one value if equal
+        pl_txt = (f"{len(det)} of {len(pl_cases)} model cases estimable within the scaling domain: peak visible sunlit mass {rg(mv, KG)} kg, best exposure-integrated SNR "
+                  f"{rg(snr, '{:.2f}'.format)} (1-m telescope, 1-s $V$ window, regolith grains, systematic $10^{{-3}}$; fine-rich grains {rg(fine, '{:.1f}'.format)})"
+                  + ("; the others cannot be determined" if len(det) < len(pl_cases) else ""))
     else:
         pl_txt = f"all {len(pl_cases)} model cases: cannot determine (the speed needed to reach sunlight exceeds the scaling-domain maximum)" if pl_cases else 'no plume geometry'
-    lro = c['orbiters']['lro']['low_sun_season_approx']
-    lro_txt = ('inside an approximate LRO low-Sun season (' + ' to '.join(lro['next_season']) + ')') if lro.get('inside') else (f"next approximate LRO low-Sun season in {lro['days_until']} d ({' to '.join(lro['next_season'])})" if lro.get('next_season') else 'no season in the table')
+    lro = c['orbiters']['lro']['low_sun_season'] or {}; dan = c['orbiters']['danuri']
+    unc = ' (near an uncertain boundary)' if lro.get('boundary_uncertain') else ''
+    lro_txt = (('inside a computed LRO low-Sun season (' + ' to '.join(lro['next_season']) + ')' + unc) if lro.get('inside') else
+               (f"next computed LRO low-Sun season in {lro['days_until']} d ({' to '.join(lro['next_season'])}){unc}" if lro.get('next_season') else 'no season in the computed span'))
+    dan_txt = ('Danuri available in the baseline (before its planned March 2028 impact), assumed availability ' + f"{dan['p_operational_assumed']}" if dan['available_in_baseline']
+               else 'Danuri not available in the baseline (planned lunar impact in March 2028; continued operation is a changed-plan sensitivity)')
     rim = c['crater']['rim_diameter_m']
     vis = c['public']['visual']
     vis_txt = (f"at {vis['site']} (Moon {vis['moon_alt']:.0f}$^\\circ$, Sun {vis['sun_alt']:.0f}$^\\circ$), conditional on a clear, unobstructed, attentive view: naked eye {fsmall(vis['none']['p_conditional'])}, 7$\\times$50 binoculars {fsmall(vis['binoculars']['p_conditional'])}, 20-cm eyepiece {fsmall(vis['telescope20cm']['p_conditional'])} (with the site's weather: {fsmall(vis['telescope20cm']['p_with_weather'])})"
@@ -306,11 +322,11 @@ for sid in order:
           f"Predicted flash & peak $V/R_c/I_c/K_s$ at $T_0$ = 3000 K, $\\tau$ = 0.5 s: $\\eta_{{\\rm vis}}=10^{{-5}}$: {fl_txt(1e-5)}; $10^{{-4}}$: {fl_txt(1e-4)}; $10^{{-3}}$: {fl_txt(1e-3)}; Monte Carlo median peak $V$ {c['mc'][PRIOR]['peakV']['median']:.1f} (10--90\\%: {c['mc'][PRIOR]['peakV']['p10']:.1f}--{c['mc'][PRIOR]['peakV']['p90']:.1f}); laboratory-trend case $V\\approx${c['lab_trend']['V_peak']:.0f} \\\\",
           f"Requirements & fast ($\\leq$50 ms) visible or $\\geq$1-s near-infrared imaging with GPS timing; field covering the ellipse ($\\sigma$ along/cross {ph['sigma_along_km']}/{ph['sigma_cross_km']} km = {206265 * ph['sigma_along_km'] / c['moon']['distance_km']:.1f}$''$/{206265 * ph['sigma_cross_km'] / c['moon']['distance_km']:.1f}$''$); linear $\\geq$12-bit data; non-sidereal tracking; timing uncertainty $\\pm${ph['sigma_t_min']} min requires continuous recording \\\\",
           f"Network probabilities & P(any): A {prr('A_turkiye_priority', 'any')}, B {prr('B_global_science', 'any')}, C {prr('C_public_participation', 'any')}; P(two sites): A {prr('A_turkiye_priority', 'two_indep')}, B {prr('B_global_science', 'two_indep')}, C {prr('C_public_participation', 'two_indep')}; P(confirmed, B) {prr('B_global_science', 'confirmed')}; P(live, C) {prr('C_public_participation', 'live')}; P(T\\\"urkiye detection, A) {prr('A_turkiye_priority', 'turkish')}; $v$-scaled prior: P(any, B) {prr('B_global_science', 'any', PRIOR_V)} \\\\",
-          f"Visual-threshold model & {vis_txt}; phone limits (broad band, steady source): standalone {c['public']['phone_standalone_limit_broad']:.1f}, afocal on 20 cm {c['public']['phone_afocal20cm_limit_broad']:.1f} \\\\",
+          f"Visual-threshold model & {vis_txt}; phone limits (broad band, steady source): standalone {plim(c['public']['phone_standalone_limit_broad'])}, afocal on 20 cm {plim(c['public']['phone_afocal20cm_limit_broad'])} \\\\",
           f"Settlement sums & GeoNames settlement populations under the public criteria: {pr['10km']['public'] / 1e9:.2f} bn (10-km agglomeration; {pr['25km']['public'] / 1e9:.2f}--{pr['0km']['public'] / 1e9:.2f} for 25--0 km), T\\\"urkiye {pr['10km']['turkiye_public'] / 1e6:.0f} M; not a census, audience or witness estimate \\\\",
           f"Plume & {tex(c['plume']['regime'])}; {pl_txt} \\\\",
           f"Crater & rim diameter {rim['all'][0]:.0f}--{rim['all'][2]:.0f} m (vertical-component rule {rim['vertical-component'][0]:.0f}--{rim['vertical-component'][2]:.0f} m; vertical-equivalent {rim['vertical-equivalent'][0]:.0f}--{rim['vertical-equivalent'][2]:.0f} m), {c['crater']['angular_size_arcsec']:.4f}$''$ from Earth \\\\",
-          f"Orbital follow-up & {lro_txt}; P(LRO operating in 2028) = {c['orbiters']['lro']['p_operational_assumed']} (sensitivity {c['orbiters']['lro']['p_operational_sensitivity'][0]}--{c['orbiters']['lro']['p_operational_sensitivity'][1]}), a scenario input, not a probability of imaging the crater; {tex(c['orbiters']['lro']['latency_summary'])} (heuristic) \\\\",
+          f"Orbital follow-up & {lro_txt}; P(LRO operating in 2028) = {c['orbiters']['lro']['p_operational_assumed']} (sensitivity {c['orbiters']['lro']['p_operational_sensitivity'][0]}--{c['orbiters']['lro']['p_operational_sensitivity'][1]}), a scenario input, not a probability of imaging the crater; {tex(c['orbiters']['lro']['latency_summary'])} (heuristic); {dan_txt} \\\\",
           r'\bottomrule', r'\end{tabularx}', '']
 open(f'{SEC}/B_scenarios.tex', 'w').write('\n'.join(B))
 
@@ -320,6 +336,7 @@ open(f'{SEC}/B_scenarios.tex', 'w').write('\n'.join(B))
 # ---------------- ephemeris, frames, times
 iers = json.load(open(need('outputs/validation/iers_provenance.json')))
 nm('iersVersion', iers['version'].replace('.', '.\\allowbreak ')); nm('iersMeasured', iers['measured_until']); nm('iersPredicted', iers['predicted_until'])
+nm('iersHeld', iers['ut1_utc_held_s'], '{:+.3f}'); nm('iersBound', iers['ut1_utc_bound_beyond_table_s'], '{:.3f}'); nm('iersRot', iers['rotation_bound_arcsec'], '{:.1f}')
 lts = [x for c in cards.values() for x in (c['latency']['light_time_station_range_s'] or [])]
 nm('ltMin', min(lts), '{:.2f}'); nm('ltMax', max(lts), '{:.2f}')
 ev = json.load(open(need('outputs/validation/ephemeris_validation.json')))
@@ -365,11 +382,28 @@ twp = pd.read_csv(need('outputs/tables/timeline_window_probability.csv'))
 mm_ = twp[twp.family_set == 'main'].set_index(['launch', 'science_months', 'cls', 'delta']); jj_ = twp[twp.family_set == 'incl88_j2'].set_index(['launch', 'science_months', 'cls', 'delta'])
 dj = [abs(mm_.loc[i][c_] - jj_.loc[i][c_]) for i in mm_.index if i in jj_.index for c_ in ('p_14d', 'p_30d', 'p_60d') if pd.notna(mm_.loc[i][c_]) and pd.notna(jj_.loc[i][c_])]
 nm('jTwoMax', max(dj), '{:.2f}')
+# the class-A 60-day minimum (worst start day): the evenings on which its opportunities fall (marginal summer crescents)
+zo = np.load(need('outputs/reachability/opportunities_main.npz')); d0_ = fam['cross_track_tolerance_deg'][0]
+occA = np.unpackbits(zo['occ'][:, :, list(zo['classes']).index('A_turkiye_evening_public'), list(zo['deltas']).index(d0_), :], axis=-1,
+                     count=int(zo['n_hours'])).astype(bool).reshape(-1, int(zo['n_hours']))
+stA, pA = OP.window_prob(occA, 60); h_min = int(stA[np.argmin(pA)])
+hrs = np.where(occA[:, h_min:h_min + 60 * 24].any(axis=0))[0] + h_min
+import datetime as dt_
+jd_ist = cl['jd_utc'][hrs] + 3 / 24.0                                                                     # Istanbul time (UTC+3)
+evenings = sorted({(dt_.datetime(2000, 1, 1, 12) + dt_.timedelta(days=float(j) - 2451545.0)).date() for j in jd_ist})
+nm('wASixtyMinBasis', (f'a single evening, {evenings[0].day}~{evenings[0].strftime("%B")}~{evenings[0].year}' if len(evenings) == 1 else f'{len(evenings)} evenings'))
 oc = pd.read_csv(need('outputs/tables/opportunity_convergence.csv'))
-nm('ocMax', oc[oc.subset != 'all'].d_mean_p30.abs().max(), '{:.3f}')
+nm('ocMax', oc[oc.subset.isin(['nodes/2', 'phases/2', 'both/2'])].d_mean_p30.abs().max(), '{:.3f}')
+dr1 = oc[oc.subset == 'direction 1'].set_index(['cls', 'delta']); dr2 = oc[oc.subset == 'direction 2'].set_index(['cls', 'delta'])   # GE-V2-02
+nm('dirMean', (dr1.mean_p30 - dr2.mean_p30).abs().max(), '{:.3f}')
+nm('dirMin', (dr1.min_p30 - dr2.min_p30).abs().max(), '{:.3f}'); nm('dirFirst', (dr1.p_first_3mo - dr2.p_first_3mo).abs().max(), '{:.3f}')
 rcv = pd.read_csv(need('outputs/tables/reachability_convergence.csv')); rcv = rcv[~rcv.variant.str.startswith('production')]
 small3 = lambda v: '$<$0.001' if v < 0.0005 else f'{v:.3f}'
-nm('rcMaxP', small3(rcv.d_mean_p30.abs().max())); nm('rcMaxF', small3(rcv.d_p_first_3mo.abs().max())); nm('rcMaxH', 100 * rcv.rel_d_opp_hours.abs().max(), '{:.1f}')
+for kind, kn in (('numerical', 'Num'), ('sampling', 'Sam'), ('burn', 'Burn')):            # numerical refinement, other planes/phases, 50-m/s burn
+    rk = rcv[rcv.kind == kind]
+    z3 = lambda v: '0' if v < 1e-12 else small3(v)
+    nm(f'rc{kn}P', z3(rk.d_mean_p30.abs().max())); nm(f'rc{kn}Min', z3(rk.d_min_p30.abs().max()))
+    nm(f'rc{kn}F', z3(rk.d_p_first_3mo.abs().max())); nm(f'rc{kn}H', 100 * rk.rel_d_opp_hours.abs().max(), '{:.1f}')
 d0, d1 = fam['cross_track_tolerance_deg']
 nm('rchCenCov', rreg(d0, 'flash_cov3', 'near side central'), '{:.1f}'); nm('rchCenTr', rreg(d0, 'flash_tr', 'near side central'), '{:.1f}')
 nm('rchPolCov', rreg(d0, 'flash_cov3', 'polar'), '{:.1f}'); nm('rchPolTr', rreg(d0, 'flash_tr', 'polar'), '{:.1f}')
@@ -431,25 +465,34 @@ for tname, tag in LIMN.items():
     ext = float(D.extinction_mag(band, 1.2, 2500.0)); bk = D.total_background_sb(band, 0.35, 8.0, -20, ext_mag=ext)
     nm(f'lim{tag}', D.limiting_magnitude(inst, bk, 8.0) - ext, '{:.1f}'); nm(f'sat{tag}', D.bright_limit(inst, bk) - ext, '{:.1f}')
 # ---------------- injection-recovery
-nm('injNtrial', int(inj['nel']['ntrial']), '{:d}'); nm('injNseq', thou(inj['nel']['n_seq']))
+nm('injNtrial', int(inj['nel']['ntrial']), '{:d}'); nm('injNseq', thou(inj['nel']['n_seq'])); nm('injSeed', int(inj['_settings']['seed']), '{:d}')
+nm('injBox', int(inj['_settings']['box_px']), '{:d}'); nm('injNclips', int(inj['nel']['false_alarms']['n_clips']), '{:d}')
+nm('injMaxShift', max(inj[k]['registration']['max_abs_shift_px'] for k in inj if not k.startswith('_')), '{:.1f}')
+nm('injAtLimit', sum(inj[k]['registration']['frames_at_search_limit'] for k in inj if not k.startswith('_')), '{:d}')
 for key, tag in INJ_TAG.items():
-    r = inj[key]; f0 = r['fits']['cam0']; c0 = r['false_alarms']['candidate_rate_per_frame'][0]
+    r = inj[key]; f0 = r['fits']['cam0']; fa = r['false_alarms']; c0 = fa['candidate_rate_per_box_frame'][0]
     nm(f'inj{tag}Mfifty', f0['m50'], '{:.1f}'); nm(f'inj{tag}MfiftyLo', f0['m50_ci95'][0], '{:.1f}'); nm(f'inj{tag}MfiftyHi', f0['m50_ci95'][1], '{:.1f}')
     nm(f'inj{tag}Mninety', f0['m90'], '{:.1f}'); nm(f'inj{tag}An', r['analytic_limits']['steady_snr8'], '{:.1f}'); nm(f'inj{tag}AnFive', r['analytic_limits']['steady_snr5'], '{:.1f}')
-    nm(f'inj{tag}Fa', c0['rate'], '{:.3f}'); nm(f'inj{tag}FaHi', c0['ci95'][1], '{:.3f}'); nm(f'inj{tag}FaN', int(round(c0['rate'] * r['false_alarms']['n_frames'])), '{:d}')
+    nm(f'inj{tag}Fa', c0['rate'], '{:.4f}'); nm(f'inj{tag}FaHi', c0['ci95_clip_bootstrap'][1], '{:.4f}'); nm(f'inj{tag}FaN', int(c0['total']), '{:d}')
+    nm(f'inj{tag}FaWin', fa['expected_false_candidates_per_injection_window'], '{:.2f}')
     nm(f'inj{tag}Gap', r['analytic_limits']['steady_snr8'] - f0['m50'], '{:+.1f}')
+    f40 = r['fits'].get('cam0_first40_frames')
+    if f40:
+        nm(f'inj{tag}MfiftyFirstForty', f40['m50'], '{:.2f}'); nm(f'inj{tag}DFirstForty', f40['m50'] - f0['m50'], '{:+.2f}')
 fd = inj['nel']['fits']['dual']; nm('injNelDualMfifty', fd['m50'], '{:.1f}'); nm('injNelDualMninety', fd['m90'], '{:.1f}')
-dc = inj['nel']['false_alarms'].get('dual_coincidence_rate_per_frame')
-nm('injNelCoincN', int(inj['nel']['false_alarms'].get('dual_coincident_frames', 0)), '{:d}'); nm('injNelCoincHi', dc['ci95'][1] if dc else float('nan'), '{:.4f}')
-nm('injNelFaFrames', thou(inj['nel']['false_alarms']['n_frames']))
+dc = inj['nel']['false_alarms'].get('dual_coincidence_rate_per_box_frame')
+nm('injNelCoincN', int(dc['total']) if dc else 0, '{:d}'); nm('injNelCoincHi', dc['ci95_clip_bootstrap'][1] if dc else float('nan'), '{:.4f}')
+nm('injNelFaFrames', thou(inj['nel']['false_alarms']['candidate_rate_per_box_frame'][0]['box_frames']))
+nm('injMedFrames', int(round(inj['nel']['false_alarms']['median_frames_per_injection'])), '{:d}')
 nm('nelSNR', inj['_neliota_check']['model_snr_at_12_41'], '{:.1f}')
+nm('injMaxDFirstForty', max(abs(inj[k]['fits']['cam0_first40_frames']['m50'] - inj[k]['fits']['cam0']['m50']) for k in INJ_TAG if 'cam0_first40_frames' in inj[k]['fits']), '{:.2f}')
 # ---------------- ejecta checks (LCROSS, crater consistency)
 ej = json.load(open(need('outputs/tables/ejecta_checks.json')))
 lcm = {(x['model'], x['params']): x['M_illuminated_kg'] for x in ej['lcross']}
 nm('lcFly', lcm[('Centaur as 400 kg/m3', 'sand/fly ash')], '{:.0f}'); nm('lcSand', lcm[('Centaur as 400 kg/m3', 'sand')], '{:.0f}'); nm('lcPerl', lcm[('Centaur as 400 kg/m3', 'perlite/sand')], '{:.0f}')
 dense = [v for (m_, p_), v in lcm.items() if m_ == 'dense parts + hollow']; nm('lcDenseLo', min(dense), '{:.0f}'); nm('lcDenseHi', max(dense), '{:.0f}')
 nm('lcHollowMax', max(v for (m_, p_), v in lcm.items() if m_ == 'hollow Centaur'), '{:.0f}')
-CC = {'GRAIL': 'Grail', 'LADEE': 'Ladee', 'Falcon': 'Falcon'}
+CC = {'GRAIL': 'Grail', 'LADEE': 'Ladee', 'Falcon': 'Falcon', 'LCROSS': 'Lcross'}
 for x in ej['crater_consistency']:
     tag = next(v for k_, v in CC.items() if x['case'].startswith(k_))
     for rule, rt in (('vertical-component', 'Vc'), ('vertical-equivalent', 'Ve')):
@@ -472,16 +515,53 @@ def plume_best(sid):
                 vneed=min(x['v_needed_m_s'] for x in cards[sid]['plume']['cases']), vmax=max(x['vmax_domain_m_s'] for x in det))
 for sid in ['S2', 'S5', 'S8']:
     b_ = plume_best(sid); w = W[sid]
-    nm(f'plSnr{w}', b_['snr'], '{:.1f}'); nm(f'plSnrSys{w}', b_['snr2'], '{:.2f}'); nm(f'plM{w}', b_['m'], '{:.0f}'); nm(f'plN{w}', b_['n'], '{:d}'); nm(f'plNall{w}', b_['N'], '{:d}')
+    nm(f'plSnr{w}', b_['snr'], '{:.1f}'); nm(f'plSnrSys{w}', b_['snr2'], '{:.2f}'); nm(f'plM{w}', KG(b_['m'])); nm(f'plN{w}', b_['n'], '{:d}'); nm(f'plNall{w}', b_['N'], '{:d}')
     nm(f'plVneed{w}', b_['vneed'], '{:.0f}'); nm(f'plVmax{w}', b_['vmax'], '{:.0f}'); nm(f'plCon{w}', 100 * b_['con'], '{:.1f}')
 for sid in ['S1', 'S2', 'S8']:
     nm(f'sh{W[sid]}', cards[sid]['geometry']['shadow_height_km'], '{:.0f}' if cards[sid]['geometry']['shadow_height_km'] > 20 else '{:.1f}')
-allsnr = [x['observers'][o]['sys0.001']['snr_max'] for c in cards.values() for x in c['plume']['cases'] for o in x.get('observers', {}) if isinstance(x['observers'][o], dict) and 'sys0.001' in x['observers'][o]]
+allsnr = [x['observers']['TUG']['sys0.001']['snr_max'] for c in cards.values() for x in c['plume']['cases'] if 'TUG' in x.get('observers', {})]   # the 1-m telescope at TUG, as in Table 9
 nm('plSnrAll', max(allsnr), '{:.1f}')
+def plume_sens(sid, key):
+    det = [x['observers']['TUG'] for x in cards[sid]['plume']['cases'] if x.get('observers', {}).get('TUG')]
+    return det, [d[key] for d in det if key in d]
+for sid in ['S2', 'S5', 'S8']:
+    det, _ = plume_sens(sid, 'grains_sys0.001'); w = W[sid]
+    mx = lambda v, f: f.format(max(v)) if v else '--'
+    fine = [d['grains_sys0.001']['fine-rich'] for d in det]; coarse = [d['grains_sys0.001']['coarse'] for d in det]
+    corner = [d['optimistic_corner_sys0.001']['snr_max'] for d in det]; pphi = [d['pphi_sys0.001']['0.1'] for d in det]
+    nm(f'plFine{w}', mx(fine, '{:.1f}')); nm(f'plCoarse{w}', mx(coarse, '{:.1f}')); nm(f'plCorner{w}', mx(corner, '{:.0f}')); nm(f'plPphiHi{w}', mx(pphi, '{:.1f}'))
+    nm(f'plKappaOne{w}', mx([d['kappa_sys0.001']['1'] for d in det if 'kappa_sys0.001' in d], '{:.1f}'))
+    nm(f'plMcon{w}', KG(max(d['M_contrast_class_max_kg'] for d in det)) if det else '--')
+pc = pd.read_csv(need('outputs/tables/plume_convergence.csv'))
+NUMV = ['fine cell 25 m', 'fine cell 100 m', 'coarse cell 0.25 km', 'coarse cell 1 km', 'particles x8 (96 x 14 x 32)', 'time step x0.5', 'record step x0.5']
+for sid in ['S2', 'S5']:
+    x = pc[pc.scenario == sid].set_index('variant'); b0 = x.loc['production', 'snr_regolith_sys1e3']; w = W[sid]
+    nm(f'pcNum{w}', 100 * max(abs(x.loc[v, 'snr_regolith_sys1e3'] / b0 - 1) for v in NUMV), '{:.0f}')
+    nm(f'pcFloor{w}', 100 * max(abs(x.loc[v, 'snr_regolith_sys1e3'] / b0 - 1) for v in ('speed floor 0.5 m/s', 'speed floor 2 m/s', 'speed floor 5 m/s')), '{:.0f}')
+    nm(f'pcPoint{w}', 100 * abs(x.loc['point source at t = 0', 'snr_regolith_sys1e3'] / b0 - 1), '{:.0f}')
+    dw_ = 100 * (x.loc['window 0.1 s', 'snr_regolith_sys1e3'] / b0 - 1)
+    nm(f'pcWin{w}', dw_, '{:+.0f}'); nm(f'pcWinTxt{w}', f"{'lowers' if dw_ < 0 else 'raises'} the {sid} value by {abs(dw_):.0f}\\%")
 # ---------------- Monte Carlo settings and precision
 ms = c1['mc_settings']; nm('nOuter', ms['n_outer'], '{:d}'); nm('nInner', ms['n_inner'], '{:d}'); nm('nEvents', thou(ms['n_outer'] * ms['n_inner']))
 hw = [1.96 * m['mc_se'] for c in cards.values() for pri in (PRIOR, PRIOR_V) for s in c['mc'][pri]['strategies'].values() for o, m in s.items() if isinstance(m, dict) and 'mc_se' in m and m['mc_se'] is not None and np.isfinite(m['mc_se'])]
 nm('mcHalfMax', np.ceil(max(hw) * 100) / 100, '{:.2f}')
+ic = c1['mc_inner_convergence']; ni_ = sorted(ic, key=int)
+nm('icSmall', int(ni_[0]), '{:d}'); nm('icLarge', int(ni_[-1]), '{:d}')
+def width(m):
+    return m['outer_p95'] - m['outer_p05']
+def raw_width(m):
+    return m['outer_raw_p95'] - m['outer_raw_p05']
+dw = [abs(width(ic[n][st][o]) - width(ic[ni_[-1]][st][o])) for n in ni_ for st in SL for o in ('any', 'two_indep')]
+nm('icMaxDW', max(dw), '{:.2f}')
+nm('icRawSmall', raw_width(ic[ni_[0]]['B_global_science']['any']), '{:.2f}'); nm('icRawLarge', raw_width(ic[ni_[-1]]['B_global_science']['any']), '{:.2f}')
+nm('icDecSmall', width(ic[ni_[0]]['B_global_science']['any']), '{:.2f}'); nm('icDecLarge', width(ic[ni_[-1]]['B_global_science']['any']), '{:.2f}')
+for sid in ('S1', 'S11'):
+    ws = cards[sid]['mc_weather_sensitivity']; w = W[sid]
+    base = {(st, o): mcs(sid, st, o)['p'] for st in SL for o in ('any', 'two_indep', 'confirmed')}
+    dd = {v: max(abs(ws[v][st][o]['p'] - base[(st, o)]) for st in SL for o in ('any', 'two_indep', 'confirmed')) for v in ws}
+    nm(f'wsMax{w}', max(dd.values()), '{:.2f}'); nm(f'wsMaxVar{w}', max(dd, key=dd.get))
+    for v, tag in (('flat season', 'Flat'), ('L = 250 km', 'Lshort'), ('L = 1000 km', 'Llong'), ('prior spread x0.5', 'Narrow'), ('prior spread x2', 'Wide')):
+        nm(f'ws{tag}{w}', fp(ws[v]['B_global_science']['any']['p'])); nm(f'wsTwo{tag}{w}', fp(ws[v]['B_global_science']['two_indep']['p']))
 # ---------------- per-scenario probabilities
 for sid in order:
     c = cards[sid]; w = W[sid]
@@ -568,6 +648,9 @@ adom = [sid for sid in order if sid != 'S9' and not bool(ndt[(ndt.scenario == si
 cdom = [sid for sid in order if sid != 'S9' and not bool(ndt[(ndt.scenario == sid) & (ndt.strategy == 'C_public_participation')].nondominated.values[0])]
 bdom = [sid for sid in order if sid != 'S9' and not bool(ndt[(ndt.scenario == sid) & (ndt.strategy == 'B_global_science')].nondominated.values[0])]
 nm('ndAll', listing(allnd)); nm('ndADom', listing(adom)); nm('ndBDom', listing(bdom)); nm('ndCDom', listing(cdom))
+cons = lambda strat: [sid for sid in order if sid != 'S9' and not bool(ndt[(ndt.scenario == sid) & (ndt.strategy == strat)].nondominated_conservative.values[0])]
+nm('ndAllCons', listing([sid for sid in order if sid != 'S9' and ndt[(ndt.scenario == sid)].nondominated_conservative.all()]))
+nm('ndADomCons', listing(cons('A_turkiye_priority'))); nm('ndBDomCons', listing(cons('B_global_science'))); nm('ndCDomCons', listing(cons('C_public_participation')))
 darknp = [sid for sid in order if cards[sid]['geometry']['incidence'] > 90 and cards[sid]['region'] != 'polar' and cards[sid]['n_sites_available'] > 0]
 rat = [mcv(sid, st, 'two_indep') / mcv(sid, 'A_turkiye_priority', 'two_indep') for sid in darknp for st in ('B_global_science', 'C_public_participation') if mcv(sid, 'A_turkiye_priority', 'two_indep') > 0.01]
 nm('twoRatio', f'{min(rat):.1f}--{max(rat):.1f}')
@@ -608,11 +691,47 @@ nm('latPoorLo', poor.days_event_to_first_image.min(), '{:.0f}'); nm('latPoorHi',
 nm('latPoorRelLo', poor.days_event_to_release.min(), '{:.0f}'); nm('latPoorRelHi', poor.days_event_to_release.max(), '{:.0f}')
 nm('latNimp', len(imp), '{:d}'); nm('latNctx', len(ol) - len(imp), '{:d}')
 lro = orbcfg['lro']; nm('pLro', lro['p_operational_2028']); nm('pLroLo', lro['p_operational_sensitivity'][0]); nm('pLroHi', lro['p_operational_sensitivity'][1])
-seas = lro['illumination_seasons_approx']
+osj = json.load(open(need('outputs/tables/orbiter_seasons.json')))
 def fmt_season(x):
     a_, b_ = pd.Timestamp(x[0]), pd.Timestamp(x[1])
     return f"{a_.day}~{a_.strftime('%B')}--{b_.day}~{b_.strftime('%B')}~{b_.year}" if a_.year == b_.year else f"{a_.day}~{a_.strftime('%B')}~{a_.year}--{b_.day}~{b_.strftime('%B')}~{b_.year}"
-nm('lroSeasons', '; '.join(fmt_season(x) for x in seas['low_sun']))
+in_dom = lambda w: w['end'] >= dom['domain']['start_utc'][:10] and w['start'] < dom['domain']['stop_utc'][:10]
+nm('lroSeasons', '; '.join(fmt_season((w['start'], w['end'])) for w in osj['lro']['low_sun'] if in_dom(w)))
+nm('lroNoon', '; '.join(fmt_season((w['start'], w['end'])) for w in osj['lro']['near_noon'] if in_dom(w)))
+hs = osj['lro']['holdout_summary']
+nm('lroHoldShift', hs['central_fit_max_boundary_shift_days'], '{:.0f}'); nm('lroHoldNode', hs['central_fit_max_node_error_deg'], '{:.0f}')
+nm('lroTrackEnd', osj['lro']['tracking_based_until_tdb'])
+rng_days = [(pd.Timestamp(w[k][1]) - pd.Timestamp(w[k][0])).days for w in osj['lro']['low_sun'] if in_dom(w) for k in ('start_range', 'end_range')]
+nm('lroRangeMax', max(rng_days), '{:d}')
+rates = osj['lro']['node_rates_deg_per_day']
+obs_r = [abs(v) for k, v in rates.items() if 'not used' not in k]; pred_r = [abs(v) for k, v in rates.items() if 'not used' in k]
+nm('lroRateObsLo', min(obs_r), '{:.2f}'); nm('lroRateObsHi', max(obs_r), '{:.2f}'); nm('lroRatePredLo', min(pred_r), '{:.3f}'); nm('lroRatePredHi', max(pred_r), '{:.2f}')
+chk = {c_['case']: c_ for c_ in osj['lro']['checks']}
+nm('lroFalconInc', chk['Falcon 9 stage crater']['predicted_incidence_deg'], '{:.1f}'); nm('lroSlimInc', chk['SLIM landing site']['predicted_incidence_deg'], '{:.1f}')
+dan = orbcfg['danuri']; nm('danP', dan['p_operational_before_planned_end'], '{:.1f}'); nm('danUntil', osj['danuri']['available_until'])
+dsj = osj['danuri']
+nm('danSeasons', '; '.join(fmt_season((w['start'], w['end'])) for w in dsj['low_sun'] if not w.get('after_planned_end') and w['end'] >= '2027-01-01'))
+nm('danTrackEnd', dsj['tracking_based_until_tdb']); nm('danPredDiff', dsj['prediction_check']['max_abs_beta_difference_deg'], '{:.1f}')
+d_rates = [abs(v) for k, v in dsj['node_rates_deg_per_day'].items() if 'not used' not in k]
+nm('danRateLo', min(d_rates), '{:.3f}'); nm('danRateHi', max(d_rates), '{:.3f}')
+nm('danBefore', listing([sid for sid in order if cards[sid]['orbiters']['danuri']['available_in_baseline']]))
+lca = json.load(open(need('outputs/validation/lightcurve_accuracy.json')))
+nm('lcAcc', '$' + sci(max(lca['worst_abs_dmag'].values()), 0) + '$')
+gcp = f'{root}/outputs/validation/catalogue_gate_check.json'          # written by `make gatecheck` (not part of `make all`)
+if os.path.exists(gcp):
+    gc = json.load(open(gcp))
+    nm('gcRows', thou(gc['rows'])); nm('gcMis', int(gc['total_count_mismatches']), '{:d}'); nm('gcMisTr', int(gc['turkish_count_mismatches']), '{:d}')
+    nm('gcMargin', gc['max_threshold_margin_of_mismatched_rows_deg'] or 0.0, '{:.3f}'); nb_ = int(gc['rows_with_fewer_than_3_sites_but_stored_3_or_more'])
+    nm('gcBelow', nb_, '{:d}')
+    nm('gcBelowTxt', 'never takes a class-B entry below three sites' if nb_ == 0 else f'takes {nb_} class-B entr{"y" if nb_ == 1 else "ies"} below three sites')
+else:
+    print('WARNING: outputs/validation/catalogue_gate_check.json missing (run `make gatecheck`); its macros are set to ?')
+    for k_ in ('gcRows', 'gcMis', 'gcMisTr', 'gcMargin', 'gcBelow', 'gcBelowTxt'):
+        nm(k_, '?')
+tc = json.load(open(need('outputs/validation/transfer_check.json')))['main']
+nm('trOffset', tc['impact_before_overflight_s'], '{:.1f}'); nm('trFlight', tc['burn_to_impact_s'] / 60, '{:.1f}')
+nm('trMiss', tc['max_miss_km'], '{:.2f}'); nm('trN', int(tc['n_checked']), '{:d}')
+off50, tf50 = OP.transfer_offset_s(fam['altitude_km'], 50.0); nm('trOffsetFifty', off50, '{:.1f}'); nm('trFlightFifty', tf50 / 60, '{:.1f}')
 # facility matrix
 fm_ = pd.read_csv(need('outputs/tables/facility_site_time_matrix.csv'))
 nm('matRows', len(fm_), '{:d}'); nm('matMaxSites', max(c['n_sites_available'] for c in cards.values()), '{:d}')

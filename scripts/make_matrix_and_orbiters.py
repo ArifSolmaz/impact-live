@@ -1,5 +1,5 @@
-"""Facility-site-time matrix and scenario summary (from the scenario cards), approximate orbiter illumination seasons
-and the orbiter-latency precedents (impacts separated from soft landings; first documented image and release counted
+"""Facility-site-time matrix and scenario summary (from the scenario cards), LRO illumination seasons computed from
+archived Horizons elements (outputs/tables/orbiter_seasons.json), the Danuri disposal plan and the orbiter-latency precedents (impacts separated from soft landings; first documented image and release counted
 from the event)."""
 import sys, os, json, glob, numpy as np, pandas as pd, yaml, datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -72,29 +72,47 @@ for sid in order:
     summ.append(row)
 sm = pd.DataFrame(summ); sm.to_csv(f'{root}/outputs/tables/scenario_summary.csv', index=False)
 print(sm[['id', 'cls', 'n_sites', 'peakV_med', 'pA_any', 'pB_any', 'pC_any', 'pB_two_indep', 'pB_dual_validated', 'pC_live', 'visual_telescope20cm_conditional', 'plume']].to_string())
-# ---- orbiter illumination seasons (approximate, orbit plane)
-fig, ax = plt.subplots(figsize=(13, 3.4))
-lro = orb['lro']['illumination_seasons_approx']
-for k, (a, b) in enumerate(lro['low_sun']):
-    ax.axvspan(dt.datetime.strptime(a, '%Y-%m-%d'), dt.datetime.strptime(b, '%Y-%m-%d'), ymin=0.55, ymax=0.95, color=P.CAT[0], alpha=0.35, label='LRO low-Sun season (approximate, orbit plane)' if k == 0 else None)
-for k, (a, b) in enumerate(lro['near_noon']):
-    ax.axvspan(dt.datetime.strptime(a, '%Y-%m-%d'), dt.datetime.strptime(b, '%Y-%m-%d'), ymin=0.55, ymax=0.95, color=P.CAT[3], alpha=0.35, label='LRO near-noon season (approximate)' if k == 0 else None)
-for k, (a, b) in enumerate(orb['danuri']['illumination_seasons_approx']['low_sun']):
-    ax.axvspan(dt.datetime.strptime(a, '%Y-%m-%d'), dt.datetime.strptime(b, '%Y-%m-%d'), ymin=0.1, ymax=0.5, color=P.CAT[2], alpha=0.35, label='Danuri low-Sun season (approximate; extension to 2027 only)' if k == 0 else None)
+# ---- orbiter illumination seasons (computed, orbit plane) and the Danuri disposal plan
+seas = json.load(open(f'{root}/outputs/tables/orbiter_seasons.json'))
+day = lambda x: dt.datetime.strptime(x, '%Y-%m-%d')
+fig, ax = plt.subplots(figsize=(13, 3.6)); hatch_label = ['range of a season boundary (alternative node fits)']
+for key, col, lab in (('low_sun', P.CAT[0], 'LRO low-Sun season (|beta| >= 55 deg)'), ('near_noon', P.CAT[3], 'LRO near-noon season (|beta| <= 15 deg)')):
+    for k, w in enumerate(seas['lro'][key]):
+        ax.axvspan(day(w['start']), day(w['end']), ymin=0.47, ymax=0.82, color=col, alpha=0.35, lw=0, label=lab if k == 0 else None)
+        for (a, b) in (w['start_range'], w['end_range']):                    # boundary range from the alternative node fits
+            if a != b:
+                ax.axvspan(day(a), day(b) + dt.timedelta(days=1), ymin=0.47, ymax=0.82, facecolor='none', edgecolor=col, hatch='////', lw=0,
+                           label=hatch_label.pop() if hatch_label else None)
+dan = seas['danuri']; t_dan = day(dan['available_until']) + dt.timedelta(days=1)
+for k, w in enumerate(x for x in dan['low_sun'] if not x.get('after_planned_end')):
+    ax.axvspan(day(w['start']), min(day(w['end']), t_dan), ymin=0.06, ymax=0.41, color=P.CAT[2], alpha=0.35, lw=0, label='Danuri low-Sun season (|beta| >= 55 deg)' if k == 0 else None)
+    for (a, b) in (w['start_range'], w['end_range']):
+        if a != b:
+            ax.axvspan(day(a), day(b) + dt.timedelta(days=1), ymin=0.06, ymax=0.41, facecolor='none', edgecolor=P.CAT[2], hatch='////', lw=0)
+ax.axvspan(t_dan, dt.datetime(2029, 3, 1), ymin=0.06, ymax=0.41, color=P.TEXT2, alpha=0.12, lw=0, label='Danuri after its planned lunar impact (March 2028, KASA)')
 by_epoch = {}
+def id_list(sids):                                                           # 'S1, S2, S5, S7-S10'
+    n = sorted(int(s[1:]) for s in sids); runs, out = [[n[0]]], []
+    for x in n[1:]:
+        (runs[-1].append(x) if x == runs[-1][-1] + 1 else runs.append([x]))
+    for r in runs:
+        out += [f'S{r[0]}-S{r[-1]}'] if len(r) >= 3 else [f'S{x}' for x in r]
+    return ', '.join(out)
 for sid in order:
     by_epoch.setdefault(cards[sid]['epoch_utc'], []).append(sid)
 for k, (e, sids) in enumerate(by_epoch.items()):
     t = dt.datetime.strptime(e, '%Y-%m-%d %H:%M:%S')
     ax.axvline(t, color=P.CAT[7], lw=1, label='scenario impact times' if k == 0 else None)
-    ax.text(t, 0.97, ' ' + ', '.join(sorted(sids, key=lambda s: int(s[1:]))), rotation=90, fontsize=6, va='top', ha='left', color=P.CAT[7])
+    ax.text(t, 0.915, ' ' + id_list(sids), transform=ax.get_xaxis_transform(), fontsize=6.5, va='center', ha='left', color=P.CAT[7])   # label strip above the bands
 ax.axvline(dt.datetime(2027, 12, 31), color=P.TEXT2, lw=1.2, ls='--', label='LRO fuel statement "until 2027" (NASA, 2024); no approved end date found')
-ax.set_yticks([0.3, 0.75]); ax.set_yticklabels(['Danuri/KPLO', 'LRO']); ax.set_xlim(dt.datetime(2027, 3, 1), dt.datetime(2029, 3, 1))
+ax.set_ylim(0, 1); ax.set_yticks([0.235, 0.645]); ax.set_yticklabels(['Danuri/KPLO', 'LRO']); ax.set_xlim(dt.datetime(2027, 3, 1), dt.datetime(2029, 3, 1))
 ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2)); ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
 ax.legend(fontsize=7, loc='upper center', bbox_to_anchor=(0.5, -0.16), ncol=2)
-ax.set_title('Orbiter follow-up: approximate orbit-plane illumination seasons (extrapolated node; +-3 weeks is model spread, not a confidence interval;\n'
-             'a season does not guarantee a sunlit pass over a given target) and the scenario impact times', loc='left', fontsize=8.5)
-P.evidence_tag(fig, 'DERIVED (research/orbiters.md; raw node history not archived) - orbiter availability in 2028 is not assured')
+hs = seas['lro']['holdout_summary']
+ax.set_title(f"Orbiter follow-up: orbit-plane illumination seasons from tracking-based JPL Horizons elements (LRO to {seas['lro']['tracking_based_until_tdb']}, "
+             f"Danuri to {dan['tracking_based_until_tdb']}), extrapolated\n(LRO hold-out test: boundaries within {hs['central_fit_max_boundary_shift_days']:.0f} days over 1.5-2.5 years; "
+             "assumes no orbit manoeuvre; a season does not guarantee a sunlit pass over a target) and the scenario impact times", loc='left', fontsize=8.2)
+P.evidence_tag(fig, 'COMPUTED GEOMETRY from archived JPL Horizons elements; orbiter availability in 2028 is not assured')
 fig.tight_layout(); P.savefig(fig, 'fig_orbiter_windows')
 # ---- latency precedents
 lat = pd.read_csv(f'{root}/research/orbiter_latency.csv')

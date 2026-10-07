@@ -8,8 +8,6 @@
  "measured_until": "2026-09-24",
  "predicted_until": "2027-10-02",
  "beyond_table": "UT1-UTC held at the last tabulated value; polar motion = 50-year mean (astropy behaviour)",
- "ut1_utc_bound_beyond_table_s": 1.0,
- "rotation_bound_arcsec": 15.0,
  "epochs": {
   "2027-09-01": {
    "ut1_utc_s": -0.1563157,
@@ -29,5 +27,9 @@
    "pm_y_arcsec": 0.29,
    "status": "held beyond table"
   }
- }
+ },
+ "ut1_utc_held_s": -0.1478001,
+ "ut1_utc_bound_beyond_table_s": 1.0478001,
+ "rotation_bound_arcsec": 15.760066084109999,
+ "bound_note": "0.9 s + |held UT1-UTC|; Earth rotation 15.0411 arcsec per second of time"
 }

@@ -1,6 +1,6 @@
 months                            3     4     6     9     12   18
 delta cls                                                        
-0.6   A_turkiye_evening_public  0.58  0.81  1.00  1.00  1.00  1.0
+0.6   A_turkiye_evening_public  0.58  0.82  1.00  1.00  1.00  1.0
       B_global_science          1.00  1.00  1.00  1.00  1.00  1.0
       C_any_turkish             1.00  1.00  1.00  1.00  1.00  1.0
       P_plume_global            0.44  0.55  0.67  0.72  0.83  1.0
@@ -10,44 +10,60 @@ delta cls
       P_plume_global            0.63  0.78  0.99  0.99  1.00  1.0
                                 mean   min   50%   max
 delta cls                                             
-0.6   A_turkiye_evening_public  0.40  0.00  0.50  0.67
+0.6   A_turkiye_evening_public  0.41  0.00  0.51  0.67
       B_global_science          0.98  0.89  1.00  1.00
-      C_any_turkish             0.94  0.78  0.95  1.00
+      C_any_turkish             0.95  0.81  0.96  1.00
       P_plume_global            0.17  0.09  0.19  0.25
-2.5   A_turkiye_evening_public  0.42  0.00  0.53  0.70
+2.5   A_turkiye_evening_public  0.43  0.00  0.54  0.70
       B_global_science          0.99  0.92  1.00  1.00
-      C_any_turkish             0.96  0.81  0.97  1.00
+      C_any_turkish             0.97  0.82  0.98  1.00
       P_plume_global            0.24  0.14  0.27  0.33
-                         cls  delta    subset  mean_p30  d_mean_p30  d_p_first_3mo
-0   A_turkiye_evening_public    0.6       all     0.398       0.000          0.000
-1   A_turkiye_evening_public    0.6   nodes/2     0.404       0.006          0.010
-2   A_turkiye_evening_public    0.6  phases/2     0.397      -0.001         -0.017
-3   A_turkiye_evening_public    0.6    both/2     0.404       0.006         -0.010
-4   A_turkiye_evening_public    2.5       all     0.418       0.000          0.000
-5   A_turkiye_evening_public    2.5   nodes/2     0.421       0.003          0.010
-6   A_turkiye_evening_public    2.5  phases/2     0.417      -0.001         -0.010
-7   A_turkiye_evening_public    2.5    both/2     0.420       0.002         -0.003
-8           B_global_science    0.6       all     0.982       0.000          0.000
-9           B_global_science    0.6   nodes/2     0.984       0.002          0.000
-10          B_global_science    0.6  phases/2     0.981      -0.000          0.000
-11          B_global_science    0.6    both/2     0.984       0.002          0.000
-12          B_global_science    2.5       all     0.988       0.000          0.000
-13          B_global_science    2.5   nodes/2     0.987      -0.001          0.000
-14          B_global_science    2.5  phases/2     0.988      -0.000          0.000
-15          B_global_science    2.5    both/2     0.987      -0.001          0.000
-16             C_any_turkish    0.6       all     0.940       0.000          0.000
-17             C_any_turkish    0.6   nodes/2     0.945       0.005          0.000
-18             C_any_turkish    0.6  phases/2     0.942       0.002          0.000
-19             C_any_turkish    0.6    both/2     0.947       0.007          0.000
-20             C_any_turkish    2.5       all     0.960       0.000          0.000
-21             C_any_turkish    2.5   nodes/2     0.959      -0.001          0.000
-22             C_any_turkish    2.5  phases/2     0.963       0.002          0.000
-23             C_any_turkish    2.5    both/2     0.961       0.001          0.000
-24            P_plume_global    0.6       all     0.170       0.000          0.000
-25            P_plume_global    0.6   nodes/2     0.167      -0.003          0.000
-26            P_plume_global    0.6  phases/2     0.170       0.000          0.000
-27            P_plume_global    0.6    both/2     0.167      -0.003          0.000
-28            P_plume_global    2.5       all     0.239       0.000          0.000
-29            P_plume_global    2.5   nodes/2     0.236      -0.003          0.021
-30            P_plume_global    2.5  phases/2     0.238      -0.000          0.000
-31            P_plume_global    2.5    both/2     0.235      -0.003          0.021
+                         cls  delta       subset  mean_p30  d_mean_p30  d_p_first_3mo
+0   A_turkiye_evening_public    0.6          all     0.412       0.000          0.000
+1   A_turkiye_evening_public    0.6      nodes/2     0.419       0.006          0.012
+2   A_turkiye_evening_public    0.6     phases/2     0.410      -0.002         -0.016
+3   A_turkiye_evening_public    0.6       both/2     0.416       0.004         -0.005
+4   A_turkiye_evening_public    0.6  direction 1     0.412      -0.000         -0.002
+5   A_turkiye_evening_public    0.6  direction 2     0.412       0.000          0.002
+6   A_turkiye_evening_public    2.5          all     0.434       0.000          0.000
+7   A_turkiye_evening_public    2.5      nodes/2     0.436       0.002          0.012
+8   A_turkiye_evening_public    2.5     phases/2     0.432      -0.002         -0.012
+9   A_turkiye_evening_public    2.5       both/2     0.434      -0.001         -0.002
+10  A_turkiye_evening_public    2.5  direction 1     0.434      -0.000          0.002
+11  A_turkiye_evening_public    2.5  direction 2     0.434       0.000         -0.002
+12          B_global_science    0.6          all     0.982       0.000          0.000
+13          B_global_science    0.6      nodes/2     0.984       0.002          0.000
+14          B_global_science    0.6     phases/2     0.982       0.000          0.000
+15          B_global_science    0.6       both/2     0.985       0.003          0.000
+16          B_global_science    0.6  direction 1     0.982      -0.000          0.000
+17          B_global_science    0.6  direction 2     0.982       0.000          0.000
+18          B_global_science    2.5          all     0.988       0.000          0.000
+19          B_global_science    2.5      nodes/2     0.987      -0.001          0.000
+20          B_global_science    2.5     phases/2     0.988       0.000          0.000
+21          B_global_science    2.5       both/2     0.987      -0.001          0.000
+22          B_global_science    2.5  direction 1     0.988      -0.000          0.000
+23          B_global_science    2.5  direction 2     0.988       0.000          0.000
+24             C_any_turkish    0.6          all     0.946       0.000          0.000
+25             C_any_turkish    0.6      nodes/2     0.950       0.004          0.000
+26             C_any_turkish    0.6     phases/2     0.946       0.000          0.000
+27             C_any_turkish    0.6       both/2     0.950       0.004          0.000
+28             C_any_turkish    0.6  direction 1     0.945      -0.000          0.000
+29             C_any_turkish    0.6  direction 2     0.946       0.000          0.000
+30             C_any_turkish    2.5          all     0.965       0.000          0.000
+31             C_any_turkish    2.5      nodes/2     0.963      -0.002          0.000
+32             C_any_turkish    2.5     phases/2     0.965       0.000          0.000
+33             C_any_turkish    2.5       both/2     0.963      -0.002          0.000
+34             C_any_turkish    2.5  direction 1     0.965      -0.000          0.000
+35             C_any_turkish    2.5  direction 2     0.965       0.000          0.000
+36            P_plume_global    0.6          all     0.170       0.000          0.000
+37            P_plume_global    0.6      nodes/2     0.168      -0.003          0.000
+38            P_plume_global    0.6     phases/2     0.170       0.000          0.000
+39            P_plume_global    0.6       both/2     0.168      -0.003          0.000
+40            P_plume_global    0.6  direction 1     0.170      -0.000          0.000
+41            P_plume_global    0.6  direction 2     0.170       0.000          0.000
+42            P_plume_global    2.5          all     0.238       0.000          0.000
+43            P_plume_global    2.5      nodes/2     0.235      -0.003          0.023
+44            P_plume_global    2.5     phases/2     0.238       0.000          0.002
+45            P_plume_global    2.5       both/2     0.235      -0.003          0.026
+46            P_plume_global    2.5  direction 1     0.238       0.000          0.002
+47            P_plume_global    2.5  direction 2     0.238      -0.000         -0.002

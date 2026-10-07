@@ -7,6 +7,11 @@ import { groupedBars, calendarStrip } from '../charts.js';
 await initPage();
 const [SC, SITES, HEAT, FEAT, CAL] = await Promise.all([load('scenarios.json'), load('sites.json'), load('heat.json'), load('moon_features.json'), load('calendar.json')]);
 const scen = SC.scenarios; const siteById = Object.fromEntries(SITES.sites.map((s) => [s.id, s]));
+function mcVars() {                                   // simulation size from the data (re-audit WB-N03)
+  const lead = document.querySelector('[data-i18n="ex.odds_lead"]');
+  if (lead) { lead.dataset.i18nVars = JSON.stringify({ outer: fmt.num(SC.mc.n_outer), inner: fmt.num(SC.mc.n_inner), n: fmt.num(SC.mc.n_outer * SC.mc.n_inner) }); lead.textContent = t('ex.odds_lead', JSON.parse(lead.dataset.i18nVars)); }
+}
+mcVars();
 const css = getComputedStyle(document.documentElement); const C = (v) => css.getPropertyValue(v).trim();
 const SERIES = [{ key: 'A', color: C('--series-1') }, { key: 'B', color: C('--series-2') }, { key: 'C', color: C('--series-3') }];
 const METRICS = ['any', 'two', 'live', 'rapid'];
@@ -106,7 +111,7 @@ function details() {
   add('ex.d_flash', occulted(s) ? t('ex.v_flash_occ', pk) : t(s.geometry.sunlit ? 'ex.v_flash_sunlit' : 'ex.v_flash', pk));
   add('ex.d_witness', occulted(s) || !s.visual.observable ? t('ex.v_witness_occ') : t('ex.v_witness', { p: fmt.pct(s.visual.eyepiece.p, 1), pw: fmt.pct(s.visual.eyepiece.p_weather, 1) }));
   const pl = s.plume;
-  add('ex.d_plume', pl.code === 'cannot' ? t('ex.v_plume_cannot', { h: fmt.num(pl.h_km, pl.h_km < 10 ? 1 : 0) }) : pl.code === 'weak' ? t('ex.v_plume_weak', { snr: fmt.num(pl.snr_max, 2) })
+  add('ex.d_plume', pl.code === 'cannot' ? t('ex.v_plume_cannot', { h: fmt.num(pl.h_km, pl.h_km < 10 ? 1 : 0) }) : pl.code === 'weak' ? t('ex.v_plume_weak', { snr: fmt.num(pl.snr_max, 2), fine: fmt.num(pl.snr_fine, 1) })
     : pl.code === 'possible' ? t('ex.v_plume_possible', { snr: fmt.num(pl.snr_max, 1) }) : t('ex.v_plume_none'));
   add('ex.d_crater', t('ex.v_crater', { a: fmt.num(s.crater.vc[0]), b: fmt.num(s.crater.vc[1]), c: fmt.num(s.crater.ve[0]), d: fmt.num(s.crater.ve[1]) }));
   if (!occulted(s)) {
@@ -149,5 +154,5 @@ function calendar() {
 
 function update() { chips(); head(); views(); odds(); details(); }
 update(); calendar();
-onLangChange(() => { update(); calendar(); });
+onLangChange(() => { mcVars(); update(); calendar(); });
 window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (scen.find((s) => s.id === id)) { st.id = id; update(); } });

@@ -146,15 +146,37 @@ def background_e_per_pixel(inst: Instrument, bkg_sb, t_exp=None):
     t = inst.exposure_s if t_exp is None else t_exp
     return photons_from_mag(bkg_sb, inst.band, inst.area, inst.throughput, t) * inst.pixel_scale_arcsec ** 2
 
-def snr_from_counts(inst: Instrument, N_src_total, bkg_sb, t_exp=None):
-    """Signal-to-noise (aperture-sum estimate of a difference-image detection) for N_src_total source electrons
-    (all of the source light; AP_FRAC of it falls in the aperture)."""
-    t = inst.exposure_s if t_exp is None else t_exp
+def clipped_aperture_signal(inst: Instrument, N_src_total, B_pix):
+    """Source electrons recorded inside the photometric aperture by a linear detector whose PSF core saturates (re-audit
+    PH-N07). Gaussian PSF with peak-pixel fraction ppf: pixels whose source + background exceed the full well are
+    clipped. With P = N ppf and L = FW - B, a Gaussian PSF records (L / ppf)(1 + ln(P / L)) of its N electrons when
+    P > L (continuous approximation); the aperture keeps the fraction AP_FRAC of what is recorded. The recorded signal
+    therefore grows only logarithmically above saturation. Non-linearity below full well, blooming and digitisation are
+    not modelled."""
+    N = np.asarray(N_src_total, float); ppf = peak_pixel_fraction(inst)
+    L = np.maximum(inst.full_well_e - np.asarray(B_pix, float), 0.0)
+    P = N * ppf
+    with np.errstate(divide='ignore', invalid='ignore'):
+        rec = np.where(P > L, (L / ppf) * (1.0 + np.log(np.maximum(P, 1e-300) / np.maximum(L, 1e-300))), N)
+    return AP_FRAC * np.minimum(N, np.maximum(rec, 0.0))
+
+def noise_terms(inst: Instrument, S, B, t):
+    """(per-frame variance, shared variance) of an aperture sum S on a difference image: the frame's own source,
+    background, dark and read noise; the mean of n_ref reference frames adds (B + dark t + RN^2)/n_ref per pixel
+    (re-audit PH-N08: release 2.0 applied the factor to the background only) and the subtraction systematic adds
+    (sys_frac B n_pix)^2. The reference and systematic terms are common to all frames of one camera."""
     n_pix = aperture_pixels(inst)
+    pix = n_pix * (np.asarray(B, float) + inst.dark_e_s * t + inst.read_noise_e ** 2)
+    return np.asarray(S, float) + pix, pix / inst.n_ref + (inst.sys_frac * np.asarray(B, float) * n_pix) ** 2
+
+def snr_from_counts(inst: Instrument, N_src_total, bkg_sb, t_exp=None):
+    """Expected signal-to-noise (aperture-sum estimate of a difference-image detection) for N_src_total source
+    electrons (all of the source light; AP_FRAC of it falls in the aperture), with core saturation (clipped signal)."""
+    t = inst.exposure_s if t_exp is None else t_exp
     B = background_e_per_pixel(inst, bkg_sb, t)
-    S = np.asarray(N_src_total, float) * AP_FRAC
-    var = S + n_pix * (B * (1 + 1.0 / inst.n_ref) + inst.dark_e_s * t + inst.read_noise_e ** 2) + (inst.sys_frac * B * n_pix) ** 2
-    return S / np.sqrt(var)
+    S = clipped_aperture_signal(inst, N_src_total, B)
+    v_f, v_s = noise_terms(inst, S, B, t)
+    return S / np.sqrt(v_f + v_s)
 
 def frame_snr(inst: Instrument, src_mag_avg, bkg_sb, ap_frac=AP_FRAC):
     """SNR of a steady source of magnitude src_mag_avg over one exposure (returns snr, N_src_in_aperture, B_pix, n_pix)."""

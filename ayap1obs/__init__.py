@@ -5,4 +5,4 @@ IAU/NAIF pck00011 lunar orientation series as a cross-check, astropy for Earth o
 astropy-iers-data; beyond the table UT1-UTC is held, which can be wrong by up to ~1 s, i.e. ~15 arcsec of Earth
 rotation, for 2028 epochs; see ephem.iers_provenance), and a Moon radius of 1737.4 km.
 """
-__version__ = "2.0.0"
+__version__ = "2.1.0"

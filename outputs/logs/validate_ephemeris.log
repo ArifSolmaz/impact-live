@@ -53,7 +53,12 @@ PASS LDEM bump at lat +20, lon +30 height 2.980 km (expected 3.0 km)
 PASS LDEM bump at lat -40, lon -160 height 4.972 km (expected 5.0 km)
 PASS LDEM no bump 180 deg away height at lon -150: 0.000 km
 PASS LDEM latitude orientation height at lat -20, lon 30: 0.000 km
-PASS LDEM rejects unsupported projection only global 0-360 / -90..90 products are supported (got W -180.0, E 360.0, lat -
+PASS LDEM rejects label: unsupported projection type unsupported or missing MAP_PROJECTION_TYPE 'POLAR STEREOGRAPHIC' (supported: ('SIMPLE CYLI
+PASS LDEM rejects label: missing line registration offset LINE_PROJECTION_OFFSET = None (expected 359.5: pixel-centre registration of a global produ
+PASS LDEM rejects label: shifted sample registration SAMPLE_PROJECTION_OFFSET = 720.0 (expected 719.5: pixel-centre registration of a global pr
+PASS LDEM rejects label: west-positive longitudes POSITIVE_LONGITUDE_DIRECTION must be EAST
+PASS LDEM rejects label: non-global extent only global 0-360 / -90..90 products are supported (got W -180.0, E 360.0, lat -90.0..90.0
+PASS LDEM rejects label: other body frame COORDINATE_SYSTEM_NAME must be the mean-Earth frame (e.g. "MEAN EARTH/POLAR AXIS OF DE421"
 PASS flat DEM = sphere (emission 23.4) terrain 0.00 km, sphere 0.00 km
 PASS sphere vs R(sec-1) (emission 23.4) 0.00 vs 0.00 km
 PASS flat DEM = sphere (emission 77.1) terrain 0.00 km, sphere 0.00 km
@@ -69,4 +74,6 @@ PASS sphere vs R(sec-1) (emission 132.0) 602.77 vs 600.26 km
 PASS flat DEM = sphere (emission 156.8) terrain 2699.20 km, sphere 2699.20 km
 PASS sphere vs R(sec-1) (emission 156.8) 2699.20 vs 2670.13 km
 PASS flat-sphere horizon = first-sample curvature dip -0.00824 deg
+PASS 2-km ridge at the tangent raises the clearance (geocentre) sphere 75.32 km, with ridge 77.57 km; tangent near -0.98 N / 83.45 E
+PASS 2-km ridge at the tangent raises the clearance (TUG) sphere 80.45 km, with ridge 82.70 km; tangent near -0.94 N / 82.92 E
 ALL PASSED

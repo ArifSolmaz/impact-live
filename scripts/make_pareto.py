@@ -4,11 +4,14 @@
   intervals (from the spread of the outer-draw means) and the 5-95 % range over the epistemic outer draws, and ILLUSTRATIVE relative
   resource weights (dimensionless constants per instrument template, summed over all stations a strategy recruits and,
   separately, over those available at the epoch; no hours, staffing, setup or money are modelled).
-* strategy_nondominance.csv: joint nondominance WITHIN each scenario (strategies compared on the same simulated events)
+* strategy_nondominance.csv: nondominance WITHIN each scenario (strategies compared on the same simulated events)
   across four objectives: maximise P(two independent sites), P(live), P(Turkish detection); minimise the recruited
-  weight. A strategy is dominated if another is at least as good in every objective and better in one, where 'better'
-  in a probability requires the paired 95 % interval of the difference to exclude zero. Strategies are descriptive
-  options, not optimisation results.
+  weight. Two rules (re-audit ST-12: release 2.0 treated 'not significantly worse' as 'not worse'):
+    descriptive Pareto front - on the point estimates, b dominates a if b >= a in every objective and > in one;
+    conservative dominance - b dominates a only if the simultaneous (Bonferroni over the three probabilities, one-sided
+      95 %) lower bounds of every paired difference b - a are >= 0, with one lower bound > 0 or a lower weight, and
+      b's weight is not higher. Failing to show a difference is never read as equivalence.
+  Strategies are descriptive options, not optimisation results.
 * fig_pareto: outcome probabilities by scenario and strategy with the outer 5-95 % ranges; fig_sensitivity: flash-efficiency,
   season, temperature-prior and field-of-view sensitivities."""
 import sys, os, json, glob, numpy as np, pandas as pd, yaml
@@ -42,29 +45,35 @@ for sid in order:
 df = pd.DataFrame(rows); df.to_csv(f'{root}/outputs/tables/strategy_objectives.csv', index=False)
 # ---- joint nondominance within each scenario (wide|broad), significance from the paired differences
 nd_rows = []
+from scipy.stats import norm as _norm
+Z_SIM = float(_norm.ppf(1 - 0.05 / 3))                                 # one-sided, Bonferroni over three probabilities
+OBJ = ('two_indep', 'live', 'turkish')
 for sid in order:
     m = cards[sid]['mc']['wide|broad']; pr = m['paired']
-    def better(o, a, b):
-        """True if strategy a is significantly better than b in outcome o (paired 95 % CI excludes zero)."""
-        k1, k2 = f'{o}:{a}-{b}', f'{o}:{b}-{a}'
-        if k1 in pr: return pr[k1]['ci95'][0] > 0
-        if k2 in pr: return pr[k2]['ci95'][1] < 0
-        return False
-    def not_worse(o, a, b):
-        return not better(o, b, a)
+    def diff(o, b, a):
+        """paired difference b - a and its Monte Carlo standard error"""
+        k1, k2 = f'{o}:{b}-{a}', f'{o}:{a}-{b}'
+        if k1 in pr: return pr[k1]['diff'], pr[k1]['mc_se']
+        return -pr[k2]['diff'], pr[k2]['mc_se']
     sub = df[(df.scenario == sid) & (df.prior == 'wide|broad')].set_index('strategy')
     for a in STRATS:
-        dominated_by = []
+        dom_d, dom_c = [], []
         for b in STRATS:
             if a == b:
                 continue
-            objs_ok = all(not_worse(o, b, a) for o in ('two_indep', 'live', 'turkish')) and sub.loc[b, 'weight_recruited'] <= sub.loc[a, 'weight_recruited']
-            strictly = any(better(o, b, a) for o in ('two_indep', 'live', 'turkish')) or sub.loc[b, 'weight_recruited'] < sub.loc[a, 'weight_recruited']
-            if objs_ok and strictly:
-                dominated_by.append(b)
-        nd_rows.append(dict(scenario=sid, strategy=a, nondominated=not dominated_by, dominated_by=';'.join(dominated_by)))
+            wa, wb = sub.loc[a, 'weight_recruited'], sub.loc[b, 'weight_recruited']
+            d = {o: diff(o, b, a) for o in OBJ}
+            # descriptive Pareto (point estimates)
+            if wb <= wa and all(d[o][0] >= 0 for o in OBJ) and (any(d[o][0] > 0 for o in OBJ) or wb < wa):
+                dom_d.append(b)
+            # conservative: simultaneous lower bounds
+            lb = {o: d[o][0] - Z_SIM * d[o][1] for o in OBJ}
+            if wb <= wa and all(lb[o] >= 0 for o in OBJ) and (any(lb[o] > 0 for o in OBJ) or wb < wa):
+                dom_c.append(b)
+        nd_rows.append(dict(scenario=sid, strategy=a, nondominated=not dom_d, dominated_by=';'.join(dom_d),
+                            nondominated_conservative=not dom_c, dominated_by_conservative=';'.join(dom_c)))
 nd = pd.DataFrame(nd_rows); nd.to_csv(f'{root}/outputs/tables/strategy_nondominance.csv', index=False)
-print(nd.pivot_table(index='scenario', columns='strategy', values='nondominated', aggfunc='first').reindex(order).to_string())
+print(nd.pivot_table(index='scenario', columns='strategy', values=['nondominated', 'nondominated_conservative'], aggfunc='first').reindex(order).to_string())
 # ---- figure: outcome probabilities by scenario
 col = {'A_turkiye_priority': P.CAT[1], 'B_global_science': P.CAT[0], 'C_public_participation': P.CAT[2]}
 w = df[df.prior == 'wide|broad']
@@ -80,8 +89,8 @@ axs[0].legend(fontsize=7, ncol=3, loc='upper right')
 axs[2].set_xticks(xx); axs[2].set_xticklabels([f"{s}\n{cards[s]['cls']}" for s in order], fontsize=7)
 hw = max(1.96 * cards[s_]['mc']['wide|broad']['strategies'][st_][o_]['mc_se'] for s_ in order for st_ in STRATS for o_ in ('two_indep', 'live', 'turkish')
          if cards[s_]['mc']['wide|broad']['strategies'][st_][o_]['mc_se'] is not None)
-fig.suptitle('Strategy outcomes by hypothetical scenario (wide eta prior; conditional on the terminal state; error bars: 5-95 % range of the conditional\n'
-             f'probability over the weather, readiness, calibration and background draws; 95 % Monte Carlo intervals of the bar heights are within +/-{np.ceil(hw * 100) / 100:.2f})', fontsize=8.5)
+fig.suptitle('Strategy outcomes by hypothetical scenario (wide eta prior; conditional on the terminal state; error bars: 5-95 % range of the conditional probability\n'
+             f'over the outer assumption draws (weather, readiness, throughput, background, terrain), finite-sample noise removed; Monte Carlo 95 % intervals within +/-{np.ceil(hw * 100) / 100:.2f})', fontsize=8.5)
 P.evidence_tag(fig, 'MODEL (Monte Carlo) on HYPOTHETICAL SCENARIOS - strategies are descriptive options, not optimised networks')
 fig.tight_layout(rect=(0, 0, 1, 0.95)); P.savefig(fig, 'fig_pareto')
 # ---- sensitivity figure

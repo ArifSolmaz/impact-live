@@ -99,6 +99,9 @@
    "case": "GRAIL (each ~130 kg, 1.6 km/s, ~2 deg)",
    "observed_m": 5.0,
    "observed_is_upper_limit": false,
+   "angle_assumed": false,
+   "observation_source": "LROC images/596",
+   "kind": "consistency check",
    "vertical-component": [
     1.412507804997352,
     4.094068364275834
@@ -111,9 +114,12 @@
    "vertical-equivalent_consistent": false
   },
   {
-   "case": "LADEE (248 kg, 1.699 km/s, low angle: 1-10 deg assumed)",
+   "case": "LADEE (248 kg, 1.699 km/s; angle not published, 1-10 deg assumed)",
    "observed_m": 3.0,
    "observed_is_upper_limit": true,
+   "angle_assumed": true,
+   "observation_source": "LROC images/822",
+   "kind": "assumed-angle sensitivity and censored-size consistency check",
    "vertical-component": [
     1.5199257940985487,
     8.233133558602296
@@ -129,6 +135,9 @@
    "case": "Falcon 9 stage (3.9-4.9 t, 2.43 km/s, ~31 deg)",
    "observed_m": 18.0,
    "observed_is_upper_limit": false,
+   "angle_assumed": false,
+   "observation_source": "LROC images/1499; NASA",
+   "kind": "consistency check",
    "vertical-component": [
     16.180960616266614,
     37.98712894581687
@@ -139,6 +148,24 @@
     46.557525844118764
    ],
    "vertical-equivalent_consistent": false
+  },
+  {
+   "case": "LCROSS Centaur (2271.6 kg, 2.507 km/s, 85.9 deg)",
+   "observed_m": 22.0,
+   "observed_is_upper_limit": false,
+   "angle_assumed": false,
+   "observation_source": "Fassett et al. 2024 (ShadowCam, 22 m; earlier indirect estimates 25-30 m, NASA ~20 m)",
+   "kind": "near-vertical scaling check (the oblique rules coincide)",
+   "vertical-component": [
+    18.48434421992611,
+    36.42187356752212
+   ],
+   "vertical-component_consistent": true,
+   "vertical-equivalent": [
+    18.52929661635569,
+    36.428165862010125
+   ],
+   "vertical-equivalent_consistent": true
   }
  ],
  "ballistic_envelope_m": {
@@ -158,5 +185,5 @@
    30.350364956554184
   ]
  },
- "note": "LCROSS: like-for-like illuminated ejecta mass at 20 s (Strycker et al. 2013 observed 2240 +/- 400 kg); crater: out-of-sample consistency of the rim-diameter envelopes with LROC-observed craters (no parameter fitted)"
+ "note": "LCROSS plume: like-for-like illuminated ejecta mass at 20 s (Strycker et al. 2013 observed 2240 +/- 400 kg), a calibration of the bulk density rather than a validation; craters: qualitative consistency of broad rim-diameter envelopes (no parameter fitted) with observed craters (LROC; LCROSS 22 m from ShadowCam, Fassett et al. 2024); LADEE has no published angle (assumed-angle, censored-size check) and LCROSS is near-vertical (tests the scaling, not the oblique rules); not evidence that favours either rule"
 }

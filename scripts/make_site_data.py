@@ -60,7 +60,7 @@ dump('sites.json', dict(note='Configured observing sites of the study; none has 
 # ------------------------------------------------------------------ scenarios
 NAMES = {
     'S1': ('Uygun: karanlık mare, Türkiye’de bahar akşamı', 'Favourable: dark mare, Türkiye spring evening'),
-    'S2': ('Toz bulutu için uygun: gün doğumu sınırının 3° ötesi', 'Favourable for a plume: 3° beyond the sunrise terminator'),
+    'S2': ('Terminatör toz bulutu testi: gün doğumu sınırının 3° ötesi', 'Terminator plume test: 3° beyond the sunrise terminator'),
     'S3': ('Ara: yaz sabahı, küçülen Ay, doğu yakın yüz', 'Intermediate: summer morning, waning Moon, eastern near side'),
     'S4': ('Ara: yaz akşamı, alçak Ay, az gözlemevi', 'Intermediate: summer evening, low Moon, few sites'),
     'S5': ('Elverişsiz: güneşli bölge', 'Unfavourable: sunlit terrain'),
@@ -116,8 +116,13 @@ def plume_summary(c):
     det = [r for r in cases if r['status'].startswith('within')]
     if not det:
         return dict(code='cannot', snr_max=None, h_km=r(c['plume']['height_needed_km'], 1))
-    snr = max(max(o['sys0.001']['snr_max'] for o in rr['observers'].values()) for rr in det)
-    return dict(code='possible' if snr >= 5 else 'weak', snr_max=r(snr, 1), n_within=len(det), n_cases=len(cases), h_km=r(c['plume']['height_needed_km'], 1))
+    # the paper's observer: a 1-m telescope at TUG (extincted); the idealised geocentre observer is not shown
+    obs_of = lambda rr: [rr['observers']['TUG']] if 'TUG' in rr['observers'] else list(rr['observers'].values())
+    snr = max(max(o['sys0.001']['snr_max'] for o in obs_of(rr)) for rr in det)
+    fine = max(max(o['grains_sys0.001']['fine-rich'] for o in obs_of(rr)) for rr in det)
+    opt = max(max(o['optimistic_corner_sys0.001']['snr_max'] for o in obs_of(rr)) for rr in det)
+    return dict(code='possible' if snr >= 5 else 'weak', snr_max=r(snr, 1), snr_fine=r(fine, 1), snr_optimistic=r(opt, 1), n_within=len(det), n_cases=len(cases),
+                h_km=r(c['plume']['height_needed_km'], 1), defaults='regolith grains, p Phi 0.03, kappa 0.2, subtraction systematic 1e-3')
 cards = {os.path.basename(f)[:-5]: json.load(open(f)) for f in glob.glob(f'{root}/outputs/scenarios/S*.json')}
 order = [s['id'] for s in cfg['scenarios'] if s['id'] in cards]
 scen = []
@@ -165,8 +170,8 @@ for sid in order:
         terrain=[r(x, 2) for x in c['terrain']['p_terrain_range']],
         reach=dict(p06=r(c['reachability']['p_random_polar_plane_within']['0.6'], 4), p25=r(c['reachability']['p_random_polar_plane_within']['2.5'], 4),
                    node=r(c['reachability']['required_node_mod180_deg'], 1), period_min=r(c['reachability']['orbital_period_min'], 0)),
-        lro=dict(p_operational=lro['p_operational_assumed'], season=(lro['low_sun_season_approx'] or {}).get('inside'),
-                 days_until=(lro['low_sun_season_approx'] or {}).get('days_until')),
+        lro=dict(p_operational=lro['p_operational_assumed'], season=(lro['low_sun_season'] or {}).get('inside'),
+                 days_until=(lro['low_sun_season'] or {}).get('days_until')),
     ))
 po = pd.read_csv(f'{root}/outputs/tables/opportunity_probability_vs_duration.csv')
 popp = lambda d, cls, N: float(po[(po.delta == d) & (po.cls == cls) & (po.months == N)].p_at_least_one.values[0])
@@ -175,7 +180,8 @@ w30 = lambda d, cls: float(wp[(wp.delta == d) & (wp.cls == cls) & (wp.W_days == 
 opportunity = dict(A_3=r(popp(0.6, 'A_turkiye_evening_public', 3), 2), A_6=r(popp(0.6, 'A_turkiye_evening_public', 6), 2),
                    P_3=r(popp(0.6, 'P_plume_global', 3), 2), P_3_pc=r(popp(2.5, 'P_plume_global', 3), 2),
                    A_w30=r(w30(0.6, 'A_turkiye_evening_public'), 2), B_w30=r(w30(0.6, 'B_global_science'), 2), P_w30=r(w30(0.6, 'P_plume_global'), 2))
-dump('scenarios.json', dict(opportunity=opportunity, note='HYPOTHETICAL test points of the study - not official AYAP-1 targets. Probabilities are conditional on the spacecraft reaching the stated terminal state; ranges are the 5-95 % spread over weather, readiness, calibration and background draws.',
+MC_META = dict(n_outer=int(cards['S1']['mc_settings']['n_outer']), n_inner=int(cards['S1']['mc_settings']['n_inner']))
+dump('scenarios.json', dict(mc=MC_META, opportunity=opportunity, note='HYPOTHETICAL test points of the study - not official AYAP-1 targets. Probabilities are conditional on the spacecraft reaching the stated terminal state; ranges are the 5-95 % spread of the conditional probability over the assumption draws (weather, readiness, station calibration, backgrounds, subtraction systematic, terrain), with the inner Monte Carlo noise removed by a beta-binomial fit.',
                             strategies=dict(A=dict(tr='Yalnız Türkiye', en='Türkiye only'), B=dict(tr='Küresel bilim ağı', en='Global science network'),
                                             C=dict(tr='Halka açık ağ', en='Public participation network')),
                             scenarios=scen))
@@ -207,51 +213,78 @@ lad_pub, pkV_l, fp_l, det_pub = MC.ladder_probabilities(lad_inst[:2], 'wide', 'b
                                                         g_ist['dist_sunlit_arcmin'], g_ist['sun_alt'], float(X), 100.0, return_det=True)
 lad_pro, pkV_p, fp_p, det_pro = MC.ladder_probabilities(lad_inst[2:], 'wide', 'broad', n, 1, tuple(phys['mass_kg']), phys['v_km_s'], g_ist['range_km'] * 1e3, ILLUM_PUB,
                                                         g_ist['dist_sunlit_arcmin'], -18.0, float(X), 2500.0, return_det=True)
+N_MIN = 50                                          # bins with fewer prior draws are not shown (re-audit WB-N02)
+def pav_decreasing(y, w):
+    """Weighted isotonic (non-increasing) regression by pool-adjacent-violators."""
+    blocks = []
+    for yi, wi in zip(y, w):
+        blocks.append([yi * wi, wi, 1])
+        while len(blocks) > 1 and blocks[-2][0] / blocks[-2][1] < blocks[-1][0] / blocks[-1][1]:
+            a = blocks.pop(); blocks[-1][0] += a[0]; blocks[-1][1] += a[1]; blocks[-1][2] += a[2]
+    out = []
+    for sw, ww, nn in blocks:
+        out += [sw / ww] * nn
+    return np.array(out)
 def curve(pkv, d):
-    """P(detect | peak V) on the histogram bins (monotone, NaN-free)."""
-    idx = np.digitize(pkv, edges) - 1; out = np.full(len(edges) - 1, np.nan)
-    for i in range(len(out)):
-        sel = idx == i
-        if sel.sum() >= 20: out[i] = float(np.mean(d[sel]))
-    ok = np.isfinite(out)
-    out = np.interp(np.arange(len(out)), np.where(ok)[0], out[ok])
-    return np.maximum.accumulate(out[::-1])[::-1].round(4)
+    """P(detect | peak V) per histogram bin: only bins with >= N_MIN prior draws (others null), weighted isotonic fit
+    (brighter is never less detectable); no padding or extrapolation outside the sampled range."""
+    nb = len(edges) - 1; idx = np.digitize(pkv, edges) - 1; ok_i = (idx >= 0) & (idx < nb)
+    n = np.bincount(idx[ok_i], minlength=nb); sd = np.bincount(idx[ok_i], weights=d[ok_i], minlength=nb)
+    pop = np.where(n >= N_MIN)[0]
+    out = [None] * nb
+    if len(pop):
+        fit = pav_decreasing(sd[pop] / n[pop], n[pop])
+        for i, v in zip(pop, fit):
+            out[int(i)] = round(float(v), 4)
+    return out, n
 def half_point(cv):
-    """Peak V at which the detection chance falls to half its maximum; None if it never rises above zero, or if it is
-    still above half at the faint end of the histogram range (flagged separately as 'beyond')."""
-    mx = cv.max()
+    """Peak V where the detection chance falls to half its maximum within the sampled range (linear interpolation
+    between bins); None if the chance is never measurably above zero or if it is still above half at the faintest
+    sampled bin (flagged 'beyond')."""
+    vals = [(i, v) for i, v in enumerate(cv) if v is not None]
+    if not vals: return None
+    mx = max(v for _, v in vals)
     if mx <= 0: return None
-    k = np.where(cv >= 0.5 * mx)[0].max(); mid = 0.5 * (edges[1:] + edges[:-1])
-    return None if k == len(cv) - 1 else r(mid[k], 2)
+    mid = 0.5 * (edges[1:] + edges[:-1])
+    above = [k for k, (i, v) in enumerate(vals) if v >= 0.5 * mx]
+    k = max(above)
+    if k == len(vals) - 1: return None
+    (i0, v0), (i1, v1) = vals[k], vals[k + 1]
+    return r(mid[i0] + (mid[i1] - mid[i0]) * (v0 - 0.5 * mx) / max(v0 - v1, 1e-9), 2)
 def beyond_range(cv):
-    mx = cv.max()
-    return bool(mx > 0 and cv[-1] >= 0.5 * mx)
+    vals = [v for v in cv if v is not None]
+    return bool(vals and max(vals) > 0 and vals[-1] >= 0.5 * max(vals))
+def sampled_range(cv):
+    pop = [i for i, v in enumerate(cv) if v is not None]
+    return [r(edges[pop[0]], 2), r(edges[pop[-1] + 1], 2)] if pop else None
 LABELS = {'phone': ('Telefon kamerası (tek başına)', 'Phone camera (on its own)'), 'naked': ('Çıplak göz', 'Naked eye'), 'binoculars': ('Dürbün (7×50)', 'Binoculars (7×50)'),
           'phone_scope': ('Telefon + 20 cm teleskop', 'Phone + 20 cm telescope'), 'eyepiece': ('20 cm teleskop, göz ile', '20 cm telescope, by eye'),
           'amateur': ('Amatör teleskop + hızlı kamera', 'Amateur telescope + fast camera'), 'neliota': ('Ay çarpma izleme sistemi (1,2 m)', 'Lunar-impact monitoring system (1.2 m)'),
           'fast_large': ('2–4 m teleskop, hızlı kamera', '2–4 m telescope, fast camera'), 'nir': ('2–4 m teleskop, yakın kızılötesi', '2–4 m telescope, near-infrared')}
 methods = []
+pmax_of = lambda cv: r(max([v for v in cv if v is not None] or [0.0]), 3)
 for key in ('naked', 'binoculars', 'eyepiece'):
-    cv = curve(pk['wide'], pdet[key])
-    methods.append(dict(key=key, label=dict(tr=LABELS[key][0], en=LABELS[key][1]), kind='public', band='V', p=r(pdet[key].mean(), 4), half=half_point(cv), beyond=beyond_range(cv), pmax=r(cv.max(), 3), curve=cv.tolist(),
-                        basis='visual'))
+    cv, nn = curve(pk['wide'], pdet[key])
+    methods.append(dict(key=key, label=dict(tr=LABELS[key][0], en=LABELS[key][1]), kind='public', band='V', p=r(pdet[key].mean(), 4), half=half_point(cv), beyond=beyond_range(cv),
+                        pmax=pmax_of(cv), sampled=sampled_range(cv), curve=cv, n_draws=nn.tolist(), basis='visual'))
 for lad, det, pkv in ((lad_pub, det_pub, pkV_l), (lad_pro, det_pro, pkV_p)):
     for key, o in lad.items():
-        cv = curve(pkv, det[key].astype(float))
+        cv, nn = curve(pkv, det[key].astype(float))
         methods.append(dict(key=key, label=dict(tr=LABELS[key][0], en=LABELS[key][1]), kind='public' if key.startswith('phone') else 'instrument', band=o['band'], p=r(o['p'], 4),
-                            half=half_point(cv), beyond=beyond_range(cv), pmax=r(cv.max(), 3), curve=cv.tolist(), basis='camera'))
+                            half=half_point(cv), beyond=beyond_range(cv), pmax=pmax_of(cv), sampled=sampled_range(cv), curve=cv, n_draws=nn.tolist(), basis='camera'))
 inj = json.load(open(f'{root}/outputs/tables/injection_recovery.json'))
 dump('magnitudes.json', dict(
     note=('Prior-predictive peak brightness of the flash (ballistic case, 1.6-2.4 t at 1.68 km/s; broad temperature prior; radiated energy <= 10 % of the kinetic energy) as an '
           'unocculted source-equivalent V magnitude at 380 000 km (MODEL). The ladder gives the probability of detection over that sample at the S1 geometry seen from Istanbul '
           f'(Moon {g_ist["moon_alt"]:.0f} deg high, {100 * ILLUM_PUB:.0f} % lit): eye methods use the conditional visual-threshold model (first 0.1 s, field factor 1.4-24, attention 0.5); cameras use exposure-integrated '
-          'counts for randomly phased frames (SNR 8; phones in their broad band with the declared processing penalty). half = peak V at which the chance falls to half its maximum.'),
+          'counts for randomly phased frames, noise applied before the best frame is chosen (SNR 8; phones in their broad band with the declared processing penalty). '
+          f'Curves: bins with at least {N_MIN} prior draws only (null elsewhere: not sampled), weighted isotonic fit; half = peak V at which the chance falls to half its maximum within the sampled range.'),
     bins=dict(start=-2.0, step=0.25, count=len(edges) - 1),
     hist=dict(wide=hist(pk['wide']), vs=hist(pk['v-scaled'])),
     pct={k: dict(p5=r(np.percentile(v, 5), 2), p50=r(np.percentile(v, 50), 2), p95=r(np.percentile(v, 95), 2)) for k, v in (('wide', pk['wide']), ('vs', pk['v-scaled']))},
     lab_trend_V=r(c1['lab_trend']['V_peak'], 0), methods=methods,
     injection={k: dict(label=v['label'], band=v['bands'][0], m50=r(v['fits']['cam0']['m50'], 2), m50_ci=[r(x, 2) for x in v['fits']['cam0']['m50_ci95']],
-                       m90=r(v['fits']['cam0']['m90'], 2), fa_per_frame=r(v['false_alarms']['candidate_rate_per_frame'][0]['rate'], 4), ntrial=v['ntrial'])
+                       m90=r(v['fits']['cam0']['m90'], 2), fa_per_box_frame=r(v['false_alarms']['candidate_rate_per_box_frame'][0]['rate'], 4), ntrial=v['ntrial'])
                for k, v in inj.items() if not k.startswith('_')},
 ))
 
@@ -273,7 +306,7 @@ nz = lambda v: None if (v is None or (isinstance(v, float) and not np.isfinite(v
 dump('timeline.json', dict(note='Launch-to-impact families (MODELLING CHOICES spanning the published launch statements; nominal phase durations).',
                            families=[dict(launch=row.launch, launch_date=row.launch_date, loi=row.loi_date, science_start=row.science_start, months=int(row.science_months),
                                           impact_date=row.impact_date, n_sessions=nz(row.n_evening_sessions_pm15d), best_session=str(row.best_session_istanbul),
-                                          lro_season=bool(row.in_LRO_low_sun_season_approx), p30_A=nz(r(getattr(row, 'p30_A', None), 2)), p30_B=nz(r(getattr(row, 'p30_B', None), 2)))
+                                          lro_season=bool(row.in_LRO_low_sun_season), p30_A=nz(r(getattr(row, 'p30_A', None), 2)), p30_B=nz(r(getattr(row, 'p30_B', None), 2)))
                                      for row in tf.itertuples()]))
 
 # ------------------------------------------------------------------ world map (Natural Earth, simplified)

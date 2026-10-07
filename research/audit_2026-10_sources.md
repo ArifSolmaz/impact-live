@@ -10,6 +10,16 @@ reached from either the cloud environment or the linked computer.
 Status labels: **[V]** read on the page; **[V-rep]** read in a later paper that reproduces the original;
 **[D]** derived by us from verified values; **[U]** not verified.
 
+**Quotation ledger (release 2.1, re-audit ST-26).** `research/quotations.csv` lists every quotation from an external
+source that the manuscript, these notes or the code reuse: the text as printed, the original wording (with a SHA-256
+of it), the source, publication and access dates, how it was retrieved, whether it is a direct quotation, a
+shortened quotation or our translation, and any correction made in release 2.1. `python3 scripts/check_quotations.py`
+(`make quotes`) confirms that each printed text occurs where the ledger says it is used. Raw page snapshots are not
+archived (the page-reading tool returns processed text, not the original bytes), so the ledger fixes what was
+extracted and where it is used, but cannot by itself prove the source wording; rows marked 'V-tool' should be
+spot-checked against the source before print. Statements that nothing was found describe the stated search, not
+proof that no such study exists.
+
 ## Ejecta and crater scaling
 
 - **Housen & Holsapple (2011), Icarus 211, 856–875, doi:10.1016/j.icarus.2010.09.017.** Equations reproduced as

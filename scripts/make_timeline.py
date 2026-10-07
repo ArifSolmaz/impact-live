@@ -1,8 +1,8 @@
 """Launch-to-impact timeline families (modelling choices spanning the published 'first months' / 'first half' / 'Q2 2027'
 statements, plus slips) and, for each, the Turkish evening observing sessions near the end of the science phase and the
-trajectory-level opportunity probabilities for terminal windows opening then (outputs/tables/timeline_window_probability.csv).
+screening-opportunity probabilities for terminal windows opening then (outputs/tables/timeline_window_probability.csv).
 Writes outputs/tables/timeline_families.csv and fig_timeline_families."""
-import sys, os, numpy as np, yaml, pandas as pd, datetime as dt
+import sys, os, json, numpy as np, yaml, pandas as pd, datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import warnings; warnings.filterwarnings('ignore')
 import matplotlib.pyplot as plt, matplotlib.dates as mdates
@@ -17,7 +17,7 @@ cal = pd.read_csv(f'{root}/outputs/tables/observing_windows_calendar.csv')
 cal['start'] = pd.to_datetime(cal.start_utc.str.replace('Z', ''), format='%Y-%m-%dT%H:%M')
 ev = cal[cal.session.str.startswith('evening') & cal.illum.between(0.12, 0.5) & (cal.moon_alt_tug > 25)]
 twp = pd.read_csv(f'{root}/outputs/tables/timeline_window_probability.csv')
-lro_low = orb['lro']['illumination_seasons_approx']['low_sun']
+lro_low = [(w['start'], w['end']) for w in json.load(open(f'{root}/outputs/tables/orbiter_seasons.json'))['lro']['low_sun']]   # computed (make_orbiter_seasons.py)
 rows = []
 for L in tl['launch_families']:
     d0 = dt.datetime.strptime(L['date'], '%Y-%m-%d')
@@ -34,7 +34,7 @@ for L in tl['launch_families']:
                        impact_date=str(t_imp.date()), impact_hour_note='date only; the hour is set by the orbital pass',
                        n_evening_sessions_pm15d=(len(w) if inside else None),
                        best_session_istanbul=(best.best_istanbul if best is not None else ('outside the computed domain' if not inside else 'none (low evening crescent)')),
-                       in_LRO_low_sun_season_approx=lro)
+                       in_LRO_low_sun_season=lro)
             if key == 'nominal':
                 tw = twp[(twp.launch == L['id']) & (twp.science_months == S) & (twp.family_set == 'main') & (twp.delta == 0.6)]
                 for _, r in tw.iterrows():

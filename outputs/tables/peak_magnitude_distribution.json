@@ -1,23 +1,23 @@
 {
  "peakV_wide": {
-  "p5": 7.5121130284508455,
-  "p50": 12.01927007412731,
-  "p95": 16.35363264695391,
-  "eye_V_p50": 12.806422981277091,
-  "rejected_fraction": 0.02075989032510772,
+  "p5": 7.512003322117277,
+  "p50": 12.021478397329938,
+  "p95": 16.356625105792173,
+  "eye_V_p50": 12.80919166693111,
+  "rejected_fraction": 0.02083180338302615,
   "p_brighter_than_none_median_threshold": 0.0,
   "p_brighter_than_binoculars_median_threshold": 7.5e-05,
-  "p_brighter_than_telescope20cm_median_threshold": 0.25
+  "p_brighter_than_telescope20cm_median_threshold": 0.24995
  },
  "peakV_v-scaled": {
-  "p5": 6.8976059550981965,
-  "p50": 10.063855949402967,
-  "p95": 13.447412884305939,
-  "eye_V_p50": 10.83815552932169,
-  "rejected_fraction": 0.06463380413431863,
+  "p5": 6.897333309811245,
+  "p50": 10.064405883227199,
+  "p95": 13.451120539226585,
+  "eye_V_p50": 10.839510323873853,
+  "rejected_fraction": 0.06469941777538757,
   "p_brighter_than_none_median_threshold": 0.0,
   "p_brighter_than_binoculars_median_threshold": 0.01135,
-  "p_brighter_than_telescope20cm_median_threshold": 0.4454
+  "p_brighter_than_telescope20cm_median_threshold": 0.44505
  },
  "note": "seeded prior-predictive sample (n=40000), ballistic case, broad T0 prior, radiative-energy cut 0.1; peak V unocculted at 380 000 km; eye magnitudes: first 0.1 s at the S1 Istanbul geometry, extincted",
  "visual_thresholds_V": {

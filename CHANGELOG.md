@@ -1,5 +1,75 @@
 # Changelog
 
+## 2.1.0 (2026-10-07)
+
+Corrected analysis after an independent scientific re-audit of release 2.0 (43 open items: 3 major, 25 moderate,
+15 minor). Every product was regenerated with one version of the code; the point-by-point response is
+[docs/REAUDIT_RESPONSE.md](docs/REAUDIT_RESPONSE.md). Includes the 2.0.1 reproduction-check fix.
+
+**Changed conclusions**
+- Plume: with regolith-like grains no modelled plume is detectable with a metre-class telescope, but fine-grained
+  ejecta or optimistic photometry would make the near-terminator plume detectable, so plume detectability is not
+  constrained (release 2.0: "no modelled plume is detectable"). Release 2.0 omitted the slow in-domain ejecta.
+- Opportunities are called circular-overflight screening opportunities, not definite or mission-feasible impacts.
+  The mean window probabilities change by at most 0.03; the class-A minima over start days rise (60-day windows
+  0.00 to 0.15, 90-day 0.22 to 0.29) because the exact-time gates admit a short evening interval on 26 August 2028
+  that release 2.0's nearest-grid-time gates missed.
+- Danuri is not available after its planned lunar impact in March 2028 (KASA); LRO and Danuri seasons are computed
+  from archived Horizons elements (they agree with release 2.0's dates within one day).
+- Network probabilities are unchanged within 0.01; their epistemic ranges no longer include inner Monte Carlo noise.
+
+**Geometry and orbits**
+- Each circular overflight is mapped to the impact time of a 25-m/s de-orbit burn (91.5 s earlier; 14.7 s at 50 m/s),
+  checked by RK4 propagation; release 2.0 placed the burn 141 km along track from where it must be.
+- Both traversal directions of every polar plane (72 directed planes); station counts and class gates at the impact
+  time from continuous station altitudes; convergence variants add HEALPix Nside 64, offset nodes and phases and the
+  50-m/s burn.
+- Terrain ray tracing continues past the closest approach (ridge regression test); the LOLA reader parses quoted
+  label values and rejects unsupported projections, frames and offsets; the UT1 bound is 0.9 s plus the held offset.
+- LRO and Danuri beta-angle seasons from the tracking-based part of archived JPL Horizons elements with a fitted node
+  trend, alternative fits and a hold-out test (`scripts/make_orbiter_seasons.py`; the Horizons predictions are not
+  used).
+
+**Physics and detection**
+- Light-curve integrals rewritten as temperature integrals tabulated every 0.5 K (no time grid), validated against
+  adaptive quadrature (worst error below 1e-4 mag; `scripts/validate_lightcurves.py`); release 2.0's tables erred by
+  up to 0.15 mag for cool flashes.
+- Monte Carlo: per-frame noise before the best frame is chosen, a shared reference and systematic term per camera,
+  saturation clipping of the source counts, reference noise on background, dark and read noise; public visual model
+  at each event's geometry.
+- Plume: every in-domain ejecta speed from 1 m/s, finite source, mass on nested grids, grain, p Phi and contrast
+  sensitivities, additive and contrast classes, exposure integration with a camera model and source extinction;
+  numerical convergence study (`scripts/check_plume_convergence.py`).
+- Crater comparison adds LCROSS (22 m, ShadowCam; Fassett et al. 2024) and treats LADEE as an assumed-angle,
+  censored check; wording no longer claims evidence for a rule.
+- Injection-recovery and false alarms use one detection pipeline, independent clips, 40-px boxes, clip-bootstrap
+  intervals and no frame cap (first-40-frame comparison kept). The frame registration searches only +-7 px with
+  sub-pixel steps of at most 0.5 px (an unrestricted search occasionally jumped 10-15 px in phone video, found by a
+  macOS reproduction check), and every clip, trial and fit bootstrap has its own random stream.
+
+**Statistics, records and reproducibility**
+- Epistemic ranges by beta-binomial deconvolution of the inner sampling (600 inner events), with an inner-size
+  convergence check; conservative and descriptive nondominance; weather sensitivities run and exported for S1/S11.
+- `make check` validates the structure of the products and compares quantiles, fits and false-alarm products;
+  `make test-checker` proves it fails eight corruptions that passed release 2.0's checker.
+- Quotation ledger (`research/quotations.csv`, `make quotes`); precedent notes reconciled (Kaguya cadence wording,
+  GRAIL LAMP, LCROSS crater, scoped efficiency statement); random seeds exported in the release manifest; injection
+  seed corrected in the manuscript (20261007).
+
+**Website**
+- S2 relabelled as a terminator plume test; detection-ladder tails beyond the simulated range are no longer padded;
+  weather probabilities described as planning priors, not climatology; simulation counts, strategy values and number
+  formatting corrected; the 2.1 notice; mobile layout of the science page fixed.
+
+## 2.0.1 (2026-10-07)
+
+Reproduction tooling only; the analysis code and every product are those of 2.0.0.
+- `make check` now runs one at a time per folder. A second check started while one was running deleted the first
+  one's working copy (`.check/run`), and the first then stopped with a misleading "can't open file" error; the second
+  check is now refused with a message (exit status 3).
+- The check prints a "still running" line every 5 minutes, so the half-hour overflight step no longer looks stalled,
+  and keeps `.check/run.log` current while it runs.
+
 ## 2.0.0 (2026-10-07)
 
 Corrected analysis after an independent scientific audit of release 1.0.1 (95 findings). Every product was

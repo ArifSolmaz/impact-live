@@ -4,16 +4,19 @@
   map-projection keywords are parsed: the global products run from westernmost longitude 0 deg to easternmost 360 deg
   (pixel-is-area, centre longitude 180), so the array is rolled by half its columns into the -180..180 convention used
   here (release 1 read it without the roll, i.e. 180 deg off in longitude). Only global 0-360 / -90..90 products are
-  supported; anything else raises. The reader is tested on a synthetic file written with the official conventions
-  (tests in scripts/validate_terrain.py); no real LOLA file could be downloaded in the analysis environment, so it has
-  not been run on the real product here.
+  supported, and the label must state the simple-cylindrical projection, east-positive longitudes, the mean-Earth frame
+  and pixel-centre registration (LINE/SAMPLE_PROJECTION_OFFSET = N/2 - 0.5, centre longitude 180), as in the official
+  LDEM_4.LBL (keywords checked against the PDS copy on 2026-10-07); anything else raises. The reader is tested on a
+  synthetic file written with those conventions (scripts/validate_terrain.py); the independent re-audit of release 2.0
+  ran it on the official LDEM_4 product (heights -0.752 km at 0 N/0 E and +2.733 km at 0 N/180 E).
 * Without a real DEM, site-specific terrain tests are not made. Instead `synthetic_horizon_statistics` generates
   local Gaussian random terrain patches in a tangent plane (kilometre units, the same at every latitude) for three
   declared relief levels and returns the distribution of the terrain horizon elevation seen from a point; this is an
   illustrative sensitivity experiment, not a calibrated lunar prior and not a bound (real terrain can raise or lower
   the horizon).
 * Horizon/obstruction geometry is exact on the sphere, and `plume_clearance_height_km` first enforces the spherical-limb
-  clearance for the actual observer direction and then traces the whole line of sight over the terrain.
+  clearance for the actual observer direction and then traces the line of sight over the terrain past its closest
+  approach to the Moon, until the ray rises above the highest terrain on its outward branch (re-audit GE-13).
 """
 from __future__ import annotations
 import os, re, numpy as np
@@ -40,13 +43,18 @@ class DEMBase:
         return ((1 - wy) * ((1 - wx) * z[y0c, x0c] + wx * z[y0c, x1c]) + wy * ((1 - wx) * z[y1c, x0c] + wx * z[y1c, x1c]))
 
 def parse_pds3_label(txt):
-    """Numeric keywords of a PDS3 label (values with units such as <DEG> are accepted)."""
+    """Keywords of a PDS3 label: numbers (units such as <deg> accepted), quoted strings (spaces and slashes kept,
+    e.g. "SIMPLE CYLINDRICAL", "MEAN EARTH/POLAR AXIS OF DE421") and bare identifiers."""
     out = {}
-    for m in re.finditer(r'^\s*([A-Z_^]+)\s*=\s*"?([-+]?[0-9.]+(?:[eE][-+]?[0-9]+)?)"?\s*(?:<[^>]*>)?\s*$', txt, re.M):
+    for m in re.finditer(r'^\s*([A-Z_^]+)\s*=\s*([-+]?[0-9]+\.?[0-9]*(?:[eE][-+]?[0-9]+)?)\s*(?:<[^>]*>)?\s*$', txt, re.M):
         out[m.group(1)] = float(m.group(2))
-    for m in re.finditer(r'^\s*([A-Z_]+)\s*=\s*"?([A-Z_]+)"?\s*$', txt, re.M):
+    for m in re.finditer(r'^\s*([A-Z_^]+)\s*=\s*"([^"]*)"\s*$', txt, re.M):
+        out.setdefault(m.group(1), m.group(2).strip())
+    for m in re.finditer(r'^\s*([A-Z_]+)\s*=\s*([A-Z][A-Z0-9_]*)\s*$', txt, re.M):
         out.setdefault(m.group(1), m.group(2))
     return out
+
+SUPPORTED_PROJECTIONS = ('SIMPLE CYLINDRICAL', 'EQUIRECTANGULAR')
 
 class LDEM(DEMBase):
     """LOLA GDR cylindrical DEM reader (PDS3, global 0-360 products)."""
@@ -54,6 +62,21 @@ class LDEM(DEMBase):
         lbl_path = lbl_path or os.path.splitext(img_path)[0] + '.LBL'
         L = parse_pds3_label(open(lbl_path, 'r', errors='ignore').read())
         lines, samples = int(L['LINES']), int(L['LINE_SAMPLES'])
+        # projection, frame and registration must be those of the supported global LOLA GDR products (re-audit GE-V2-06)
+        proj = str(L.get('MAP_PROJECTION_TYPE', '')).upper()
+        if proj not in SUPPORTED_PROJECTIONS:
+            raise NotImplementedError(f'unsupported or missing MAP_PROJECTION_TYPE {proj!r} (supported: {SUPPORTED_PROJECTIONS})')
+        if str(L.get('POSITIVE_LONGITUDE_DIRECTION', '')).upper() != 'EAST':
+            raise NotImplementedError('POSITIVE_LONGITUDE_DIRECTION must be EAST')
+        if 'MEAN EARTH' not in str(L.get('COORDINATE_SYSTEM_NAME', '')).upper():
+            raise NotImplementedError('COORDINATE_SYSTEM_NAME must be the mean-Earth frame (e.g. "MEAN EARTH/POLAR AXIS OF DE421")')
+        for key, want in (('CENTER_LONGITUDE', 180.0), ('CENTER_LATITUDE', 0.0), ('LINE_PROJECTION_OFFSET', lines / 2 - 0.5),
+                          ('SAMPLE_PROJECTION_OFFSET', samples / 2 - 0.5)):
+            if key not in L or abs(float(L[key]) - want) > 1e-3:
+                raise NotImplementedError(f'{key} = {L.get(key)} (expected {want}: pixel-centre registration of a global product)')
+        for key in ('A_AXIS_RADIUS', 'B_AXIS_RADIUS', 'C_AXIS_RADIUS'):
+            if key in L and abs(float(L[key]) - 1737.4) > 1e-3:
+                raise NotImplementedError(f'{key} = {L[key]} km (the reader assumes the 1737.4-km reference sphere)')
         bits = int(L.get('SAMPLE_BITS', 16)); stype = str(L.get('SAMPLE_TYPE', 'LSB_INTEGER'))
         endian = '<' if stype.startswith('LSB') else '>'
         dtype = {16: endian + 'i2', 32: endian + 'i4'}[bits]
@@ -137,28 +160,36 @@ def sphere_clearance_height_km(es, obs_vec_geo, lat, lon, h_max=5000.0):
     return hi
 
 def plume_clearance_height_km(dem, es, obs_vec_geo, lat, lon, max_h=None, step_km=0.25):
-    """Minimum height above a surface point at which a parcel on the local vertical is visible from the observer:
-    the spherical-limb clearance (exact) and, if a DEM is given, terrain along the entire line of sight (the ray is
-    traced until it is higher than any terrain, 12 km). Returns inf if not cleared below max_h (default: the
-    spherical clearance + 50 km)."""
+    """Minimum height above the LOCAL GROUND of a surface point at which a parcel on the local vertical is visible from
+    the observer: the spherical-limb clearance (exact) and, if a DEM is given, terrain along the line of sight. The ray
+    is traced past its closest approach to the Moon's centre and stops only on the outward branch once it is higher than
+    the highest terrain of the DEM (re-audit GE-13: release 2.0 stopped at the first sample above 12 km, which misses a
+    tangent region beyond an elevated far-side parcel). Without a DEM the spherical clearance (height above the 1737.4-km
+    sphere, which is then also the ground) is returned. Returns inf if not cleared below max_h (default: the spherical
+    clearance + 50 km)."""
     H_s = sphere_clearance_height_km(es, obs_vec_geo, lat, lon)
     if not np.isfinite(H_s) or dem is None:
         return H_s
-    max_h = (H_s + 50.0) if max_h is None else max_h
     n0_me = E.latlon_to_vec(lat, lon, 1.0); O_me = es.M @ (obs_vec_geo - es.r_moon)
     h0 = float(dem.height(lat, lon))
+    z_top = float(np.nanmax(dem.z)) + 0.05                              # highest terrain (km) plus a margin
+    H_start = max(H_s - h0, 0.0)                                        # sphere clearance expressed above the local ground
+    max_h = (H_start + 50.0) if max_h is None else max_h
     def clear(H):
-        Q = n0_me * (R + h0 + H); d = O_me - Q; d /= np.linalg.norm(d)
-        s = np.arange(step_km, 4000.0, step_km)
+        Q = n0_me * (R + h0 + H); d = O_me - Q; L = np.linalg.norm(d); d /= L
+        s_ca = max(0.0, -float(Q @ d))                                  # closest approach to the Moon's centre
+        s = np.arange(step_km, min(L, s_ca + 4000.0), step_km)
         P = Q[None, :] + s[:, None] * d[None, :]
         r = np.linalg.norm(P, axis=1); h_ray = r - R
-        beyond = np.where(h_ray > 12.0)[0]
-        upto = beyond[0] if len(beyond) else len(s)
-        if upto == 0:
+        done = np.where((s > s_ca) & (h_ray > z_top))[0]
+        upto = done[0] if len(done) else len(s)
+        low = np.where(h_ray[:upto] <= z_top)[0]                        # only samples that could touch terrain
+        if len(low) == 0:
             return True
-        la = np.degrees(np.arcsin(P[:upto, 2] / r[:upto])); lo = np.degrees(np.arctan2(P[:upto, 1], P[:upto, 0]))
-        return bool(np.all(h_ray[:upto] > dem.height(la, lo)))
-    for H in np.arange(H_s, max_h + 1e-9, 0.25):
+        Pl = P[low]; rl = r[low]
+        la = np.degrees(np.arcsin(Pl[:, 2] / rl)); lo = np.degrees(np.arctan2(Pl[:, 1], Pl[:, 0]))
+        return bool(np.all(h_ray[low] > dem.height(la, lo)))
+    for H in np.arange(H_start, max_h + 1e-9, 0.25):
         if clear(H):
             return float(H)
     return np.inf

@@ -56,6 +56,35 @@ def observer_sky(obs_lon, obs_lat, obs_h_m, times, moon, sun):
     alt_m, az_m = altaz(moon); alt_s, az_s = altaz(sun)
     return dict(moon_alt=alt_m, moon_az=az_m, sun_alt=alt_s, sun_az=az_s, obs_gcrs=o)
 
+def itrs_to_gcrs_matrices(times):
+    """ITRS -> GCRS rotation matrices (N,3,3) for a Time array, from the astropy transformation of the three basis
+    vectors (geocentric frames: a pure rotation). Shared by all stations, so station geometry on fine time grids costs
+    one astropy transformation instead of four per station."""
+    t = E.to_time(times); n = len(np.atleast_1d(t.jd))
+    cols = []
+    for v in np.eye(3):
+        itrs = ITRS(CartesianRepresentation(np.repeat(v[0], n) * u.km, np.repeat(v[1], n) * u.km, np.repeat(v[2], n) * u.km), obstime=t)
+        cols.append(itrs.transform_to(GCRS(obstime=t)).cartesian.xyz.to_value(u.km).T)
+    return np.stack(cols, axis=2)                                   # R[:, :, j] = image of ITRS axis j
+
+def observer_sky_fast(obs_lon, obs_lat, obs_h_m, R_itrs_gcrs, moon, sun):
+    """Same quantities as observer_sky (Moon and Sun altitude/azimuth, observer GCRS position) using precomputed
+    ITRS->GCRS matrices. Agrees with observer_sky to ~1e-6 deg."""
+    loc = EarthLocation.from_geodetic(obs_lon * u.deg, obs_lat * u.deg, obs_h_m * u.m)
+    r_itrs = np.array([loc.x.to_value(u.km), loc.y.to_value(u.km), loc.z.to_value(u.km)])
+    lon, lat = np.radians(obs_lon), np.radians(obs_lat)
+    up = np.array([np.cos(lat) * np.cos(lon), np.cos(lat) * np.sin(lon), np.sin(lat)])
+    east = np.array([-np.sin(lon), np.cos(lon), 0.0]); north = np.cross(up, east)
+    o = R_itrs_gcrs @ r_itrs
+    E_, N_, U_ = (R_itrs_gcrs @ v for v in (east, north, up))
+    def altaz(target):
+        d = target - o; d /= np.linalg.norm(d, axis=1, keepdims=True)
+        alt = np.degrees(np.arcsin(np.clip(np.einsum('ij,ij->i', d, U_), -1, 1)))
+        az = np.degrees(np.arctan2(np.einsum('ij,ij->i', d, E_), np.einsum('ij,ij->i', d, N_))) % 360
+        return alt, az
+    alt_m, az_m = altaz(moon); alt_s, az_s = altaz(sun)
+    return dict(moon_alt=alt_m, moon_az=az_m, sun_alt=alt_s, sun_az=az_s, obs_gcrs=o)
+
 def surface_classes(moon, sun, M, lat, lon, obs_gcrs=None):
     """For one epoch: emission (geocentric or topocentric if obs_gcrs given) and incidence angles for all pixels."""
     p_me = E.latlon_to_vec(lat, lon)              # P x 3

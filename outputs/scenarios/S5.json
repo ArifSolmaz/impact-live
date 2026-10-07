@@ -1911,7 +1911,8 @@
   "height_needed_km": 0.0,
   "emission_criterion_ok": true,
   "regime": "plume over sunlit ground (low contrast, LCROSS-like)",
-  "instrument": "1-m telescope, V band, 1-s exposures, throughput 0.5, seeing 1.5 arcsec; background-subtraction systematic 1e-3 and 1e-2 of the background",
+  "instrument": "1-m telescope, V band, 0.5\"/pixel, full well 60 ke-, read noise 5 e-; 1-s integration windows; seeing 1.5 arcsec; source and background extincted; background-subtraction systematic 1e-3 and 1e-2 of the background",
+  "defaults": "regolith grains, p Phi 0.03, dust/sunlit-ground contrast kappa 0.2",
   "cases": [
    {
     "rule": "vertical-component",
@@ -1919,9 +1920,99 @@
     "params": "sand",
     "U_eff_m_s": 87.92440648814564,
     "vmax_domain_m_s": 2.619684248631456,
-    "v_needed_m_s": 12.744301063666853,
-    "observers": {},
-    "status": "cannot determine: reaching sunlight/visibility needs > 13 m/s (vertical launch), above the scaling-domain maximum 3 m/s"
+    "v_needed_m_s": 0.0,
+    "observers": {
+     "geocentre": {
+      "sys0.001": {
+       "snr_max": 0.035887059466411075,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.5913309754767036e-05
+      },
+      "sys0.01": {
+       "snr_max": 0.0035913046966678294,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.5913309754767036e-05
+      },
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.035887059466411075,
+       "coarse": 0.03412090482821354,
+       "fine-rich": 0.03607861690767106
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.035887059466411075,
+       "0.03": 0.035887059466411075,
+       "0.1": 0.035887059466411075
+      },
+      "M_vis_max_kg": 4105.300083221657,
+      "t_M_vis_max_s": 2.5,
+      "M_contrast_class_max_kg": 4105.300083221657,
+      "kappa_sys0.001": {
+       "0.2": 0.035887059466411075,
+       "0.5": 0.08971764530572406,
+       "1": 0.1794352794104371
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 0.18039306642490285,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 5.932618497111046,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
+     },
+     "TUG": {
+      "sys0.001": {
+       "snr_max": 0.03722472259776982,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.7251998926050086e-05
+      },
+      "sys0.01": {
+       "snr_max": 0.0037251725865896346,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.7251998926050086e-05
+      },
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.03722472259776982,
+       "coarse": 0.03539265960425232,
+       "fine-rich": 0.03742345290311726
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.03722472259776982,
+       "0.03": 0.03722472259776982,
+       "0.1": 0.03722472259776982
+      },
+      "M_vis_max_kg": 4105.300083221657,
+      "t_M_vis_max_s": 2.5,
+      "M_contrast_class_max_kg": 4105.300083221657,
+      "kappa_sys0.001": {
+       "0.2": 0.03722472259776982,
+       "0.5": 0.09306180287263577,
+       "1": 0.18612359367264358
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 0.18711724499258484,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 5.932892541031485,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
+     }
+    },
+    "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 4105.300083221657,
+    "M_domain_kg": 14454.64344747834,
+    "population": "in-domain ejecta from 1.0 m/s to 3 m/s (4.11e+03 of 1.45e+04 kg in the domain)",
+    "M_fast_total_kg": 4105.300083221657
    },
    {
     "rule": "vertical-component",
@@ -1929,9 +2020,99 @@
     "params": "sand",
     "U_eff_m_s": 87.92440648814564,
     "vmax_domain_m_s": 7.468022714544735,
-    "v_needed_m_s": 12.744301063666853,
-    "observers": {},
-    "status": "cannot determine: reaching sunlight/visibility needs > 13 m/s (vertical launch), above the scaling-domain maximum 7 m/s"
+    "v_needed_m_s": 0.0,
+    "observers": {
+     "geocentre": {
+      "sys0.001": {
+       "snr_max": 0.03607370266489192,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.6100089481737256e-05
+      },
+      "sys0.01": {
+       "snr_max": 0.0036099825326880294,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.6100089481737256e-05
+      },
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.03607370266489192,
+       "coarse": 0.03582709929744888,
+       "fine-rich": 0.03608813373967447
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.03607370266489192,
+       "0.03": 0.03607370266489192,
+       "0.1": 0.03607370266489192
+      },
+      "M_vis_max_kg": 7011.334590602417,
+      "t_M_vis_max_s": 2.75,
+      "M_contrast_class_max_kg": 7011.334590602417,
+      "kappa_sys0.001": {
+       "0.2": 0.03607370266489192,
+       "0.5": 0.0901842532668822,
+       "1": 0.1803684952159406
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 0.18044065057536235,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 10.332286052156734,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
+     },
+     "TUG": {
+      "sys0.001": {
+       "snr_max": 0.037418347615966796,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.7445765827579085e-05
+      },
+      "sys0.01": {
+       "snr_max": 0.0037445491347047714,
+       "t_snr_max_s": 2.25,
+       "contrast_max": 3.7445765827579085e-05
+      },
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.037418347615966796,
+       "coarse": 0.03716242866251716,
+       "fine-rich": 0.037433717683061
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.037418347615966796,
+       "0.03": 0.037418347615966796,
+       "0.1": 0.037418347615966796
+      },
+      "M_vis_max_kg": 7011.334590602417,
+      "t_M_vis_max_s": 2.75,
+      "M_contrast_class_max_kg": 7011.334590602417,
+      "kappa_sys0.001": {
+       "0.2": 0.037418347615966796,
+       "0.5": 0.09354586538035263,
+       "1": 0.18709171856215875
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 0.18716856888159183,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 10.333157579488898,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
+     }
+    },
+    "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 7011.334590602417,
+    "M_domain_kg": 18994.70923851109,
+    "population": "in-domain ejecta from 1.0 m/s to 7 m/s (7.01e+03 of 1.9e+04 kg in the domain)",
+    "M_fast_total_kg": 7011.334590602417
    },
    {
     "rule": "vertical-component",
@@ -1939,47 +2120,99 @@
     "params": "sand",
     "U_eff_m_s": 87.92440648814564,
     "vmax_domain_m_s": 52.200761301683386,
-    "v_needed_m_s": 12.744301063666853,
+    "v_needed_m_s": 0.0,
     "observers": {
      "geocentre": {
       "sys0.001": {
-       "snr_max": 0.01787320389484737,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 1.7906691024866625e-05,
-       "peak_sb": 15.390042401474934
+       "snr_max": 0.03900917896610149,
+       "t_snr_max_s": 2.5,
+       "contrast_max": 3.9037713074354005e-05
       },
       "sys0.01": {
-       "snr_max": 0.0017906355221305509,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 1.7906691024866625e-05,
-       "peak_sb": 15.390042401474934
+       "snr_max": 0.0039037427423252043,
+       "t_snr_max_s": 2.5,
+       "contrast_max": 3.9037713074354005e-05
       },
-      "M_vis_max_kg": 38.84083989107785,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.0005382495971262524,
-      "background_sb_V": 4.254317222612258
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.03900917896610149,
+       "coarse": 0.037143889319881176,
+       "fine-rich": 0.08428600235352326
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.03900917896610149,
+       "0.03": 0.03900917896610149,
+       "0.1": 0.03900917896610149
+      },
+      "M_vis_max_kg": 6511.59208080148,
+      "t_M_vis_max_s": 2.25,
+      "M_contrast_class_max_kg": 6511.59208080148,
+      "kappa_sys0.001": {
+       "0.2": 0.03900917896610149,
+       "0.5": 0.09752294344483424,
+       "1": 0.1950458736549385
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 0.4214299129095088,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 9.686101990838136,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
      },
      "TUG": {
       "sys0.001": {
-       "snr_max": 0.01788358739280218,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 1.7915849996057874e-05,
-       "peak_sb": 15.360793847717314
+       "snr_max": 0.040464142420683226,
+       "t_snr_max_s": 2.5,
+       "contrast_max": 4.0493792517679026e-05
       },
       "sys0.01": {
-       "snr_max": 0.001791552650521943,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 1.7915849996057874e-05,
-       "peak_sb": 15.360793847717314
+       "snr_max": 0.004049349569400157,
+       "t_snr_max_s": 2.5,
+       "contrast_max": 4.0493792517679026e-05
       },
-      "M_vis_max_kg": 38.84083989107785,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.0005382495971262524,
-      "background_sb_V": 4.242451997477515
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.040464142420683226,
+       "coarse": 0.03852897130544881,
+       "fine-rich": 0.08730696632911411
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.040464142420683226,
+       "0.03": 0.040464142420683226,
+       "0.1": 0.040464142420683226
+      },
+      "M_vis_max_kg": 6511.59208080148,
+      "t_M_vis_max_s": 2.25,
+      "M_contrast_class_max_kg": 6511.59208080148,
+      "kappa_sys0.001": {
+       "0.2": 0.040464142420683226,
+       "0.5": 0.10116035177213074,
+       "1": 0.20232068927900618
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 0.43653472538880966,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 9.687487773428408,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
      }
     },
     "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
-    "M_fast_total_kg": 38.84083989107785
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 6511.59208080148,
+    "M_domain_kg": 20889.351733728152,
+    "population": "in-domain ejecta from 1.0 m/s to 52 m/s (6.51e+03 of 2.09e+04 kg in the domain)",
+    "M_fast_total_kg": 6511.59208080148
    },
    {
     "rule": "vertical-equivalent",
@@ -1987,47 +2220,99 @@
     "params": "sand",
     "U_eff_m_s": 1680.0,
     "vmax_domain_m_s": 58.747216275309675,
-    "v_needed_m_s": 12.744301063666853,
+    "v_needed_m_s": 0.0,
     "observers": {
      "geocentre": {
       "sys0.001": {
-       "snr_max": 1.3640397000380693,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0013665988003273492,
-       "peak_sb": 10.683478163728486
+       "snr_max": 0.4051426585007319,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.00040543911215186663
       },
       "sys0.01": {
-       "snr_max": 0.13665731379846424,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0013665988003273492,
-       "peak_sb": 10.683478163728486
+       "snr_max": 0.0405436144393302,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.00040543911215186663
       },
-      "M_vis_max_kg": 3026.017753966151,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.041934027213024035,
-      "background_sb_V": 4.254317222612258
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.4051426585007319,
+       "coarse": 0.2730646972804293,
+       "fine-rich": 1.508123003867153
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.4051426585007319,
+       "0.03": 0.4051426585007319,
+       "0.1": 0.4051426585007319
+      },
+      "M_vis_max_kg": 139122.41635838355,
+      "t_M_vis_max_s": 4.25,
+      "M_contrast_class_max_kg": 139122.41635838355,
+      "kappa_sys0.001": {
+       "0.2": 0.4051426585007319,
+       "0.5": 1.012856217981113,
+       "1": 2.0257110083955854
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 7.540583369468158,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 200.35620872024433,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
      },
      "TUG": {
       "sys0.001": {
-       "snr_max": 1.3648322691336072,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0013672977926216174,
-       "peak_sb": 10.654229609970864
+       "snr_max": 0.4193994375252137,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0004197068632793133
       },
       "sys0.01": {
-       "snr_max": 0.13672730712087103,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0013672977926216174,
-       "peak_sb": 10.654229609970864
+       "snr_max": 0.04197037856745856,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0004197068632793133
       },
-      "M_vis_max_kg": 3026.017753966151,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.041934027213024035,
-      "background_sb_V": 4.242451997477515
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.4193994375252137,
+       "coarse": 0.2826099086581566,
+       "fine-rich": 1.5610275716956046
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.4193994375252137,
+       "0.03": 0.4193994375252137,
+       "0.1": 0.4193994375252137
+      },
+      "M_vis_max_kg": 139122.41635838355,
+      "t_M_vis_max_s": 4.25,
+      "M_contrast_class_max_kg": 139122.41635838355,
+      "kappa_sys0.001": {
+       "0.2": 0.4193994375252137,
+       "0.5": 1.0484981340696267,
+       "1": 2.0969947356639187
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 7.805103889944078,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 200.61307651506314,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
      }
     },
     "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
-    "M_fast_total_kg": 3026.017753966151
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 201609.572282049,
+    "M_domain_kg": 341425.5662157559,
+    "population": "in-domain ejecta from 1.0 m/s to 59 m/s (2.02e+05 of 3.41e+05 kg in the domain)",
+    "M_fast_total_kg": 201609.572282049
    },
    {
     "rule": "vertical-equivalent",
@@ -2035,47 +2320,99 @@
     "params": "sand",
     "U_eff_m_s": 1680.0,
     "vmax_domain_m_s": 156.34748436199266,
-    "v_needed_m_s": 12.744301063666853,
+    "v_needed_m_s": 0.0,
     "observers": {
      "geocentre": {
       "sys0.001": {
-       "snr_max": 2.5466394859813293,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.002551422931582628,
-       "peak_sb": 10.005624615218826
+       "snr_max": 0.5619317495711135,
+       "t_snr_max_s": 12.0,
+       "contrast_max": 0.0005623429913136776
       },
       "sys0.01": {
-       "snr_max": 0.25513749636211946,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.002551422931582628,
-       "peak_sb": 10.005624615218826
+       "snr_max": 0.05623388744259391,
+       "t_snr_max_s": 12.0,
+       "contrast_max": 0.0005623429913136776
       },
-      "M_vis_max_kg": 5756.328772750518,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.0797702019716372,
-      "background_sb_V": 4.254317222612258
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.5619317495711135,
+       "coarse": 0.36192289328051735,
+       "fine-rich": 2.3445237606306124
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.5619317495711135,
+       "0.03": 0.5619317495711135,
+       "0.1": 0.5619317495711135
+      },
+      "M_vis_max_kg": 168606.36739614356,
+      "t_M_vis_max_s": 4.5,
+      "M_contrast_class_max_kg": 168606.36739614356,
+      "kappa_sys0.001": {
+       "0.2": 0.5619317495711135,
+       "0.5": 1.4048285500374251,
+       "1": 2.8096543537800986
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 11.722542312938947,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 237.163612001977,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
      },
      "TUG": {
       "sys0.001": {
-       "snr_max": 2.548119405398791,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0025527279414861844,
-       "peak_sb": 9.976376061461197
+       "snr_max": 0.5818647183097865,
+       "t_snr_max_s": 12.0,
+       "contrast_max": 0.0005822912993630338
       },
       "sys0.01": {
-       "snr_max": 0.2552681732279502,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0025527279414861844,
-       "peak_sb": 9.976376061461197
+       "snr_max": 0.05822870289072588,
+       "t_snr_max_s": 12.0,
+       "contrast_max": 0.0005822912993630338
       },
-      "M_vis_max_kg": 5756.328772750518,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.0797702019716372,
-      "background_sb_V": 4.242451997477515
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.5818647183097865,
+       "coarse": 0.3747122863604871,
+       "fine-rich": 2.428510270573749
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.5818647183097865,
+       "0.03": 0.5818647183097865,
+       "0.1": 0.5818647183097865
+      },
+      "M_vis_max_kg": 168606.36739614356,
+      "t_M_vis_max_s": 4.5,
+      "M_contrast_class_max_kg": 168606.36739614356,
+      "kappa_sys0.001": {
+       "0.2": 0.5818647183097865,
+       "0.5": 1.4546609108550752,
+       "1": 2.909318871986027
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 12.142469141154006,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 237.48751702960027,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
      }
     },
     "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
-    "M_fast_total_kg": 5756.328772750518
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 244110.4922798109,
+    "M_domain_kg": 403771.91588866914,
+    "population": "in-domain ejecta from 1.0 m/s to 156 m/s (2.44e+05 of 4.04e+05 kg in the domain)",
+    "M_fast_total_kg": 244110.4922798109
    },
    {
     "rule": "vertical-equivalent",
@@ -2083,47 +2420,99 @@
     "params": "sand",
     "U_eff_m_s": 1680.0,
     "vmax_domain_m_s": 1032.0955897442655,
-    "v_needed_m_s": 12.744301063666853,
+    "v_needed_m_s": 0.0,
     "observers": {
      "geocentre": {
       "sys0.001": {
-       "snr_max": 2.2408185374312333,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0022450262632786678,
-       "peak_sb": 10.144527186749212
+       "snr_max": 0.5255168998211722,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0005259014785503027
       },
       "sys0.01": {
-       "snr_max": 0.22449840686189243,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0022450262632786678,
-       "peak_sb": 10.144527186749212
+       "snr_max": 0.052589762858267816,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0005259014785503027
       },
-      "M_vis_max_kg": 5040.304472515848,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.069847661876862,
-      "background_sb_V": 4.254317222612258
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.5255168998211722,
+       "coarse": 0.3464659528876624,
+       "fine-rich": 2.0909375495262923
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.5255168998211722,
+       "0.03": 0.5255168998211722,
+       "0.1": 0.5255168998211722
+      },
+      "M_vis_max_kg": 189151.82322696602,
+      "t_M_vis_max_s": 4.25,
+      "M_contrast_class_max_kg": 189151.82322696602,
+      "kappa_sys0.001": {
+       "0.2": 0.5255168998211722,
+       "0.5": 1.3137915289837405,
+       "1": 2.6275806560754496
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 10.454626909024716,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 270.3113799913292,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
      },
      "TUG": {
       "sys0.001": {
-       "snr_max": 2.2421206893344072,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.002246174556441285,
-       "peak_sb": 10.115278632991592
+       "snr_max": 0.5438399510182891,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0005442386406432172
       },
       "sys0.01": {
-       "snr_max": 0.2246133908863401,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.002246174556441285,
-       "peak_sb": 10.115278632991592
+       "snr_max": 0.054423464940560606,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0005442386406432172
       },
-      "M_vis_max_kg": 5040.304472515848,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.069847661876862,
-      "background_sb_V": 4.242451997477515
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.5438399510182891,
+       "coarse": 0.35862277568740347,
+       "fine-rich": 2.1636494786317524
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.5438399510182891,
+       "0.03": 0.5438399510182891,
+       "0.1": 0.5438399510182891
+      },
+      "M_vis_max_kg": 189151.82322696602,
+      "t_M_vis_max_s": 4.25,
+      "M_contrast_class_max_kg": 189151.82322696602,
+      "kappa_sys0.001": {
+       "0.2": 0.5438399510182891,
+       "0.5": 1.3595991045058113,
+       "1": 2.7191956322177737
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 10.818182135996018,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 270.60767763141183,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
      }
     },
     "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
-    "M_fast_total_kg": 5040.304472515848
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 258068.49979608465,
+    "M_domain_kg": 458591.37277105957,
+    "population": "in-domain ejecta from 1.0 m/s to 1032 m/s (2.58e+05 of 4.59e+05 kg in the domain)",
+    "M_fast_total_kg": 258068.49979608465
    },
    {
     "rule": "vertical-equivalent",
@@ -2131,47 +2520,99 @@
     "params": "sand/fly ash",
     "U_eff_m_s": 1680.0,
     "vmax_domain_m_s": 1024.3527736721487,
-    "v_needed_m_s": 12.744301063666853,
+    "v_needed_m_s": 0.0,
     "observers": {
      "geocentre": {
       "sys0.001": {
-       "snr_max": 1.8048891062256573,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0018082767844613055,
-       "peak_sb": 10.37941848495284
+       "snr_max": 0.44776486488374884,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.00044809251962458645
       },
       "sys0.01": {
-       "snr_max": 0.18082428131993006,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0018082767844613055,
-       "peak_sb": 10.37941848495284
+       "snr_max": 0.0448089239515866,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.00044809251962458645
       },
-      "M_vis_max_kg": 4031.783616560413,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.055871755435760985,
-      "background_sb_V": 4.254317222612258
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.44776486488374884,
+       "coarse": 0.2921856990335698,
+       "fine-rich": 1.7895751572147065
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.44776486488374884,
+       "0.03": 0.44776486488374884,
+       "0.1": 0.44776486488374884
+      },
+      "M_vis_max_kg": 100637.61545614342,
+      "t_M_vis_max_s": 4.0,
+      "M_contrast_class_max_kg": 100637.61545614342,
+      "kappa_sys0.001": {
+       "0.2": 0.44776486488374884,
+       "0.5": 1.1194116390880569,
+       "1": 2.2388215344416573
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 8.947831220689006,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 148.27643113033733,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
      },
      "TUG": {
       "sys0.001": {
-       "snr_max": 1.8059378833172834,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.001809201687613525,
-       "peak_sb": 10.350169931195218
+       "snr_max": 0.4634948339585579,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0004638345965211414
       },
       "sys0.01": {
-       "snr_max": 0.1809168961926938,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.001809201687613525,
-       "peak_sb": 10.350169931195218
+       "snr_max": 0.046383119519609696,
+       "t_snr_max_s": 11.0,
+       "contrast_max": 0.0004638345965211414
       },
-      "M_vis_max_kg": 4031.783616560413,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.055871755435760985,
-      "background_sb_V": 4.242451997477515
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.4634948339585579,
+       "coarse": 0.30242575385645815,
+       "fine-rich": 1.8520404984697545
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.4634948339585579,
+       "0.03": 0.4634948339585579,
+       "0.1": 0.4634948339585579
+      },
+      "M_vis_max_kg": 100637.61545614342,
+      "t_M_vis_max_s": 4.0,
+      "M_contrast_class_max_kg": 100637.61545614342,
+      "kappa_sys0.001": {
+       "0.2": 0.4634948339585579,
+       "0.5": 1.1587365233966356,
+       "1": 2.3174711751310304
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 9.26015467824747,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 148.45434179679006,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
      }
     },
     "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
-    "M_fast_total_kg": 4031.783616560413
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 111070.2153173181,
+    "M_domain_kg": 121454.56786778467,
+    "population": "in-domain ejecta from 1.0 m/s to 1024 m/s (1.11e+05 of 1.21e+05 kg in the domain)",
+    "M_fast_total_kg": 111070.2153173181
    },
    {
     "rule": "vertical-equivalent",
@@ -2179,47 +2620,99 @@
     "params": "perlite/sand",
     "U_eff_m_s": 1680.0,
     "vmax_domain_m_s": 1158.4854541478376,
-    "v_needed_m_s": 12.744301063666853,
+    "v_needed_m_s": 0.0,
     "observers": {
      "geocentre": {
       "sys0.001": {
-       "snr_max": 1.2001522986981625,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0012024035579246094,
-       "peak_sb": 10.822455119922372
+       "snr_max": 0.33775974304131295,
+       "t_snr_max_s": 10.0,
+       "contrast_max": 0.00033800687497530414
       },
       "sys0.01": {
-       "snr_max": 0.1202380982584477,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0012024035579246094,
-       "peak_sb": 10.822455119922372
+       "snr_max": 0.03380044009701438,
+       "t_snr_max_s": 10.0,
+       "contrast_max": 0.00033800687497530414
       },
-      "M_vis_max_kg": 2655.666558540363,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.03680176482394716,
-      "background_sb_V": 4.254317222612258
+      "camera": {
+       "t_exposure_s": 0.001736218223625582,
+       "n_frames": 365,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.33775974304131295,
+       "coarse": 0.22154480069481178,
+       "fine-rich": 1.3570279531741114
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.33775974304131295,
+       "0.03": 0.33775974304131295,
+       "0.1": 0.33775974304131295
+      },
+      "M_vis_max_kg": 106377.25799399885,
+      "t_M_vis_max_s": 3.75,
+      "M_contrast_class_max_kg": 106377.25799399885,
+      "kappa_sys0.001": {
+       "0.2": 0.33775974304131295,
+       "0.5": 0.844399059944795,
+       "1": 1.6887971276960314
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 6.7851141401388,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 154.40873562082376,
+      "background_sb_V": 4.254317222612258,
+      "extinction_mag": 0.0
      },
      "TUG": {
       "sys0.001": {
-       "snr_max": 1.200849628302524,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0012030185671148606,
-       "peak_sb": 10.79320656616475
+       "snr_max": 0.34959710063084853,
+       "t_snr_max_s": 10.0,
+       "contrast_max": 0.00034985334325799745
       },
       "sys0.01": {
-       "snr_max": 0.12029968195189983,
-       "t_snr_max_s": 0.0,
-       "contrast_max": 0.0012030185671148606,
-       "peak_sb": 10.79320656616475
+       "snr_max": 0.034985077804199585,
+       "t_snr_max_s": 10.0,
+       "contrast_max": 0.00034985334325799745
       },
-      "M_vis_max_kg": 2655.666558540363,
-      "t_M_vis_max_s": 0.0,
-      "tau_max": 0.03680176482394716,
-      "background_sb_V": 4.242451997477515
+      "camera": {
+       "t_exposure_s": 0.0017173476505423094,
+       "n_frames": 368,
+       "usable": true
+      },
+      "grains_sys0.001": {
+       "regolith": 0.34959710063084853,
+       "coarse": 0.2293278605408009,
+       "fine-rich": 1.4038240899098589
+      },
+      "pphi_sys0.001": {
+       "0.01": 0.34959710063084853,
+       "0.03": 0.34959710063084853,
+       "0.1": 0.34959710063084853
+      },
+      "M_vis_max_kg": 106377.25799399885,
+      "t_M_vis_max_s": 3.75,
+      "M_contrast_class_max_kg": 106377.25799399885,
+      "kappa_sys0.001": {
+       "0.2": 0.34959710063084853,
+       "0.5": 0.8739924321325325,
+       "1": 1.7479837994513256
+      },
+      "optimistic_corner_sys0.001": {
+       "snr_max": 7.019092978112743,
+       "assumptions": "fine-rich grains, p Phi 0.1, kappa 1"
+      },
+      "tau_max": 154.55161197116618,
+      "background_sb_V": 4.242451997477515,
+      "extinction_mag": 0.18813475419279882
      }
     },
     "status": "within-domain estimate (ejecta faster than the domain maximum are not modelled)",
-    "M_fast_total_kg": 2655.666558540363
+    "v_lo_m_s": 1.0,
+    "M_selected_kg": 135834.66406592363,
+    "M_domain_kg": 552997.7202633873,
+    "population": "in-domain ejecta from 1.0 m/s to 1158 m/s (1.36e+05 of 5.53e+05 kg in the domain)",
+    "M_fast_total_kg": 135834.66406592363
    }
   ],
   "note": "Housen & Holsapple (2011) point-source scaling with its domain [n1 a, n2 R]; two oblique-impact rules bracket a grazing impact by a hollow spacecraft, for which no validated rule exists; impactor bulk density is a calibration choice (the LCROSS like-for-like check favours ~400 kg/m3), not a validation."
@@ -2315,38 +2808,62 @@
    "p_note": "assumed probability that LRO is still operating in 2028 (scenario input, not measured; not a probability of imaging the crater)",
    "latency_summary": "well-located near-side or mid-latitude impacts: first documented image after 0.6-11 days; far-side, high-latitude or poorly located impacts: about 2-4 months; public release 12-193 days after the event",
    "latency_note": "heuristic from a small, selected precedent sample (impacts only; first documented image, release counted from the event); not a calibrated forecast for this site",
-   "low_sun_season_approx": {
+   "low_sun_season": {
     "next_season": [
-     "2028-03-29",
+     "2028-03-28",
      "2028-05-28"
     ],
-    "days_until": 0,
-    "inside": true
-   },
-   "season_note": "approximate orbit-plane illumination season (+-3 weeks model spread); does not guarantee a sunlit pass over this point"
-  },
-  "danuri": {
-   "p_operational_assumed": 0.4,
-   "low_sun_season_approx": {
-    "next_season": [
-     "2028-03-23",
-     "2028-06-02"
+    "start_range": [
+     "2028-03-28",
+     "2028-04-05"
+    ],
+    "end_range": [
+     "2028-05-28",
+     "2028-06-05"
     ],
     "days_until": 0,
-    "inside": true
-   }
+    "inside": true,
+    "boundary_uncertain": true,
+    "extrapolated": true
+   },
+   "near_noon_season": {
+    "next_season": [
+     "2028-07-05",
+     "2028-08-01"
+    ],
+    "start_range": [
+     "2028-07-05",
+     "2028-07-14"
+    ],
+    "end_range": [
+     "2028-08-01",
+     "2028-08-11"
+    ],
+    "days_until": 94,
+    "inside": false,
+    "boundary_uncertain": false,
+    "extrapolated": true
+   },
+   "season_note": "orbit-plane illumination season: beta angle from JPL Horizons tracking-based LRO elements, extrapolated beyond 2026-09-02 (quadratic node trend; start_range and end_range from alternative fits); assumes no orbit manoeuvre and does not guarantee a sunlit pass over this point"
+  },
+  "danuri": {
+   "planned_impact": "2028-03",
+   "available_in_baseline": false,
+   "p_operational_assumed": 0.0,
+   "p_continued_operation_sensitivity": 0.4,
+   "note": "KASA plans a lunar impact in March 2028 (press release 10 Feb 2025); after it, Danuri follow-up exists only in the changed-plan sensitivity"
   },
   "high_latitude_note": ""
  },
  "mc": {
   "wide|broad": {
    "n_outer": 200,
-   "n_inner": 150,
-   "N": 30000,
+   "n_inner": 600,
+   "N": 120000,
    "eta_prior": "wide",
    "T0_prior": "broad",
    "eps_max": 0.1,
-   "rejected_fraction": 0.021111364897053564,
+   "rejected_fraction": 0.020999559449801808,
    "eta_bins": [
     -6.0,
     -5.5,
@@ -2360,28 +2877,33 @@
    "strategies": {
     "A_turkiye_priority": {
      "any": {
-      "p": 0.009966666666666667,
-      "k": 299,
-      "mc_se": 0.000729068610300816,
+      "p": 0.009233333333333333,
+      "k": 1108,
+      "mc_se": 0.0004908202548928327,
       "ci95": [
-       0.008537692190477068,
-       0.011395641142856267
+       0.00827132563374338,
+       0.010195341032923286
       ],
       "wilson95_iid": [
-       0.008903656127604855,
-       0.011155161940545458
+       0.008707658697075077,
+       0.009790429117473687
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.006666666666666667,
-      "outer_p95": 0.02666666666666667,
+      "outer_p05": 0.0020830094005265852,
+      "outer_p50": 0.0080317744701969,
+      "outer_p95": 0.02048794724559947,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.023333333333333334,
+      "var_total": 4.818090452261306e-05,
+      "var_binomial": 1.5192218512335374e-05,
+      "var_epistemic": 3.298868601027769e-05,
       "by_eta": [
        0.0,
-       0.0,
-       0.00046008741660915573,
-       0.0024564537740062527,
-       0.005184851217312894,
-       0.02547169811320755,
-       0.04068241469816273
+       0.00017069701280227596,
+       0.0006322565812162317,
+       0.002227553118574366,
+       0.007133406201461198,
+       0.02005363180599277,
+       0.03839612768184197
       ]
      },
      "two_indep": {
@@ -2393,12 +2915,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2418,12 +2945,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2443,12 +2975,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2460,28 +2997,33 @@
       ]
      },
      "obvious_any": {
-      "p": 0.0028666666666666667,
-      "k": 86,
-      "mc_se": 0.0003676171630371248,
+      "p": 0.002608333333333333,
+      "k": 313,
+      "mc_se": 0.0002417186451350381,
       "ci95": [
-       0.002146137027113902,
-       0.0035871963062194313
+       0.0021345647888686586,
+       0.0030821018777980077
       ],
       "wilson95_iid": [
-       0.002322010158670999,
-       0.0035386260339957424
+       0.0023352326165808793,
+       0.002913279361055676
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.013333333333333334,
+      "outer_p05": 8.488253711157125e-05,
+      "outer_p50": 0.0016834296171577751,
+      "outer_p95": 0.008283019551449227,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01,
+      "var_total": 1.1685580681183695e-05,
+      "var_binomial": 4.3237108143201635e-06,
+      "var_epistemic": 7.361869866863532e-06,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.00022331397945511388,
-       0.0004508566275924256,
-       0.007547169811320755,
-       0.013385826771653543
+       0.00011495574203931487,
+       0.00017135023989033586,
+       0.0020134614278317898,
+       0.005129998834091174,
+       0.012100994243851387
       ]
      },
      "live": {
@@ -2493,12 +3035,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2518,12 +3065,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2535,60 +3087,70 @@
       ]
      },
      "turkish": {
-      "p": 0.009966666666666667,
-      "k": 299,
-      "mc_se": 0.000729068610300816,
+      "p": 0.009233333333333333,
+      "k": 1108,
+      "mc_se": 0.0004908202548928327,
       "ci95": [
-       0.008537692190477068,
-       0.011395641142856267
+       0.00827132563374338,
+       0.010195341032923286
       ],
       "wilson95_iid": [
-       0.008903656127604855,
-       0.011155161940545458
+       0.008707658697075077,
+       0.009790429117473687
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.006666666666666667,
-      "outer_p95": 0.02666666666666667,
+      "outer_p05": 0.0020830094005265852,
+      "outer_p50": 0.0080317744701969,
+      "outer_p95": 0.02048794724559947,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.023333333333333334,
+      "var_total": 4.818090452261306e-05,
+      "var_binomial": 1.5192218512335374e-05,
+      "var_epistemic": 3.298868601027769e-05,
       "by_eta": [
        0.0,
-       0.0,
-       0.00046008741660915573,
-       0.0024564537740062527,
-       0.005184851217312894,
-       0.02547169811320755,
-       0.04068241469816273
+       0.00017069701280227596,
+       0.0006322565812162317,
+       0.002227553118574366,
+       0.007133406201461198,
+       0.02005363180599277,
+       0.03839612768184197
       ]
      },
      "obvious_turkish": {
-      "p": 0.0028666666666666667,
-      "k": 86,
-      "mc_se": 0.0003676171630371248,
+      "p": 0.002608333333333333,
+      "k": 313,
+      "mc_se": 0.0002417186451350381,
       "ci95": [
-       0.002146137027113902,
-       0.0035871963062194313
+       0.0021345647888686586,
+       0.0030821018777980077
       ],
       "wilson95_iid": [
-       0.002322010158670999,
-       0.0035386260339957424
+       0.0023352326165808793,
+       0.002913279361055676
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.013333333333333334,
+      "outer_p05": 8.488253711157125e-05,
+      "outer_p50": 0.0016834296171577751,
+      "outer_p95": 0.008283019551449227,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01,
+      "var_total": 1.1685580681183695e-05,
+      "var_binomial": 4.3237108143201635e-06,
+      "var_epistemic": 7.361869866863532e-06,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.00022331397945511388,
-       0.0004508566275924256,
-       0.007547169811320755,
-       0.013385826771653543
+       0.00011495574203931487,
+       0.00017135023989033586,
+       0.0020134614278317898,
+       0.005129998834091174,
+       0.012100994243851387
       ]
      },
      "n_stations": 9,
      "station_p_det": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.009966666666666667,
+      "DAG:dag_dirac": 0.009233333333333333,
       "DAG:dag_visitor_fast": 0.0,
       "AUKR:amateur_class": 0.0,
       "ULUP:amateur_class": 0.0,
@@ -2599,7 +3161,7 @@
      "station_p_fov": {
       "TUG:tug_t100_qhy": 1.0,
       "TUG:rtt150_fast": 1.0,
-      "DAG:dag_dirac": 0.5018333333333334,
+      "DAG:dag_dirac": 0.498825,
       "DAG:dag_visitor_fast": 1.0,
       "AUKR:amateur_class": 1.0,
       "ULUP:amateur_class": 1.0,
@@ -2610,7 +3172,7 @@
      "station_p_saturated": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.0015333333333333334,
+      "DAG:dag_dirac": 0.00145,
       "DAG:dag_visitor_fast": 0.0,
       "AUKR:amateur_class": 0.0,
       "ULUP:amateur_class": 0.0,
@@ -2621,28 +3183,33 @@
     },
     "B_global_science": {
      "any": {
-      "p": 0.009966666666666667,
-      "k": 299,
-      "mc_se": 0.000729068610300816,
+      "p": 0.009233333333333333,
+      "k": 1108,
+      "mc_se": 0.0004908202548928327,
       "ci95": [
-       0.008537692190477068,
-       0.011395641142856267
+       0.00827132563374338,
+       0.010195341032923286
       ],
       "wilson95_iid": [
-       0.008903656127604855,
-       0.011155161940545458
+       0.008707658697075077,
+       0.009790429117473687
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.006666666666666667,
-      "outer_p95": 0.02666666666666667,
+      "outer_p05": 0.0020830094005265852,
+      "outer_p50": 0.0080317744701969,
+      "outer_p95": 0.02048794724559947,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.023333333333333334,
+      "var_total": 4.818090452261306e-05,
+      "var_binomial": 1.5192218512335374e-05,
+      "var_epistemic": 3.298868601027769e-05,
       "by_eta": [
        0.0,
-       0.0,
-       0.00046008741660915573,
-       0.0024564537740062527,
-       0.005184851217312894,
-       0.02547169811320755,
-       0.04068241469816273
+       0.00017069701280227596,
+       0.0006322565812162317,
+       0.002227553118574366,
+       0.007133406201461198,
+       0.02005363180599277,
+       0.03839612768184197
       ]
      },
      "two_indep": {
@@ -2654,12 +3221,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2679,12 +3251,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2704,12 +3281,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2721,28 +3303,33 @@
       ]
      },
      "obvious_any": {
-      "p": 0.0028666666666666667,
-      "k": 86,
-      "mc_se": 0.0003676171630371248,
+      "p": 0.002608333333333333,
+      "k": 313,
+      "mc_se": 0.0002417186451350381,
       "ci95": [
-       0.002146137027113902,
-       0.0035871963062194313
+       0.0021345647888686586,
+       0.0030821018777980077
       ],
       "wilson95_iid": [
-       0.002322010158670999,
-       0.0035386260339957424
+       0.0023352326165808793,
+       0.002913279361055676
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.013333333333333334,
+      "outer_p05": 8.488253711157125e-05,
+      "outer_p50": 0.0016834296171577751,
+      "outer_p95": 0.008283019551449227,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01,
+      "var_total": 1.1685580681183695e-05,
+      "var_binomial": 4.3237108143201635e-06,
+      "var_epistemic": 7.361869866863532e-06,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.00022331397945511388,
-       0.0004508566275924256,
-       0.007547169811320755,
-       0.013385826771653543
+       0.00011495574203931487,
+       0.00017135023989033586,
+       0.0020134614278317898,
+       0.005129998834091174,
+       0.012100994243851387
       ]
      },
      "live": {
@@ -2754,12 +3341,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2779,12 +3371,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2796,60 +3393,70 @@
       ]
      },
      "turkish": {
-      "p": 0.009966666666666667,
-      "k": 299,
-      "mc_se": 0.000729068610300816,
+      "p": 0.009233333333333333,
+      "k": 1108,
+      "mc_se": 0.0004908202548928327,
       "ci95": [
-       0.008537692190477068,
-       0.011395641142856267
+       0.00827132563374338,
+       0.010195341032923286
       ],
       "wilson95_iid": [
-       0.008903656127604855,
-       0.011155161940545458
+       0.008707658697075077,
+       0.009790429117473687
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.006666666666666667,
-      "outer_p95": 0.02666666666666667,
+      "outer_p05": 0.0020830094005265852,
+      "outer_p50": 0.0080317744701969,
+      "outer_p95": 0.02048794724559947,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.023333333333333334,
+      "var_total": 4.818090452261306e-05,
+      "var_binomial": 1.5192218512335374e-05,
+      "var_epistemic": 3.298868601027769e-05,
       "by_eta": [
        0.0,
-       0.0,
-       0.00046008741660915573,
-       0.0024564537740062527,
-       0.005184851217312894,
-       0.02547169811320755,
-       0.04068241469816273
+       0.00017069701280227596,
+       0.0006322565812162317,
+       0.002227553118574366,
+       0.007133406201461198,
+       0.02005363180599277,
+       0.03839612768184197
       ]
      },
      "obvious_turkish": {
-      "p": 0.0028666666666666667,
-      "k": 86,
-      "mc_se": 0.0003676171630371248,
+      "p": 0.002608333333333333,
+      "k": 313,
+      "mc_se": 0.0002417186451350381,
       "ci95": [
-       0.002146137027113902,
-       0.0035871963062194313
+       0.0021345647888686586,
+       0.0030821018777980077
       ],
       "wilson95_iid": [
-       0.002322010158670999,
-       0.0035386260339957424
+       0.0023352326165808793,
+       0.002913279361055676
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.013333333333333334,
+      "outer_p05": 8.488253711157125e-05,
+      "outer_p50": 0.0016834296171577751,
+      "outer_p95": 0.008283019551449227,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01,
+      "var_total": 1.1685580681183695e-05,
+      "var_binomial": 4.3237108143201635e-06,
+      "var_epistemic": 7.361869866863532e-06,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.00022331397945511388,
-       0.0004508566275924256,
-       0.007547169811320755,
-       0.013385826771653543
+       0.00011495574203931487,
+       0.00017135023989033586,
+       0.0020134614278317898,
+       0.005129998834091174,
+       0.012100994243851387
       ]
      },
      "n_stations": 31,
      "station_p_det": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.009966666666666667,
+      "DAG:dag_dirac": 0.009233333333333333,
       "DAG:dag_visitor_fast": 0.0,
       "KRY:lunar_impact_system": 0.0,
       "SEV:midas_video": 0.0,
@@ -2882,7 +3489,7 @@
      "station_p_fov": {
       "TUG:tug_t100_qhy": 1.0,
       "TUG:rtt150_fast": 1.0,
-      "DAG:dag_dirac": 0.5018333333333334,
+      "DAG:dag_dirac": 0.498825,
       "DAG:dag_visitor_fast": 1.0,
       "KRY:lunar_impact_system": 1.0,
       "SEV:midas_video": null,
@@ -2915,7 +3522,7 @@
      "station_p_saturated": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.0015333333333333334,
+      "DAG:dag_dirac": 0.00145,
       "DAG:dag_visitor_fast": 0.0,
       "KRY:lunar_impact_system": 0.0,
       "SEV:midas_video": 0.0,
@@ -2956,12 +3563,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -2981,12 +3593,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3006,12 +3623,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3031,12 +3653,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3056,12 +3683,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3081,12 +3713,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3106,12 +3743,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3131,12 +3773,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3156,12 +3803,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3311,19 +3963,19 @@
      ]
     },
     "any:C_public_participation-A_turkiye_priority": {
-     "diff": -0.009966666666666667,
-     "mc_se": 0.000729068610300816,
+     "diff": -0.009233333333333333,
+     "mc_se": 0.0004908202548928327,
      "ci95": [
-      -0.011395641142856267,
-      -0.008537692190477068
+      -0.010195341032923286,
+      -0.00827132563374338
      ]
     },
     "any:C_public_participation-B_global_science": {
-     "diff": -0.009966666666666667,
-     "mc_se": 0.000729068610300816,
+     "diff": -0.009233333333333333,
+     "mc_se": 0.0004908202548928327,
      "ci95": [
-      -0.011395641142856267,
-      -0.008537692190477068
+      -0.010195341032923286,
+      -0.00827132563374338
      ]
     },
     "confirmed:B_global_science-A_turkiye_priority": {
@@ -3407,62 +4059,63 @@
      ]
     },
     "turkish:C_public_participation-A_turkiye_priority": {
-     "diff": -0.009966666666666667,
-     "mc_se": 0.000729068610300816,
+     "diff": -0.009233333333333333,
+     "mc_se": 0.0004908202548928327,
      "ci95": [
-      -0.011395641142856267,
-      -0.008537692190477068
+      -0.010195341032923286,
+      -0.00827132563374338
      ]
     },
     "turkish:C_public_participation-B_global_science": {
-     "diff": -0.009966666666666667,
-     "mc_se": 0.000729068610300816,
+     "diff": -0.009233333333333333,
+     "mc_se": 0.0004908202548928327,
      "ci95": [
-      -0.011395641142856267,
-      -0.008537692190477068
+      -0.010195341032923286,
+      -0.00827132563374338
      ]
     }
    },
    "peakV": {
-    "median": 11.964455916601764,
-    "p10": 8.241425094803672,
-    "p90": 15.612097421426384
+    "median": 12.00069998477924,
+    "p10": 8.248548424350064,
+    "p90": 15.630162903391035
    },
    "T0_percentiles": [
-    1950.0550606766637,
-    3012.3412729516645,
-    4647.079821676506
+    1950.3780230308296,
+    3009.238653141371,
+    4653.3797110847345
    ],
    "visual": {
     "site": "IST",
     "observable": true,
     "moon_alt": 52.896918923706075,
     "sun_alt": -17.30509043652958,
+    "p_conditions": 1.0,
     "none": {
-     "p_conditional": 1.7011491011334615e-128,
-     "p_with_weather": 2.4194228682923485e-135,
-     "threshold_median": -4.123640807079266
+     "p_conditional": 2.6315714553814497e-126,
+     "p_with_weather": 1.5719951691650197e-126,
+     "threshold_median": -4.123705880716757
     },
     "binoculars": {
-     "p_conditional": 5.947416903043886e-46,
-     "p_with_weather": 6.032722125067758e-50,
-     "threshold_median": 0.06849987116252754
+     "p_conditional": 6.415660835627275e-45,
+     "p_with_weather": 3.5009942013387185e-45,
+     "threshold_median": 0.06843726725897836
     },
     "telescope20cm": {
-     "p_conditional": 0.0005687379982350346,
-     "p_with_weather": 0.00017584275709881095,
-     "threshold_median": 6.0169087227575435
+     "p_conditional": 0.0005857520938531828,
+     "p_with_weather": 0.00016943537527876404,
+     "threshold_median": 6.0168825640551855
     }
    }
   },
   "v-scaled|broad": {
    "n_outer": 200,
-   "n_inner": 150,
-   "N": 30000,
+   "n_inner": 600,
+   "N": 120000,
    "eta_prior": "v-scaled",
    "T0_prior": "broad",
    "eps_max": 0.1,
-   "rejected_fraction": 0.06276359773813611,
+   "rejected_fraction": 0.06536232787089535,
    "eta_bins": [
     -6.0,
     -5.5,
@@ -3476,28 +4129,33 @@
    "strategies": {
     "A_turkiye_priority": {
      "any": {
-      "p": 0.016366666666666668,
-      "k": 491,
-      "mc_se": 0.001001169054232873,
+      "p": 0.017583333333333333,
+      "k": 2110,
+      "mc_se": 0.0008985960573983503,
       "ci95": [
-       0.014404375320370238,
-       0.0183289580129631
+       0.015822085060832568,
+       0.019344581605834098
       ],
       "wilson95_iid": [
-       0.014991552590147098,
-       0.017865626605199678
+       0.016854986160254423,
+       0.018342567048742174
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.013333333333333334,
-      "outer_p95": 0.04,
+      "outer_p05": 0.0035182107975502063,
+      "outer_p50": 0.015065660658245378,
+      "outer_p95": 0.0402459164397405,
+      "outer_raw_p05": 0.003250000000000002,
+      "outer_raw_p95": 0.040083333333333304,
+      "var_total": 0.00016149497487437186,
+      "var_binomial": 2.8570070487850124e-05,
+      "var_epistemic": 0.00013292490438652173,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.002617801047120419,
-       0.00816326530612245,
-       0.019652761032071378,
-       0.036691410392364794
+       0.0009596928982725527,
+       0.0028321448439791634,
+       0.007571856922191598,
+       0.021772197202421784,
+       0.039495050023571315
       ]
      },
      "two_indep": {
@@ -3509,12 +4167,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3534,12 +4197,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3559,12 +4227,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3576,28 +4249,33 @@
       ]
      },
      "obvious_any": {
-      "p": 0.005266666666666667,
-      "k": 158,
-      "mc_se": 0.0005102850606322028,
+      "p": 0.0053416666666666664,
+      "k": 641,
+      "mc_se": 0.00041842968719576394,
       "ci95": [
-       0.004266507947827549,
-       0.006266825385505785
+       0.0045215444797629695,
+       0.006161788853570363
       ],
       "wilson95_iid": [
-       0.004508555457487652,
-       0.00615146615787776
+       0.00494478349979655,
+       0.005770220143886804
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.02,
+      "outer_p05": 0.00032101836267753786,
+      "outer_p50": 0.003806064572666842,
+      "outer_p95": 0.015605659016791864,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01516666666666661,
+      "var_total": 3.501668062534897e-05,
+      "var_binomial": 8.81183917640512e-06,
+      "var_epistemic": 2.6204841448943853e-05,
       "by_eta": [
        0.0,
        0.0,
        0.0,
-       0.0004027386226339106,
-       0.0021608643457382954,
-       0.004943332529539426,
-       0.013149522799575823
+       0.0007586102260658474,
+       0.001453796529060787,
+       0.006531659160726535,
+       0.012518988004819025
       ]
      },
      "live": {
@@ -3609,12 +4287,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3634,12 +4317,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3651,60 +4339,70 @@
       ]
      },
      "turkish": {
-      "p": 0.016366666666666668,
-      "k": 491,
-      "mc_se": 0.001001169054232873,
+      "p": 0.017583333333333333,
+      "k": 2110,
+      "mc_se": 0.0008985960573983503,
       "ci95": [
-       0.014404375320370238,
-       0.0183289580129631
+       0.015822085060832568,
+       0.019344581605834098
       ],
       "wilson95_iid": [
-       0.014991552590147098,
-       0.017865626605199678
+       0.016854986160254423,
+       0.018342567048742174
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.013333333333333334,
-      "outer_p95": 0.04,
+      "outer_p05": 0.0035182107975502063,
+      "outer_p50": 0.015065660658245378,
+      "outer_p95": 0.0402459164397405,
+      "outer_raw_p05": 0.003250000000000002,
+      "outer_raw_p95": 0.040083333333333304,
+      "var_total": 0.00016149497487437186,
+      "var_binomial": 2.8570070487850124e-05,
+      "var_epistemic": 0.00013292490438652173,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.002617801047120419,
-       0.00816326530612245,
-       0.019652761032071378,
-       0.036691410392364794
+       0.0009596928982725527,
+       0.0028321448439791634,
+       0.007571856922191598,
+       0.021772197202421784,
+       0.039495050023571315
       ]
      },
      "obvious_turkish": {
-      "p": 0.005266666666666667,
-      "k": 158,
-      "mc_se": 0.0005102850606322028,
+      "p": 0.0053416666666666664,
+      "k": 641,
+      "mc_se": 0.00041842968719576394,
       "ci95": [
-       0.004266507947827549,
-       0.006266825385505785
+       0.0045215444797629695,
+       0.006161788853570363
       ],
       "wilson95_iid": [
-       0.004508555457487652,
-       0.00615146615787776
+       0.00494478349979655,
+       0.005770220143886804
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.02,
+      "outer_p05": 0.00032101836267753786,
+      "outer_p50": 0.003806064572666842,
+      "outer_p95": 0.015605659016791864,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01516666666666661,
+      "var_total": 3.501668062534897e-05,
+      "var_binomial": 8.81183917640512e-06,
+      "var_epistemic": 2.6204841448943853e-05,
       "by_eta": [
        0.0,
        0.0,
        0.0,
-       0.0004027386226339106,
-       0.0021608643457382954,
-       0.004943332529539426,
-       0.013149522799575823
+       0.0007586102260658474,
+       0.001453796529060787,
+       0.006531659160726535,
+       0.012518988004819025
       ]
      },
      "n_stations": 9,
      "station_p_det": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.016366666666666668,
+      "DAG:dag_dirac": 0.017583333333333333,
       "DAG:dag_visitor_fast": 0.0,
       "AUKR:amateur_class": 0.0,
       "ULUP:amateur_class": 0.0,
@@ -3715,7 +4413,7 @@
      "station_p_fov": {
       "TUG:tug_t100_qhy": 1.0,
       "TUG:rtt150_fast": 1.0,
-      "DAG:dag_dirac": 0.5010333333333333,
+      "DAG:dag_dirac": 0.4992333333333333,
       "DAG:dag_visitor_fast": 1.0,
       "AUKR:amateur_class": 1.0,
       "ULUP:amateur_class": 1.0,
@@ -3726,7 +4424,7 @@
      "station_p_saturated": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.0026666666666666666,
+      "DAG:dag_dirac": 0.0029083333333333335,
       "DAG:dag_visitor_fast": 0.0,
       "AUKR:amateur_class": 0.0,
       "ULUP:amateur_class": 0.0,
@@ -3737,28 +4435,33 @@
     },
     "B_global_science": {
      "any": {
-      "p": 0.016366666666666668,
-      "k": 491,
-      "mc_se": 0.001001169054232873,
+      "p": 0.017583333333333333,
+      "k": 2110,
+      "mc_se": 0.0008985960573983503,
       "ci95": [
-       0.014404375320370238,
-       0.0183289580129631
+       0.015822085060832568,
+       0.019344581605834098
       ],
       "wilson95_iid": [
-       0.014991552590147098,
-       0.017865626605199678
+       0.016854986160254423,
+       0.018342567048742174
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.013333333333333334,
-      "outer_p95": 0.04,
+      "outer_p05": 0.0035182107975502063,
+      "outer_p50": 0.015065660658245378,
+      "outer_p95": 0.0402459164397405,
+      "outer_raw_p05": 0.003250000000000002,
+      "outer_raw_p95": 0.040083333333333304,
+      "var_total": 0.00016149497487437186,
+      "var_binomial": 2.8570070487850124e-05,
+      "var_epistemic": 0.00013292490438652173,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.002617801047120419,
-       0.00816326530612245,
-       0.019652761032071378,
-       0.036691410392364794
+       0.0009596928982725527,
+       0.0028321448439791634,
+       0.007571856922191598,
+       0.021772197202421784,
+       0.039495050023571315
       ]
      },
      "two_indep": {
@@ -3770,12 +4473,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3795,12 +4503,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3820,12 +4533,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3837,28 +4555,33 @@
       ]
      },
      "obvious_any": {
-      "p": 0.005266666666666667,
-      "k": 158,
-      "mc_se": 0.0005102850606322028,
+      "p": 0.0053416666666666664,
+      "k": 641,
+      "mc_se": 0.00041842968719576394,
       "ci95": [
-       0.004266507947827549,
-       0.006266825385505785
+       0.0045215444797629695,
+       0.006161788853570363
       ],
       "wilson95_iid": [
-       0.004508555457487652,
-       0.00615146615787776
+       0.00494478349979655,
+       0.005770220143886804
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.02,
+      "outer_p05": 0.00032101836267753786,
+      "outer_p50": 0.003806064572666842,
+      "outer_p95": 0.015605659016791864,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01516666666666661,
+      "var_total": 3.501668062534897e-05,
+      "var_binomial": 8.81183917640512e-06,
+      "var_epistemic": 2.6204841448943853e-05,
       "by_eta": [
        0.0,
        0.0,
        0.0,
-       0.0004027386226339106,
-       0.0021608643457382954,
-       0.004943332529539426,
-       0.013149522799575823
+       0.0007586102260658474,
+       0.001453796529060787,
+       0.006531659160726535,
+       0.012518988004819025
       ]
      },
      "live": {
@@ -3870,12 +4593,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3895,12 +4623,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -3912,60 +4645,70 @@
       ]
      },
      "turkish": {
-      "p": 0.016366666666666668,
-      "k": 491,
-      "mc_se": 0.001001169054232873,
+      "p": 0.017583333333333333,
+      "k": 2110,
+      "mc_se": 0.0008985960573983503,
       "ci95": [
-       0.014404375320370238,
-       0.0183289580129631
+       0.015822085060832568,
+       0.019344581605834098
       ],
       "wilson95_iid": [
-       0.014991552590147098,
-       0.017865626605199678
+       0.016854986160254423,
+       0.018342567048742174
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.013333333333333334,
-      "outer_p95": 0.04,
+      "outer_p05": 0.0035182107975502063,
+      "outer_p50": 0.015065660658245378,
+      "outer_p95": 0.0402459164397405,
+      "outer_raw_p05": 0.003250000000000002,
+      "outer_raw_p95": 0.040083333333333304,
+      "var_total": 0.00016149497487437186,
+      "var_binomial": 2.8570070487850124e-05,
+      "var_epistemic": 0.00013292490438652173,
       "by_eta": [
        0.0,
        0.0,
-       0.0,
-       0.002617801047120419,
-       0.00816326530612245,
-       0.019652761032071378,
-       0.036691410392364794
+       0.0009596928982725527,
+       0.0028321448439791634,
+       0.007571856922191598,
+       0.021772197202421784,
+       0.039495050023571315
       ]
      },
      "obvious_turkish": {
-      "p": 0.005266666666666667,
-      "k": 158,
-      "mc_se": 0.0005102850606322028,
+      "p": 0.0053416666666666664,
+      "k": 641,
+      "mc_se": 0.00041842968719576394,
       "ci95": [
-       0.004266507947827549,
-       0.006266825385505785
+       0.0045215444797629695,
+       0.006161788853570363
       ],
       "wilson95_iid": [
-       0.004508555457487652,
-       0.00615146615787776
+       0.00494478349979655,
+       0.005770220143886804
       ],
-      "outer_p05": 0.0,
-      "outer_p50": 0.0,
-      "outer_p95": 0.02,
+      "outer_p05": 0.00032101836267753786,
+      "outer_p50": 0.003806064572666842,
+      "outer_p95": 0.015605659016791864,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.01516666666666661,
+      "var_total": 3.501668062534897e-05,
+      "var_binomial": 8.81183917640512e-06,
+      "var_epistemic": 2.6204841448943853e-05,
       "by_eta": [
        0.0,
        0.0,
        0.0,
-       0.0004027386226339106,
-       0.0021608643457382954,
-       0.004943332529539426,
-       0.013149522799575823
+       0.0007586102260658474,
+       0.001453796529060787,
+       0.006531659160726535,
+       0.012518988004819025
       ]
      },
      "n_stations": 31,
      "station_p_det": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.016366666666666668,
+      "DAG:dag_dirac": 0.017583333333333333,
       "DAG:dag_visitor_fast": 0.0,
       "KRY:lunar_impact_system": 0.0,
       "SEV:midas_video": 0.0,
@@ -3998,7 +4741,7 @@
      "station_p_fov": {
       "TUG:tug_t100_qhy": 1.0,
       "TUG:rtt150_fast": 1.0,
-      "DAG:dag_dirac": 0.5010333333333333,
+      "DAG:dag_dirac": 0.4992333333333333,
       "DAG:dag_visitor_fast": 1.0,
       "KRY:lunar_impact_system": 1.0,
       "SEV:midas_video": null,
@@ -4031,7 +4774,7 @@
      "station_p_saturated": {
       "TUG:tug_t100_qhy": 0.0,
       "TUG:rtt150_fast": 0.0,
-      "DAG:dag_dirac": 0.0026666666666666666,
+      "DAG:dag_dirac": 0.0029083333333333335,
       "DAG:dag_visitor_fast": 0.0,
       "KRY:lunar_impact_system": 0.0,
       "SEV:midas_video": 0.0,
@@ -4072,12 +4815,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4097,12 +4845,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4122,12 +4875,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4147,12 +4905,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4172,12 +4935,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4197,12 +4965,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4222,12 +4995,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4247,12 +5025,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4272,12 +5055,17 @@
        0.0
       ],
       "wilson95_iid": [
-       1.3550791931992606e-20,
-       0.0001280369377766612
+       3.3880233270970897e-21,
+       3.201230851263014e-05
       ],
       "outer_p05": 0.0,
       "outer_p50": 0.0,
       "outer_p95": 0.0,
+      "outer_raw_p05": 0.0,
+      "outer_raw_p95": 0.0,
+      "var_total": 0.0,
+      "var_binomial": 0.0,
+      "var_epistemic": 0.0,
       "by_eta": [
        0.0,
        0.0,
@@ -4427,19 +5215,19 @@
      ]
     },
     "any:C_public_participation-A_turkiye_priority": {
-     "diff": -0.016366666666666668,
-     "mc_se": 0.001001169054232873,
+     "diff": -0.017583333333333333,
+     "mc_se": 0.0008985960573983503,
      "ci95": [
-      -0.0183289580129631,
-      -0.014404375320370238
+      -0.019344581605834098,
+      -0.015822085060832568
      ]
     },
     "any:C_public_participation-B_global_science": {
-     "diff": -0.016366666666666668,
-     "mc_se": 0.001001169054232873,
+     "diff": -0.017583333333333333,
+     "mc_se": 0.0008985960573983503,
      "ci95": [
-      -0.0183289580129631,
-      -0.014404375320370238
+      -0.019344581605834098,
+      -0.015822085060832568
      ]
     },
     "confirmed:B_global_science-A_turkiye_priority": {
@@ -4523,51 +5311,52 @@
      ]
     },
     "turkish:C_public_participation-A_turkiye_priority": {
-     "diff": -0.016366666666666668,
-     "mc_se": 0.001001169054232873,
+     "diff": -0.017583333333333333,
+     "mc_se": 0.0008985960573983503,
      "ci95": [
-      -0.0183289580129631,
-      -0.014404375320370238
+      -0.019344581605834098,
+      -0.015822085060832568
      ]
     },
     "turkish:C_public_participation-B_global_science": {
-     "diff": -0.016366666666666668,
-     "mc_se": 0.001001169054232873,
+     "diff": -0.017583333333333333,
+     "mc_se": 0.0008985960573983503,
      "ci95": [
-      -0.0183289580129631,
-      -0.014404375320370238
+      -0.019344581605834098,
+      -0.015822085060832568
      ]
     }
    },
    "peakV": {
-    "median": 10.066801761838189,
-    "p10": 7.562354915779244,
-    "p90": 12.667271740321503
+    "median": 10.064636827289732,
+    "p10": 7.567608176031863,
+    "p90": 12.69485626601971
    },
    "T0_percentiles": [
-    1986.5919034816309,
-    3041.733543671134,
-    4662.975845772112
+    1986.673386741773,
+    3040.429441488579,
+    4677.890544499905
    ],
    "visual": {
     "site": "IST",
     "observable": true,
     "moon_alt": 52.896918923706075,
     "sun_alt": -17.30509043652958,
+    "p_conditions": 1.0,
     "none": {
-     "p_conditional": 2.084139355770529e-83,
-     "p_with_weather": 2.0841393557661043e-83,
-     "threshold_median": -4.123640807079266
+     "p_conditional": 1.958905067687836e-77,
+     "p_with_weather": 9.120875407247546e-94,
+     "threshold_median": -4.123716201875594
     },
     "binoculars": {
-     "p_conditional": 1.4290753842180298e-22,
-     "p_with_weather": 1.4290708967441327e-22,
-     "threshold_median": 0.06849987116252754
+     "p_conditional": 3.117244626119626e-20,
+     "p_with_weather": 1.102779001253675e-27,
+     "threshold_median": 0.06842248128873818
     },
     "telescope20cm": {
-     "p_conditional": 0.0037434464445665013,
-     "p_with_weather": 0.001212689620001258,
-     "threshold_median": 6.0169087227575435
+     "p_conditional": 0.0037644855427635083,
+     "p_with_weather": 0.0010960318897446618,
+     "threshold_median": 6.016866924336094
     }
    }
   }
@@ -4685,7 +5474,7 @@
  },
  "mc_settings": {
   "n_outer": 200,
-  "n_inner": 150,
+  "n_inner": 600,
   "seed": 20265005,
   "detection_snr": 8.0,
   "obvious_snr": 30.0,
@@ -4699,24 +5488,25 @@
    "observable": true,
    "moon_alt": 52.896918923706075,
    "sun_alt": -17.30509043652958,
+   "p_conditions": 1.0,
    "none": {
-    "p_conditional": 1.7011491011334615e-128,
-    "p_with_weather": 2.4194228682923485e-135,
-    "threshold_median": -4.123640807079266
+    "p_conditional": 2.6315714553814497e-126,
+    "p_with_weather": 1.5719951691650197e-126,
+    "threshold_median": -4.123705880716757
    },
    "binoculars": {
-    "p_conditional": 5.947416903043886e-46,
-    "p_with_weather": 6.032722125067758e-50,
-    "threshold_median": 0.06849987116252754
+    "p_conditional": 6.415660835627275e-45,
+    "p_with_weather": 3.5009942013387185e-45,
+    "threshold_median": 0.06843726725897836
    },
    "telescope20cm": {
-    "p_conditional": 0.0005687379982350346,
-    "p_with_weather": 0.00017584275709881095,
-    "threshold_median": 6.0169087227575435
+    "p_conditional": 0.0005857520938531828,
+    "p_with_weather": 0.00016943537527876404,
+    "threshold_median": 6.0168825640551855
    }
   },
-  "phone_standalone_limit_broad": -3.5999999999999996,
-  "phone_afocal20cm_limit_broad": 4.5,
+  "phone_standalone_limit_broad": null,
+  "phone_afocal20cm_limit_broad": null,
   "phone_note": "steady-source limits in the unfiltered (broad) CMOS band, not V magnitudes; flash detection also depends on the frame rate and processing"
  }
 }
