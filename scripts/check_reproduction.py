@@ -26,7 +26,7 @@ Compare two existing trees instead of running:
     python3 scripts/check_reproduction.py --compare REFERENCE_DIR NEW_DIR [--nmc-new N]
 Exit status: 0 = PASS, 1 = FAIL, 2 = the pipeline run failed.
 """
-import argparse, glob, io, json, math, os, re, shutil, subprocess, sys, tarfile, time
+import argparse, glob, io, json, math, os, re, shlex, shutil, subprocess, sys, tarfile, time
 import numpy as np
 import pandas as pd
 
@@ -269,7 +269,11 @@ def reference_tree(check_dir):
         if tracked:
             ref = os.path.join(check_dir, 'ref'); shutil.rmtree(ref, ignore_errors=True); os.makedirs(ref)
             tar = subprocess.run(['git', '-C', ROOT, 'archive', '--format=tar', 'HEAD', 'outputs', 'site/data'], capture_output=True, check=True).stdout
-            tarfile.open(fileobj=io.BytesIO(tar)).extractall(ref)
+            with tarfile.open(fileobj=io.BytesIO(tar)) as tf:
+                try:
+                    tf.extractall(ref, filter='data')
+                except TypeError:   # Python without extraction filters
+                    tf.extractall(ref)
             if os.path.exists(os.path.join(ROOT, 'paper/sections/numbers.tex')):   # private manuscript, not in git
                 shutil.copytree(os.path.join(ROOT, 'paper/sections'), os.path.join(ref, 'paper/sections'))
             return ref, f'committed release (git {sha})'
@@ -303,12 +307,13 @@ def main():
     print('Full log: .check/run.log', flush=True)
     t0 = time.time()
     with open(os.path.join(check, 'run.log'), 'w') as log:
-        proc = subprocess.Popen(['make', 'all', f'NMC={nmc}', f'NTRIAL={ntrial}', f'PY={sys.executable}'], cwd=run,
+        py = shlex.quote(sys.executable)   # quoted: the interpreter path may contain spaces
+        proc = subprocess.Popen(['make', 'all', f'NMC={nmc}', f'NTRIAL={ntrial}', f'PY={py}'], cwd=run,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in proc.stdout:
             log.write(line)
-            if line.startswith(sys.executable) or line.startswith('NMC=') or line.startswith('NTRIAL='):
-                print(f'  {time.strftime("%H:%M:%S")}  {line.strip().replace(sys.executable, "python")}', flush=True)
+            if line.startswith((py, sys.executable, 'NMC=', 'NTRIAL=')):
+                print(f'  {time.strftime("%H:%M:%S")}  {line.strip().replace(py, "python").replace(sys.executable, "python")}', flush=True)
         proc.wait()
     if proc.returncode != 0:
         print(f'\nThe pipeline stopped with an error after {(time.time() - t0) / 60:.0f} min; see .check/run.log')
